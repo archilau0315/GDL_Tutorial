@@ -18,24 +18,24 @@ const props = withDefaults(defineProps<{
   height?: number
 }>(), { height: 420 })
 
-/* ---------- 示例库（GDL 代码两语共用） ---------- */
+/* ---------- 示例库（GDL 代码两语共用，注释中英对照同行） ---------- */
 const EXAMPLES = [
   {
-    label: '🪑 参数化桌凳 Table & Stool',
-    code: props.code ?? `! === 参数化桌凳 ===
-! 桌子：宽 w、深 d、高 h
+    label: { zh: '🪑 参数化桌凳', en: '🪑 Table & Stool' },
+    code: props.code ?? `! === 参数化桌凳 / Parametric table & stool ===
+! 桌面尺寸 / table top: width, depth, height
 w = 1.2
 d = 0.6
 h = 0.72
 th = 0.04
 legR = 0.03
 
-! 桌面
+! 桌面 / table top
 ADD 0, 0, h - th
 BLOCK w, d, th
 DEL 1
 
-! 四条圆腿（双层循环）
+! 四条圆腿（双层循环）/ four cylindrical legs
 FOR i = 1 TO 2
   FOR j = 1 TO 2
     ADD legR + (i - 1) * (w - 2 * legR), legR + (j - 1) * (d - 2 * legR), 0
@@ -44,16 +44,18 @@ FOR i = 1 TO 2
   NEXT j
 NEXT i
 
-! 旁边的凳子
+! 旁边的独腿凳 / a small stool
 ADD w + 0.3, 0, 0
-BLOCK 0.35, 0.35, 0.02
-ADD 0.03, 0.03, 0
+ADD 0.175, 0.175, 0
 CYLIND 0.45, 0.025
+DEL 1
+ADD 0, 0, 0.45
+BLOCK 0.35, 0.35, 0.02
 DEL 2`
   },
   {
-    label: '🏀 基本体 Primitives',
-    code: `! 基本体一览
+    label: { zh: '🏀 基本体', en: '🏀 Primitives' },
+    code: `! 基本体一览 / primitives at a glance
 BLOCK 1, 1, 1
 
 ADD 2, 0, 0
@@ -69,8 +71,8 @@ SPHERE 0.5
 DEL 1`
   },
   {
-    label: '🌀 变换与循环 Transforms',
-    code: `! 旋转阵列：绕圆心摆 8 块柱
+    label: { zh: '🌀 变换与循环', en: '🌀 Transforms & loops' },
+    code: `! 旋转阵列 / radial array of 8 blocks
 FOR i = 1 TO 8
   ROT 0, 0, i * 45
   ADD 1.5, 0, 0
@@ -78,18 +80,20 @@ FOR i = 1 TO 8
   DEL 2
 NEXT i
 
-! 中心柱
+! 中心柱 / centre column
 CYLIND 0.8, 0.2`
   },
   {
-    label: '❌ 含错误的脚本 Buggy script',
-    code: `! 故意写错，试试报错效果
+    label: { zh: '❌ 含错误的脚本', en: '❌ Buggy script' },
+    code: `! 故意写错，试试报错效果 / on purpose: watch the errors
 w = 1.0
-BLOCK w, d, 0.5        ! 第 3 行：d 未定义
-CYLIND 1.2             ! 第 4 行：CYLIND 需要 2 个参数
-PRISM 3, 1             ! 第 5 行：PRISM 暂未支持（P2 开放）`
+BLOCK w, d, 0.5        ! 第 3 行：d 未定义 / line 3: d undefined
+CYLIND 1.2             ! 第 4 行：CYLIND 需要 2 个参数 / line 4: 2 args required
+PRISM 3, 1             ! 第 5 行：PRISM 暂未支持 / line 5: PRISM not supported yet`
   }
 ]
+
+const exLabel = (i: number): string => EXAMPLES[i].label[loc.value]
 
 /* ---------- 状态 ---------- */
 const { lang } = useData()
@@ -168,7 +172,9 @@ function initThree(): void {
   grid.position.y = -0.001
   scene.add(grid)
   // 坐标轴（红X 绿Y 蓝Z——three 系；GDL 的 z 向上映射为 three 的 y）
-  scene.add(new THREE.AxesHelper(1))
+  const axes = new THREE.AxesHelper(0.5)
+  axes.renderOrder = 1
+  scene.add(axes)
 
   controls = new OrbitControls(camera, renderer.domElement)
   controls.enableDamping = true
@@ -275,7 +281,7 @@ const errLine = (i: number): boolean => errorLines.value.has(i)
     <!-- 工具栏 -->
     <div class="pg-bar">
       <select class="pg-select" @change="pickExample" :aria-label="t(loc, 'example')">
-        <option v-for="(ex, i) in EXAMPLES" :key="i" :value="i">{{ ex.label }}</option>
+        <option v-for="(ex, i) in EXAMPLES" :key="i" :value="i">{{ ex.label[loc] }}</option>
       </select>
       <button class="pg-btn" @click="execute">{{ t(loc, 'run') }}</button>
       <button class="pg-btn ghost" @click="resetCode">{{ t(loc, 'reset') }}</button>
@@ -367,6 +373,11 @@ const errLine = (i: number): boolean => errorLines.value.has(i)
   padding: 2px 10px;
 }
 .pg-chip.bad { color: #c0392b; background: rgba(192, 57, 43, 0.12) }
+/* 暗色模式：状态标签与错误面板提亮，保证对比度 */
+.dark .pg-chip { color: #4ade80; background: rgba(74, 222, 128, 0.14) }
+.dark .pg-chip.bad { color: #f87171; background: rgba(248, 113, 113, 0.16) }
+.dark .pg-errors.bad { background: rgba(248, 113, 113, 0.08) }
+.dark .pg-err-loc { color: #f87171 }
 .pg-main {
   display: grid;
   grid-template-columns: minmax(260px, 44%) 1fr;

@@ -1,6 +1,8 @@
 ---
 title: GDL Playground
 description: Write GDL in the browser and see the 3D model instantly, with Archicad-style error reporting
+pageClass: wide-playground
+aside: false
 ---
 
 # GDL Interactive Playground

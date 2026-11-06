@@ -1,6 +1,8 @@
 ---
 title: GDL 交互沙盒
 description: 在浏览器里写 GDL，实时看到 3D 模型，报错与 Archicad 一致的定位方式
+pageClass: wide-playground
+aside: false
 ---
 
 # GDL 交互沙盒

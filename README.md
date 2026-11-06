@@ -15,7 +15,9 @@ Archicad GDL 从入门到精通——中英双语交互式教程网站。浏览�
 | 站点配置 | `docs/.vitepress/config.mts` | 双 locale（中=根路径，英=/en/）、导航、侧边栏 |
 | 主题 | `docs/.vitepress/theme/` | 数字蓝图视觉（style.css）、组件文案字典（i18n.ts） |
 | GDL 语法高亮 | `docs/.vitepress/shiki-gdl/gdl.mts` | Shiki TextMate grammar（gdl 代码块高亮） |
-| GDL 沙盒引擎 | `docs/.vitepress/gdl-engine/` | P1 阶段建设：GDL 解释器 + Three.js 渲染 |
+| GDL 沙盒引擎 | `docs/.vitepress/gdl-engine/` | 自研 GDL 解释器（tokenizer/parser/interpreter/matrix/errors）+ LP XML 导出 + Three.js 渲染 |
+| 沙盒组件 | `docs/.vitepress/theme/components/GdlPlayground.vue` | 左代码右 3D、行号错误高亮、双语错误面板、示例切换、导出 |
+| 引擎单测 | `tests/engine.test.ts` | vitest，覆盖基本体/表达式/变换/流程/报错定位/导出 |
 | 中文内容 | `docs/guide/`、`docs/reference/` | 教程章节 + 资料库页面 |
 | 英文内容 | `docs/en/` | 与中文目录结构完全镜像 |
 | 速查数据 | `docs/reference/data/` | P3 阶段建设：单源双语 JSON（desc_zh/desc_en） |
@@ -30,6 +32,7 @@ npm install        # 安装依赖
 npm run dev        # 本地开发（http://localhost:5173）
 npm run build      # 构建静态站点到 docs/.vitepress/dist
 npm run preview    # 本地预览构建产物
+npm run test       # 沙盒引擎单元测试（vitest）
 npm run check:i18n # 检查中英文页面文件对齐
 ```
 
@@ -39,4 +42,4 @@ npm run check:i18n # 检查中英文页面文件对齐
 
 ## 技术栈
 
-VitePress 1.x + Vue 3 · CodeMirror 6（沙盒编辑器，P1）· Three.js（3D 渲染，P1）· TypeScript
+VitePress 1.x + Vue 3 · TypeScript（解释器）· Three.js（3D 渲染）· vitest（单测）

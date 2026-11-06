@@ -112,3 +112,9 @@ div[class*='language-gdl'] {
 /* ---- 导航当前项：蓝图蓝底线 + 制图橙高亮 ---- */
 .VPNavBarMenuLink.active { color: var(--bp-600); }
 .dark .VPNavBarMenuLink.active { color: var(--bp-200); }
+
+/* ---- 沙盒页宽版布局：给代码栏与 3D 视口留足空间 ---- */
+.wide-playground .VPDoc .content-container { max-width: 1180px; }
+@media (max-width: 1280px) {
+  .wide-playground .VPDoc .content-container { max-width: 100%; }
+}

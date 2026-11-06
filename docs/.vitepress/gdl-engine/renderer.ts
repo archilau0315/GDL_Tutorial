@@ -17,27 +17,36 @@ const COORD_C = new THREE.Matrix4().set(
 const gdlToThree = (m: number[]): THREE.Matrix4 =>
   new THREE.Matrix4().multiplyMatrices(COORD_C, new THREE.Matrix4().fromArray(m))
 
+/**
+ * 几何体一律先按 **GDL 本地坐标**（x/y 水平、z 向上）构造，
+ * 再统一乘以 COORD_C × M_gdl 映射到 three 视图坐标。
+ * 切勿在构造时预先交换轴，否则会被映射两次导致姿态错乱。
+ */
 function geometryFor(s: Shape): THREE.BufferGeometry {
   switch (s.type) {
     case 'block': {
       // GDL 局部：x∈[0,a], y∈[0,b], z∈[0,c]
-      const g = new THREE.BoxGeometry(s.a, s.c, s.b)
-      g.translate(s.a / 2, s.c / 2, s.b / 2)
+      const g = new THREE.BoxGeometry(s.a, s.b, s.c)
+      g.translate(s.a / 2, s.b / 2, s.c / 2)
       return g
     }
     case 'cylind': {
+      // three 圆柱轴向为 +y，绕 X 转 90° 对齐 GDL 的 +z
       const g = new THREE.CylinderGeometry(s.r, s.r, s.h, 32, 1, false)
-      g.translate(0, s.h / 2, 0)
+      g.rotateX(Math.PI / 2)
+      g.translate(0, 0, s.h / 2)
       return g
     }
     case 'sphere': {
-      const g = new THREE.SphereGeometry(s.r, 32, 24)
-      return g
+      // 球心在 GDL 原点
+      return new THREE.SphereGeometry(s.r, 32, 24)
     }
     case 'cone': {
-      // GDL CONE h, r1(底), r2(顶)；柱体沿 GDL z = three y
+      // GDL CONE h, r1(底 z=0), r2(顶 z=h)
+      // 旋转后：原 +y(radiusTop) → +z，故 radiusTop = r2
       const g = new THREE.CylinderGeometry(s.r2, s.r1, s.h, 32, 1, false)
-      g.translate(0, s.h / 2, 0)
+      g.rotateX(Math.PI / 2)
+      g.translate(0, 0, s.h / 2)
       return g
     }
   }
@@ -94,7 +103,7 @@ export function frameCamera(camera: THREE.PerspectiveCamera, bbox: THREE.Box3): 
   const center = bbox.getCenter(new THREE.Vector3())
   const size = bbox.getSize(new THREE.Vector3())
   const radius = Math.max(size.x, size.y, size.z) * 0.5 || 1
-  const dist = radius * 3.2
+  const dist = radius * 2.9
   camera.position.set(center.x + dist * 0.7, center.y + dist * 0.6, center.z - dist * 0.7)
   camera.near = Math.max(radius / 100, 0.01)
   camera.far = dist * 100
