@@ -80,9 +80,9 @@ When an action repeats often ("draw one post"), package it:
 
 ```gdl
 FOR i = 1 TO 7
-  GOSUB 100        ! call: jump to label 100
-  ADD 0.5, 0, 0
-  DEL 1
+  ADD (i - 1) * 0.5, 0, 0   ! move to where post i belongs
+  GOSUB 100                 ! call: jump to label 100
+  DEL 1                     ! back to the start for the next round
 NEXT i
 END                ! main program ends here (important!)
 
@@ -98,7 +98,7 @@ Four rules:
 3. **The main program must end with `END`**, otherwise execution falls into the subroutine and runs it again
 4. Subroutines share global variables and may read and write them
 
-The missing `END` is the classic slip. It raises no error — geometry simply doubles, which is hard to trace.
+The missing `END` is the classic slip. Without it the main program runs straight on into the subroutine and draws one extra copy of the geometry; only at `RETURN` do you get "RETURN without GOSUB". Extra geometry is far harder to trace than an error message.
 
 ## Try It: A Railing Array
 
@@ -106,7 +106,7 @@ The code below draws posts with `GOSUB`, arranges them with `FOR`, then adds a h
 
 1. `n = 7` → `12`: posts get denser, spacing recomputed
 2. `len = 3.0` → `6.0`: the railing lengthens
-3. Delete the `END` line: watch the model "double" — the cost of forgetting it
+3. Delete the `END` line: an extra post appears and the `RETURN` line reports an error — the cost of forgetting it
 
 <GdlPlayground preset="railing" :height="460" />
 

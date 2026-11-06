@@ -33,3 +33,14 @@
 | 20:40 | .gitignore | 忽略 .playwright-cli/ 与 screenshots/ | 浏览器自动化临时文件误入提交 |
 | 20:45 | 截图验收 | Playwright 自动截图 5 张：中英首页/教程页/暗色/移动端 | 全部正常，线上 CI 部署 success |
 
+
+## 2026-11-06 P2 收尾：跳转与循环的执行模型修复
+
+| 时间 | 模块 | 变更简述 | 备注 |
+|---|---|---|---|
+| 22:35 | gdl-engine/bytecode.ts（新增） | AST → 扁平指令表（assign/cmd/label/gosub/return/end/test/jump/forinit/next），跳转目标回填 | 原实现用递归 execBlock 执行 AST，GOSUB 一打断就丢掉 JS 调用栈，循环状态无法恢复 |
+| 22:35 | gdl-engine/interpreter.ts | 执行驱动改为「程序计数器 + 显式循环栈 + 调用栈」；RETURN 时丢弃子程序内未配对的循环帧 | 修复：FOR/WHILE 里调 GOSUB 只执行一次（测试从 2 实体→7 实体）。文件 369 行，仍 <500 |
+| 22:40 | theme/GdlPlayground | 重写 stack 预设：左组不 DEL 造成角度层层叠加（块散乱重叠），右组每轮 DEL 2 得规整 8 柱一圈；railing 预设循环内 `ADD (i-1)*gap` 再 GOSUB，修正原来每轮退回原点导致 7 根立柱重叠 | 原示例的右组 `ADD 4.2,0,0` 因左循环累计转 180° 而落到负坐标，教学上是错的 |
+| 22:40 | gdl-engine/renderer | frameCamera 改为按包围球半径 + fov + 画布宽高比算距离；视向抬高到 47° | 窄画布下平移分组会被裁边；抬高后平面阵列/圆环更易读 |
+| 22:45 | guide 中英各 2 篇 | 第 2 章对比实验文字改为「角度层层叠加」的真实解释；第 5 章 GOSUB 示例与「忘记 END」的后果描述改为与实测一致（多画一根 + RETURN 报错） | 教学文案必须与引擎实际行为一致 |
+| 22:50 | tests/engine.test.ts | 新增 4 例：FOR 内 GOSUB、WHILE 内 GOSUB、子程序含未配对 FOR 后调用方循环继续、栏杆示例分布 | 单测 33 → 37 全绿 |

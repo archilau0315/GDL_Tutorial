@@ -3,7 +3,8 @@
  * 执行模型：顶层程序计数器 + 跳转信号（GOSUB/RETURN/END），
  * 嵌套块遇到跳转信号即逐层上抛。2D 与 3D 各持独立变换栈。
  */
-import type { Expr, GdlError, Mat4, Shape, Shape2, Stmt } from './types'
+import type { Expr, GdlError, Mat4, Pos, Shape, Shape2, Stmt } from './types'
+import { compile } from './bytecode'
 import { makeError } from './errors'
 import * as M from './matrix'
 
@@ -59,10 +60,10 @@ export function interpret(ast: Stmt[]): RunResult {
   const errors: GdlError[] = []
   const vars = new Map<string, number>()
 
-  let halted = false
-  let jump = -1                     // >=0: GOSUB 目标；-2: RETURN 信号；-1: 无
-  let pendingGosub = false
-  const callStack: number[] = []    // GOSUB 返回地址（顶层索引）
+  /** GOSUB 返回地址 + 调用时的循环栈深度（RETURN 时丢弃子程序里没配对的循环帧） */
+  const callStack: { ret: number; loops: number }[] = []
+  /** FOR 循环栈：与程序计数器配合，任何跳转都不会丢循环状态 */
+  const loopStack: { varName: string; to: number; step: number; bodyStart: number; iters: number }[] = []
   let curMat: Mat4 = M.identity()
   const stack3d: Mat4[] = [curMat]
   let cur2: Mat4 = M.identity()
@@ -132,71 +133,9 @@ export function interpret(ast: Stmt[]): RunResult {
     return true
   }
 
-  /* ---- 块执行：跳转/停止信号逐层上抛 ---- */
-  function execBlock(body: Stmt[]): void {
-    for (const s of body) {
-      if (halted || jump !== -1) return
-      if (++ops > OPS_LIMIT) { halted = true; return }
-      exec(s)
-    }
-  }
+  /* ---- 指令执行（由外层程序计数器驱动） ---- */
 
-  /* ---- 标签索引（GOSUB 目标，顶层） ---- */
-  const labels = new Map<string, number>()
-  ast.forEach((s, i) => { if (s.kind === 'label') labels.set(s.value, i) })
-
-  /* ---- 语句执行 ---- */
-  function exec(s: Stmt): void {
-    switch (s.kind) {
-      case 'assign': vars.set(s.name, num(s.value)); return
-      case 'label': return
-      case 'gosub': {
-        const key = s.target.kind === 'str' ? s.target.value : String(Math.trunc(num(s.target)))
-        const idx = labels.get(key)
-        if (idx === undefined) {
-          errors.push(makeError('undefined', 'unknownLabel', s.pos, { name: key }))
-          return
-        }
-        callStack.push(-1)
-        pendingGosub = true
-        jump = idx
-        return
-      }
-      case 'return':
-        jump = -2
-        return
-      case 'end': halted = true; return
-      case 'if':
-        if (num(s.cond) !== 0) execBlock(s.then)
-        else execBlock(s.else)
-        return
-      case 'while': {
-        let iters = 0
-        while (num(s.cond) !== 0) {
-          if (++iters > LOOP_LIMIT) { errors.push(makeError('runtime', 'loopLimit', s.pos)); return }
-          execBlock(s.body)
-          if (halted || jump !== -1) return
-        }
-        return
-      }
-      case 'for': {
-        const from = num(s.from), to = num(s.to)
-        const step = s.step ? num(s.step) : (to >= from ? 1 : -1)
-        if (step === 0) { errors.push(makeError('runtime', 'loopLimit', s.pos)); return }
-        let iters = 0
-        for (let v = from; step > 0 ? v <= to : v >= to; v += step) {
-          if (++iters > LOOP_LIMIT) { errors.push(makeError('runtime', 'loopLimit', s.pos)); return }
-          vars.set(s.varName, v)
-          execBlock(s.body)
-          if (halted || jump !== -1) return
-        }
-        return
-      }
-      case 'cmd': execCmd(s); return
-    }
-  }
-
-  function execCmd(s: Extract<Stmt, { kind: 'cmd' }>): void {
+  function execCmd(s: { name: string; args: Expr[]; pos: Pos }): void {
     const name = s.name
     const args = s.args
 
@@ -336,30 +275,93 @@ export function interpret(ast: Stmt[]): RunResult {
     shapes2.push({ type: 'poly2', pts, fill, ...base2() })
   }
 
-  /* ---- 顶层执行循环：解析 GOSUB/RETURN ---- */
+  /* ---- 程序计数器主循环 ---- */
+  const code = compile(ast)
+  const labels = new Map<string, number>()
+  code.forEach((ins, i) => { if (ins.op === 'label') labels.set(ins.value, i) })
+
   let pc = 0
-  while (pc < ast.length && !halted) {
-    if (ast[pc].kind === 'label') { pc++; continue }
-    jump = -1
-    pendingGosub = false
-    exec(ast[pc])
-    if (++ops > OPS_LIMIT) break
-    if (jump >= 0) {
-      if (pendingGosub) callStack[callStack.length - 1] = pc + 1 // 回填真实返回地址
-      pc = jump
-    } else if (jump === -2) {
-      const ret = callStack.pop()
-      if (ret === undefined || ret < 0) {
-        if (ret === undefined) {
-          // 顶层裸 RETURN：报错但继续
-          errors.push(makeError('runtime', 'noReturn', ast[pc].pos ?? { line: 1, col: 1 }))
-        }
+  while (pc >= 0 && pc < code.length) {
+    if (++ops > OPS_LIMIT) {
+      errors.push(makeError('runtime', 'loopLimit', (code[pc] as { pos?: Pos }).pos ?? { line: 1, col: 1 }))
+      break
+    }
+    const ins = code[pc]
+
+    switch (ins.op) {
+      case 'assign':
+        vars.set(ins.name, num(ins.value))
         pc++
-      } else {
-        pc = ret
+        break
+      case 'cmd':
+        execCmd(ins)
+        pc++
+        break
+      case 'label':
+        pc++
+        break
+      case 'gosub': {
+        const key = ins.target.kind === 'str' ? ins.target.value : String(Math.trunc(num(ins.target)))
+        const idx = labels.get(key)
+        if (idx === undefined) {
+          errors.push(makeError('undefined', 'unknownLabel', ins.pos, { name: key }))
+          pc++
+          break
+        }
+        callStack.push({ ret: pc + 1, loops: loopStack.length })
+        pc = idx
+        break
       }
-    } else {
-      pc++
+      case 'return': {
+        const frame = callStack.pop()
+        if (!frame) {
+          errors.push(makeError('runtime', 'noReturn', ins.pos))
+          pc++
+          break
+        }
+        // 子程序里没配对的 FOR 帧一并丢弃，回到调用点的循环状态
+        if (loopStack.length > frame.loops) loopStack.length = frame.loops
+        pc = frame.ret
+        break
+      }
+      case 'end':
+        return { shapes, shapes2, errors }
+      case 'test':
+        pc = num(ins.cond) === 0 ? ins.falseJump : pc + 1
+        break
+      case 'jump':
+        pc = ins.to
+        break
+      case 'forinit': {
+        const from = num(ins.from)
+        const to = num(ins.to)
+        const step = ins.step ? num(ins.step) : (to >= from ? 1 : -1)
+        if (step === 0) {
+          errors.push(makeError('runtime', 'loopLimit', ins.pos))
+          pc = ins.bodyEnd
+          break
+        }
+        vars.set(ins.varName, from)
+        if (step > 0 ? from > to : from < to) { pc = ins.bodyEnd; break }  // 空区间不执行
+        loopStack.push({ varName: ins.varName, to, step, bodyStart: pc + 1, iters: 1 })
+        pc++
+        break
+      }
+      case 'next': {
+        const fr = loopStack[loopStack.length - 1]
+        if (!fr) { pc++; break }
+        const v = (vars.get(fr.varName) ?? 0) + fr.step
+        if (fr.step > 0 ? v > fr.to : v < fr.to) { loopStack.pop(); pc++; break }
+        if (++fr.iters > LOOP_LIMIT) {
+          errors.push(makeError('runtime', 'loopLimit', code[fr.bodyStart]?.pos ?? { line: 1, col: 1 }))
+          loopStack.pop()
+          pc++
+          break
+        }
+        vars.set(fr.varName, v)
+        pc = fr.bodyStart
+        break
+      }
     }
   }
 

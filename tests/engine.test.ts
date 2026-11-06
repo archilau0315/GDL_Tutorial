@@ -261,3 +261,78 @@ describe('P2 扩展：运算与属性', () => {
     expect((r2.shapes[0].matrix[1])).toBeCloseTo(1)   // sin90
   })
 })
+
+describe('跳转不丢循环状态（回归）', () => {
+  it('FOR 循环里调 GOSUB，每轮都执行', () => {
+    const src = `FOR i = 1 TO 3
+  GOSUB 100
+NEXT i
+END
+100:
+BLOCK 0.5, 0.5, 0.5
+ADD 1, 0, 0
+RETURN`
+    const r = run(src)
+    expect(r.errors).toEqual([])
+    expect(r.shapes).toHaveLength(3)
+    expect(r.shapes.map(s => Math.round(s.matrix[12]))).toEqual([0, 1, 2])
+  })
+
+  it('WHILE 循环里调 GOSUB，每轮都执行', () => {
+    const src = `k = 0
+WHILE k < 4
+  GOSUB 100
+  k = k + 1
+ENDWHILE
+END
+100:
+ADD 0.25, 0, 0
+BLOCK 0.1, 0.1, 0.1
+DEL 1
+RETURN`
+    const r = run(src)
+    expect(r.errors).toEqual([])
+    expect(r.shapes).toHaveLength(4)
+  })
+
+  it('子程序内含未配对 FOR 时，RETURN 后调用方循环仍继续', () => {
+    const src = `FOR i = 1 TO 3
+  GOSUB 100
+NEXT i
+END
+100:
+FOR j = 1 TO 2
+  ADD 0, 1, 0
+NEXT j
+BLOCK 0.2, 0.2, 0.2
+RETURN`
+    const r = run(src)
+    expect(r.errors).toEqual([])
+    expect(r.shapes).toHaveLength(3)
+    // 子程序里两次 ADD 不退栈，三次调用累积成 2 / 4 / 6（GDL 变换栈本就不随 RETURN 复位）
+    expect(r.shapes.map(s => Math.round(s.matrix[13]))).toEqual([2, 4, 6])
+  })
+
+  it('栏杆示例：7 根立柱均匀分布 + 1 根扶手', () => {
+    const src = `len = 3.0
+n = 7
+gap = len / (n - 1)
+FOR i = 1 TO n
+  ADD (i - 1) * gap, 0, 0
+  GOSUB 100
+  DEL 1
+NEXT i
+ADD 0, 0, 1.0
+BLOCK len, 0.06, 0.04
+DEL 1
+END
+100:
+CYLIND 0.95, 0.02
+RETURN`
+    const r = run(src)
+    expect(r.errors).toEqual([])
+    expect(r.shapes).toHaveLength(8)
+    const xs = r.shapes.slice(0, 7).map(s => +s.matrix[12].toFixed(2))
+    expect(xs).toEqual([0, 0.5, 1, 1.5, 2, 2.5, 3])
+  })
+})

@@ -146,24 +146,24 @@ PRISM 3, 1             ! 第 5 行：顶点表不完整 / line 5: incomplete ver
   {
     key: 'stack',
     label: { zh: '🧱 变换堆栈对比', en: '🧱 Stack comparison' },
-    code: `! 左：忘记 DEL —— 坐标系一轮轮累积，越走越远（螺旋）
-FOR i = 1 TO 6
-  ROTZ 30
-  ADD 0.5, 0, 0
-  BLOCK 0.3, 0.12, 0.3
+    code: `! 左：忘记 DEL —— 角度一轮轮往上叠，柱脚全散了
+FOR i = 1 TO 8
+  ROTZ i * 45
+  ADD 1.2, 0, 0
+  BLOCK 0.16, 0.16, 0.5
 NEXT i
 
-! 右：每轮 DEL 2 —— 回到原点重新出发（规整圆环）
-ADD 4.2, 0, 0
-FOR i = 1 TO 6
-  ROTZ i * 60
-  ADD 1.0, 0, 0
-  BLOCK 0.3, 0.12, 0.3
+! 右：每轮 DEL 2 —— 回到起点重新出发（规整一圈）
+DEL TOP
+ADD 3.6, 0, 0
+FOR i = 1 TO 8
+  ROTZ i * 45
+  ADD 1.2, 0, 0
+  BLOCK 0.16, 0.16, 0.5
   DEL 2
 NEXT i
-DEL 1
 
-! 同一个循环体，只差一个 DEL，几何完全不同`
+! 同一个循环体，只差一个 DEL 2，几何完全不同`
   },
   {
     key: 'bookcase',
@@ -229,10 +229,9 @@ len = 3.0
 n = 7
 gap = len / (n - 1)
 
-i = 0
 FOR i = 1 TO n
-  GOSUB 100          ! 画一根立柱
-  ADD gap, 0, 0      ! 挪到下一根
+  ADD (i - 1) * gap, 0, 0   ! 每轮从起点算绝对位置
+  GOSUB 100                 ! 画一根立柱
   DEL 1
 NEXT i
 

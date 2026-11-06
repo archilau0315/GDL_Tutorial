@@ -45,14 +45,18 @@ The second plate sits at **0.8**, not 0.4 — the second `ADD` adds 0.4 on an al
 
 ## Side-by-side: With and Without DEL
 
-Both loops below do the same three things: rotate 30°, step out 0.5 m, draw a block. The only difference is `DEL 2` at the end of the right-hand loop.
+Both loops below are **character-for-character identical**: rotate by `i*45`, step out 0.9 m, draw a block. The only extra line on the right is `DEL 2`.
 
-- **Left**: no `DEL`, so the frame accumulates — rotations compound and distance keeps growing into a scattered spiral
-- **Right**: `DEL 2` returns to the origin each iteration, producing a clean ring
+- **Left**: no `DEL`, so each `ROTZ i*45` piles onto the previous one (45°, 90°, 135°…) and the distance accumulates too — the blocks scatter and overlap
+- **Right**: `DEL 2` returns to the start every iteration, so `i*45` is the angle you actually meant — a clean ring
 
 <GdlPlayground preset="stack" :height="460" />
 
-One `DEL` line is the whole difference, and the geometry is unrecognisable. **Watching the model teaches the stack faster than reading code.**
+One `DEL 2` line is the whole difference, and the geometry is unrecognisable. **Watching the model teaches the stack faster than reading code.**
+
+::: tip Why the left side "rotates away"
+`i*45` in `ROTZ i*45` is an **absolute** angle, but `ROT` **adds to** the current frame: round 1 turns 45°, round 2 turns another 90° on top (135° total), round 3 another 135° (270° total). The angles drift, so the blocks drift. With `DEL 2` every round starts from 0°, and `i*45` finally means what you intended.
+:::
 
 ## Single-axis Shortcuts
 

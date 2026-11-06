@@ -112,7 +112,7 @@ export function buildGroup(shapes: Shape[], isDark = false): BuildResult {
   return { group, bbox }
 }
 
-/** 自动取景：根据包围盒放置相机 */
+/** 自动取景：按包围球半径 + 相机视角/画布宽高比算距离，保证模型不被裁边 */
 export function frameCamera(camera: THREE.PerspectiveCamera, bbox: THREE.Box3): void {
   if (bbox.isEmpty()) {
     camera.position.set(3, 2.5, -3)
@@ -120,11 +120,18 @@ export function frameCamera(camera: THREE.PerspectiveCamera, bbox: THREE.Box3): 
     return
   }
   const center = bbox.getCenter(new THREE.Vector3())
-  const size = bbox.getSize(new THREE.Vector3())
-  const radius = Math.max(size.x, size.y, size.z) * 0.5 || 1
-  const dist = radius * 2.35
-  camera.position.set(center.x + dist * 0.7, center.y + dist * 0.6, center.z - dist * 0.7)
-  camera.near = Math.max(radius / 100, 0.01)
+  const sphere = bbox.getBoundingSphere(new THREE.Sphere())
+  const r = sphere.radius || 1
+
+  // 竖直方向要求 dist ≥ r / tan(vfov/2)；水平方向还受宽高比限制（窄画布要退更远）
+  const vTan = Math.tan((camera.fov * Math.PI) / 360)
+  const hTan = vTan * Math.max(camera.aspect, 0.0001)
+  const dist = Math.max(r / vTan, r / hTan) * 1.12
+
+  // 等轴风格视向：右前上方（抬高一点，环形/阵列在平面上的排布才看得清）
+  const dir = new THREE.Vector3(0.55, 0.78, -0.52).normalize()
+  camera.position.copy(center).addScaledVector(dir, dist)
+  camera.near = Math.max(dist / 1000, 0.01)
   camera.far = dist * 100
   camera.updateProjectionMatrix()
   camera.lookAt(center)
