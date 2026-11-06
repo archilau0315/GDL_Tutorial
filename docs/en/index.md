@@ -10,6 +10,9 @@ hero:
       text: Start Learning
       link: /en/guide/
     - theme: alt
+      text: "🧮 Playground"
+      link: /en/playground/
+    - theme: alt
       text: Command Index
       link: /en/reference/commands/
 
@@ -22,7 +25,7 @@ features:
   - icon: 🧊
     title: 3D Sandbox
     details: "Write GDL directly in the browser and see the generated 3D model in real time"
-    link: /en/guide/part1-basics/01-first-3d-object
+    link: /en/playground/
     linkText: Take a look
   - icon: 📚
     title: Bilingual Reference

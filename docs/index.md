@@ -10,6 +10,9 @@ hero:
       text: 开始学习
       link: /guide/
     - theme: alt
+      text: 🧮 在线沙盒
+      link: /playground/
+    - theme: alt
       text: 查命令速查表
       link: /reference/commands/
 
@@ -22,7 +25,7 @@ features:
   - icon: 🧊
     title: 浏览器 3D 沙盒
     details: 网页内直接编写 GDL，实时看到生成的 3D 模型，改参数立刻见效
-    link: /guide/part1-basics/01-first-3d-object
+    link: /playground/
     linkText: 先睹为快
   - icon: 📚
     title: 双语资料库

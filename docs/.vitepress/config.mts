@@ -5,12 +5,14 @@ import { blueprintLight, blueprintDark } from './shiki-gdl/theme.mts'
 
 const zhNav = [
   { text: '学习路径', link: '/guide/', activeMatch: '/guide/' },
+  { text: '在线沙盒', link: '/playground/', activeMatch: '/playground/' },
   { text: '资料库', link: '/reference/', activeMatch: '/reference/' },
   { text: '命令速查', link: '/reference/commands/', activeMatch: '/reference/commands/' }
 ]
 
 const enNav = [
   { text: 'Learning Path', link: '/en/guide/', activeMatch: '/en/guide/' },
+  { text: 'Playground', link: '/en/playground/', activeMatch: '/en/playground/' },
   { text: 'Reference', link: '/en/reference/', activeMatch: '/en/reference/' },
   { text: 'Command Index', link: '/en/reference/commands/', activeMatch: '/en/reference/commands/' }
 ]
@@ -42,6 +44,13 @@ const zhSidebar = [
       { text: '资料库总览', link: '/reference/' },
       { text: '命令速查表', link: '/reference/commands/' }
     ]
+  },
+  {
+    text: '在线沙盒',
+    collapsed: false,
+    items: [
+      { text: 'GDL 交互沙盒', link: '/playground/' }
+    ]
   }
 ]
 
@@ -71,6 +80,13 @@ const enSidebar = [
     items: [
       { text: 'Reference Overview', link: '/en/reference/' },
       { text: 'Command Index', link: '/en/reference/commands/' }
+    ]
+  },
+  {
+    text: 'Playground',
+    collapsed: false,
+    items: [
+      { text: 'GDL Interactive Playground', link: '/en/playground/' }
     ]
   }
 ]
