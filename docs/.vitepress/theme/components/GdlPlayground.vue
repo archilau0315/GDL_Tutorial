@@ -147,19 +147,19 @@ PRISM 3, 1             ! 第 5 行：顶点表不完整 / line 5: incomplete ver
     key: 'stack',
     label: { zh: '🧱 变换堆栈对比', en: '🧱 Stack comparison' },
     code: `! 左：忘记 DEL —— 角度一轮轮往上叠，柱脚全散了
-FOR i = 1 TO 8
-  ROTZ i * 45
-  ADD 1.2, 0, 0
-  BLOCK 0.16, 0.16, 0.5
+FOR i = 1 TO 6
+  ROTZ i * 60
+  ADD 1.5, 0, 0
+  BLOCK 0.18, 0.18, 0.6
 NEXT i
 
 ! 右：每轮 DEL 2 —— 回到起点重新出发（规整一圈）
 DEL TOP
-ADD 3.6, 0, 0
-FOR i = 1 TO 8
-  ROTZ i * 45
-  ADD 1.2, 0, 0
-  BLOCK 0.16, 0.16, 0.5
+ADD 4.2, 0, 0
+FOR i = 1 TO 6
+  ROTZ i * 60
+  ADD 1.5, 0, 0
+  BLOCK 0.18, 0.18, 0.6
   DEL 2
 NEXT i
 
@@ -316,6 +316,8 @@ function rebuild(shapes: Shape[]): void {
   modelGroup = group
   scene.add(group)
   if (camera) frameCamera(camera, bbox)
+  // OrbitControls 会把相机拽回 target 方向，模型不在原点时必须同步 target
+  if (controls && !bbox.isEmpty()) bbox.getCenter(controls.target)
   controls?.update()
 }
 

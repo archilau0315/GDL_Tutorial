@@ -44,3 +44,5 @@
 | 22:40 | gdl-engine/renderer | frameCamera 改为按包围球半径 + fov + 画布宽高比算距离；视向抬高到 47° | 窄画布下平移分组会被裁边；抬高后平面阵列/圆环更易读 |
 | 22:45 | guide 中英各 2 篇 | 第 2 章对比实验文字改为「角度层层叠加」的真实解释；第 5 章 GOSUB 示例与「忘记 END」的后果描述改为与实测一致（多画一根 + RETURN 报错） | 教学文案必须与引擎实际行为一致 |
 | 22:50 | tests/engine.test.ts | 新增 4 例：FOR 内 GOSUB、WHILE 内 GOSUB、子程序含未配对 FOR 后调用方循环继续、栏杆示例分布 | 单测 33 → 37 全绿 |
+| 23:05 | theme/GdlPlayground | 渲染后把 `bbox` 中心同步给 `OrbitControls.target` | 原先 target 恒为原点，`controls.update()` 会把相机拽回原点方向，模型不在原点时（如栏杆 x=0~3）被推到画面一侧并切边 |
+| 23:05 | theme/GdlPlayground | 对比示例改为 6 根、半径 1.5、柱高 0.6 | 8 根在 350px 窄视口里只有 5px 间距，看不出"一圈"，6 根间距翻倍后形状可辨 |
