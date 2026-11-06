@@ -9,18 +9,22 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
 import * as THREE from 'three'
 import { run as runGdl, generateLibpartXml, getConvertCommand } from '../../gdl-engine/index'
 import { buildGroup, frameCamera } from '../../gdl-engine/renderer'
-import type { GdlError, Shape } from '../../gdl-engine/types'
+import { buildSvg2d } from '../../gdl-engine/renderer-2d'
+import type { GdlError, Shape, Shape2 } from '../../gdl-engine/types'
 import { t, tf, type Locale } from '../i18n'
 
 const props = withDefaults(defineProps<{
   /** 初始代码（默认参数化桌凳） */
   code?: string
+  /** 预设示例 key（章节内嵌用）：stack / array / bookcase / chair2d / railing */
+  preset?: string
   height?: number
 }>(), { height: 420 })
 
 /* ---------- 示例库（GDL 代码两语共用，注释中英对照同行） ---------- */
 const EXAMPLES = [
   {
+    key: 'table',
     label: { zh: '🪑 参数化桌凳', en: '🪑 Table & Stool' },
     code: props.code ?? `! === 参数化桌凳 / Parametric table & stool ===
 ! 桌面尺寸 / table top: width, depth, height
@@ -54,6 +58,7 @@ BLOCK 0.35, 0.35, 0.02
 DEL 2`
   },
   {
+    key: 'prim',
     label: { zh: '🏀 基本体', en: '🏀 Primitives' },
     code: `! 基本体一览 / primitives at a glance
 BLOCK 1, 1, 1
@@ -71,6 +76,7 @@ SPHERE 0.5
 DEL 1`
   },
   {
+    key: 'array',
     label: { zh: '🌀 变换与循环', en: '🌀 Transforms & loops' },
     code: `! 旋转阵列 / radial array of 8 blocks
 FOR i = 1 TO 8
@@ -84,13 +90,162 @@ NEXT i
 CYLIND 0.8, 0.2`
   },
   {
+    key: 'prism',
+    label: { zh: '🔺 PRISM 棱柱', en: '🔺 PRISM extrusion' },
+    code: `! PRISM：底面多边形沿 Z 挤出 / extrude polygon along Z
+! 用 MATERIAL 换材质（沙盒用调色板近似）
+MATERIAL 8
+PRISM 6, 0.9,
+  0,   0,   15,
+  1.0, 0,   15,
+  1.0, 0.6, 15,
+  0.6, 0.6, 15,
+  0.6, 0.25, 15,
+  0,   0.25, -1
+
+! 上方再叠一个圆柱
+MATERIAL 6
+ADD 0.3, 0.4, 0.9
+CYLIND 0.3, 0.15
+DEL 1`
+  },
+  {
+    key: 'plan',
+    label: { zh: '📐 2D 平面符号', en: '📐 2D plan symbol' },
+    code: `! 2D 脚本：画对象的平面符号 / plan symbol
+! 桌面轮廓（对角点定义）
+RECT2 0, 0, 1.2, 0.6
+
+! 四条腿投影为圆
+CIRCLE2 0.05, 0.05, 0.03
+CIRCLE2 1.15, 0.05, 0.03
+CIRCLE2 1.15, 0.55, 0.03
+CIRCLE2 0.05, 0.55, 0.03
+
+! 中心十字线
+LINE2 0.5, 0.3, 0.7, 0.3
+LINE2 0.6, 0.2, 0.6, 0.4
+
+! 标注文本
+TEXT2 0.05, 0.62, "1.2 x 0.6"
+
+! POLY2_：带填充的多边形（1=轮廓 2=填充 4=闭合）
+POLY2_ 4, 7, 0, 0, 1, 1, 0, 1, 1, 1, 1, 0, 1, -1
+
+! 注：沙盒不绘制 PROJECT2 投影，需手绘符号`
+  },
+  {
+    key: 'buggy',
     label: { zh: '❌ 含错误的脚本', en: '❌ Buggy script' },
     code: `! 故意写错，试试报错效果 / on purpose: watch the errors
 w = 1.0
 BLOCK w, d, 0.5        ! 第 3 行：d 未定义 / line 3: d undefined
 CYLIND 1.2             ! 第 4 行：CYLIND 需要 2 个参数 / line 4: 2 args required
-PRISM 3, 1             ! 第 5 行：PRISM 暂未支持 / line 5: PRISM not supported yet`
-  }
+PRISM 3, 1             ! 第 5 行：顶点表不完整 / line 5: incomplete vertex list`
+  },
+  {
+    key: 'stack',
+    label: { zh: '🧱 变换堆栈对比', en: '🧱 Stack comparison' },
+    code: `! 左：忘记 DEL —— 坐标系一轮轮累积，越走越远（螺旋）
+FOR i = 1 TO 6
+  ROTZ 30
+  ADD 0.5, 0, 0
+  BLOCK 0.3, 0.12, 0.3
+NEXT i
+
+! 右：每轮 DEL 2 —— 回到原点重新出发（规整圆环）
+ADD 4.2, 0, 0
+FOR i = 1 TO 6
+  ROTZ i * 60
+  ADD 1.0, 0, 0
+  BLOCK 0.3, 0.12, 0.3
+  DEL 2
+NEXT i
+DEL 1
+
+! 同一个循环体，只差一个 DEL，几何完全不同`
+  },
+  {
+    key: 'bookcase',
+    label: { zh: '📚 参数化书架', en: '📚 Parametric bookcase' },
+    code: `! 参数化书架：层数随高度变化
+w = 0.9
+d = 0.3
+h = 1.8
+th = 0.02
+
+! 两侧立板
+BLOCK th, d, h
+ADD w - th, 0, 0
+BLOCK th, d, h
+DEL 1
+
+! 层板：每 0.4m 一层（用 WHILE 判断）
+z = 0
+WHILE z <= h - th
+  ADD 0, 0, z
+  BLOCK w, d, th
+  DEL 1
+  z = z + 0.4
+ENDWHILE
+
+! 顶板
+ADD 0, 0, h - th
+BLOCK w, d, th
+DEL 1`
+  },
+  {
+    key: 'chair2d',
+    label: { zh: '🪑 椅子平面符号', en: '🪑 Chair plan symbol' },
+    code: `! 椅子平面符号（2D 脚本）
+! 座面轮廓
+RECT2 0, 0, 0.45, 0.45
+
+! 靠背（矩形 + 斜线示意）
+RECT2 0, 0.42, 0.45, 0.5
+LINE2 0.05, 0.42, 0.05, 0.5
+LINE2 0.40, 0.42, 0.40, 0.5
+
+! 四条腿
+CIRCLE2 0.04, 0.04, 0.02
+CIRCLE2 0.41, 0.04, 0.02
+CIRCLE2 0.41, 0.41, 0.02
+CIRCLE2 0.04, 0.41, 0.02
+
+! 扶手弧线
+ARC2 0.225, 0.05, 0.18, 200, 340
+
+! 填充示意（1+2+4 = 轮廓+填充+闭合）
+POLY2_ 4, 7, 0.02, 0.02, 1, 0.43, 0.02, 1, 0.43, 0.43, 1, 0.02, 0.43, -1
+
+! 标注
+TEXT2 0.02, 0.55, "chair 450x450"`
+  },
+  {
+    key: 'railing',
+    label: { zh: '🪜 栏杆阵列（GOSUB）', en: '🪜 Railing array (GOSUB)' },
+    code: `! 栏杆：等距立柱 + 扶手，用 GOSUB 复用
+len = 3.0
+n = 7
+gap = len / (n - 1)
+
+i = 0
+FOR i = 1 TO n
+  GOSUB 100          ! 画一根立柱
+  ADD gap, 0, 0      ! 挪到下一根
+  DEL 1
+NEXT i
+
+! 扶手
+ADD 0, 0, 1.0
+BLOCK len, 0.06, 0.04
+DEL 1
+END
+
+100:
+CYLIND 0.95, 0.02
+RETURN`
+  },
 ]
 
 const exLabel = (i: number): string => EXAMPLES[i].label[loc.value]
@@ -99,9 +254,12 @@ const exLabel = (i: number): string => EXAMPLES[i].label[loc.value]
 const { lang } = useData()
 const loc = computed<Locale>(() => (lang.value?.startsWith('zh') ? 'zh' : 'en'))
 
-const src = ref(props.code ?? EXAMPLES[0].code)
+const presetIdx = props.preset ? EXAMPLES.findIndex(e => e.key === props.preset) : -1
+const selIdx = ref(presetIdx >= 0 ? presetIdx : 0)
+const src = ref(props.code ?? EXAMPLES[selIdx.value].code)
 const errors = ref<GdlError[]>([])
 const shapeCount = ref(0)
+const has2d = ref(false)
 const copied = ref(false)
 let runTimer: ReturnType<typeof setTimeout> | undefined
 
@@ -117,7 +275,9 @@ function execute(): void {
   const r = runGdl(src.value)
   errors.value = r.errors
   shapeCount.value = r.shapes.length
+  has2d.value = r.shapes2.length > 0
   rebuild(r.shapes)
+  render2d(r.shapes2)
   emit('errors', r.errors.length)
 }
 
@@ -135,6 +295,13 @@ let camera: THREE.PerspectiveCamera | null = null
 let controls: OrbitControls | null = null
 let modelGroup: THREE.Group | null = null
 let ro: ResizeObserver | undefined
+const view2d = ref<HTMLElement>()
+
+function render2d(shapes2: Shape2[]): void {
+  if (!view2d.value) return
+  const isDark = document.documentElement.classList.contains('dark')
+  view2d.value.innerHTML = buildSvg2d(shapes2, { isDark })
+}
 
 function rebuild(shapes: Shape[]): void {
   if (!scene) return
@@ -145,7 +312,8 @@ function rebuild(shapes: Shape[]): void {
       m.geometry?.dispose?.()
     })
   }
-  const { group, bbox } = buildGroup(shapes)
+  const isDark = document.documentElement.classList.contains('dark')
+  const { group, bbox } = buildGroup(shapes, isDark)
   modelGroup = group
   scene.add(group)
   if (camera) frameCamera(camera, bbox)
@@ -232,6 +400,7 @@ function syncScroll(): void {
 }
 function pickExample(ev: Event): void {
   const idx = Number((ev.target as HTMLSelectElement).value)
+  selIdx.value = idx
   src.value = EXAMPLES[idx].code
 }
 function resetCode(): void {
@@ -280,7 +449,7 @@ const errLine = (i: number): boolean => errorLines.value.has(i)
   <div class="gdl-pg" :style="{ '--pg-h': height + 'px' }">
     <!-- 工具栏 -->
     <div class="pg-bar">
-      <select class="pg-select" @change="pickExample" :aria-label="t(loc, 'example')">
+      <select class="pg-select" :value="selIdx" @change="pickExample" :aria-label="t(loc, 'example')">
         <option v-for="(ex, i) in EXAMPLES" :key="i" :value="i">{{ ex.label[loc] }}</option>
       </select>
       <button class="pg-btn" @click="execute">{{ t(loc, 'run') }}</button>
@@ -311,9 +480,15 @@ const errLine = (i: number): boolean => errorLines.value.has(i)
           />
         </div>
       </div>
-      <div class="pg-view">
-        <div class="pg-pane-label">{{ t(loc, 'viewport') }}</div>
-        <div ref="viewport" class="pg-canvas" />
+      <div class="pg-view" :class="{ dual: has2d }">
+        <div class="pg-pane">
+          <div class="pg-pane-label">{{ t(loc, 'viewport') }}</div>
+          <div ref="viewport" class="pg-canvas" />
+        </div>
+        <div v-show="has2d" class="pg-pane">
+          <div class="pg-pane-label">{{ t(loc, 'view2d') }}</div>
+          <div ref="view2d" class="pg-svg" />
+        </div>
       </div>
     </div>
 
@@ -442,7 +617,19 @@ const errLine = (i: number): boolean => errorLines.value.has(i)
   min-height: 240px;
   position: relative;
 }
-.pg-canvas :deep(canvas) { display: block }
+.pg-view.dual { display: grid; grid-template-columns: 1fr 1fr; gap: 0 8px }
+.pg-view.dual .pg-pane { min-width: 0; overflow: hidden }
+.pg-view.dual .pg-canvas { border-right: 1px solid var(--vp-c-border) }
+@media (max-width: 720px) { .pg-view.dual { grid-template-columns: 1fr } }
+.pg-canvas { min-width: 0 }
+.pg-canvas :deep(canvas) { display: block; max-width: 100% }
+.pg-svg {
+  height: calc(var(--pg-h) - 24px);
+  min-height: 240px;
+  padding: 6px;
+  box-sizing: border-box;
+}
+.pg-svg :deep(svg) { width: 100%; height: 100%; display: block }
 .pg-errors {
   border-top: 1px solid var(--vp-c-border);
   padding: 8px 12px;

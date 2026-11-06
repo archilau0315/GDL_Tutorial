@@ -17,37 +17,58 @@ const COORD_C = new THREE.Matrix4().set(
 const gdlToThree = (m: number[]): THREE.Matrix4 =>
   new THREE.Matrix4().multiplyMatrices(COORD_C, new THREE.Matrix4().fromArray(m))
 
+/** 材质调色板：MATERIAL 索引 → 蓝图系颜色（未设置用默认蓝） */
+const PALETTE = [
+  0x5b93cf, // 默认
+  0xb0bec5, 0x78909c, 0x8d6e63, 0xa1887f,
+  0x90a4ae, 0x64b5f6, 0x4db6ac, 0xffb74d,
+  0x81c784, 0xf06292, 0x9575cd, 0x4d6faf
+]
+const matColor = (idx?: number): number =>
+  idx === undefined || idx < 0 ? PALETTE[0] : PALETTE[idx % PALETTE.length]
+
 /**
  * 几何体一律先按 **GDL 本地坐标**（x/y 水平、z 向上）构造，
  * 再统一乘以 COORD_C × M_gdl 映射到 three 视图坐标。
- * 切勿在构造时预先交换轴，否则会被映射两次导致姿态错乱。
  */
 function geometryFor(s: Shape): THREE.BufferGeometry {
   switch (s.type) {
     case 'block': {
-      // GDL 局部：x∈[0,a], y∈[0,b], z∈[0,c]
       const g = new THREE.BoxGeometry(s.a, s.b, s.c)
       g.translate(s.a / 2, s.b / 2, s.c / 2)
       return g
     }
     case 'cylind': {
-      // three 圆柱轴向为 +y，绕 X 转 90° 对齐 GDL 的 +z
       const g = new THREE.CylinderGeometry(s.r, s.r, s.h, 32, 1, false)
       g.rotateX(Math.PI / 2)
       g.translate(0, 0, s.h / 2)
       return g
     }
     case 'sphere': {
-      // 球心在 GDL 原点
       return new THREE.SphereGeometry(s.r, 32, 24)
     }
     case 'cone': {
-      // GDL CONE h, r1(底 z=0), r2(顶 z=h)
-      // 旋转后：原 +y(radiusTop) → +z，故 radiusTop = r2
       const g = new THREE.CylinderGeometry(s.r2, s.r1, s.h, 32, 1, false)
       g.rotateX(Math.PI / 2)
       g.translate(0, 0, s.h / 2)
       return g
+    }
+    case 'ellips': {
+      // GDL ELLIPS h, r：z 向全高 h、水平半径 r，中心在原点
+      const g = new THREE.SphereGeometry(1, 32, 24)
+      g.scale(s.r, s.r, s.h / 2)
+      return g
+    }
+    case 'prism': {
+      // GDL PRISM：底面多边形沿 +z 挤出 h；shape 在 x/y 平面，挤出沿 +z
+      const shape = new THREE.Shape()
+      let first = true
+      for (const p of s.pts) {
+        if (first) { shape.moveTo(p.x, p.y); first = false }
+        else shape.lineTo(p.x, p.y)
+      }
+      shape.closePath()
+      return new THREE.ExtrudeGeometry(shape, { depth: s.h, bevelEnabled: false, curveSegments: 4 })
     }
   }
 }
@@ -59,36 +80,34 @@ export interface BuildResult {
 }
 
 /** 形状列表 → 场景组（每形状一网格 + 边线） */
-export function buildGroup(shapes: Shape[]): BuildResult {
+export function buildGroup(shapes: Shape[], isDark = false): BuildResult {
   const group = new THREE.Group()
   const bbox = new THREE.Box3()
-
-  const isDark = document.documentElement.classList.contains('dark')
-  const mat = new THREE.MeshStandardMaterial({
-    color: isDark ? 0x2e6da8 : 0x5b93cf,
-    roughness: 0.55,
-    metalness: 0.1,
-    transparent: true,
-    opacity: 0.92
-  })
-  const edgeMat = new THREE.LineBasicMaterial({
-    color: isDark ? 0x9fd0f0 : 0x042c53
-  })
 
   for (const s of shapes) {
     const geo = geometryFor(s)
     if (!geo) continue
+    const mat = new THREE.MeshStandardMaterial({
+      color: matColor((s as any).matIdx),
+      roughness: 0.55,
+      metalness: 0.1,
+      transparent: true,
+      opacity: 0.92
+    })
+    const edgeMat = new THREE.LineBasicMaterial({
+      color: isDark ? 0x9fd0f0 : 0x042c53
+    })
     const mesh = new THREE.Mesh(geo, mat)
-    mesh.applyMatrix4(gdlToThree(s.matrix))
+    const m = gdlToThree(s.matrix)
+    mesh.applyMatrix4(m)
 
     // 边线（CAD 描边感）
     const edges = new THREE.LineSegments(new THREE.EdgesGeometry(geo, 25), edgeMat)
-    edges.applyMatrix4(gdlToThree(s.matrix))
+    edges.applyMatrix4(m)
 
-    group.add(mesh)
-    group.add(edges)
+    group.add(mesh, edges)
     geo.computeBoundingBox()
-    if (geo.boundingBox) bbox.union(geo.boundingBox.clone().applyMatrix4(gdlToThree(s.matrix)))
+    if (geo.boundingBox) bbox.union(geo.boundingBox.clone().applyMatrix4(m))
   }
   return { group, bbox }
 }
@@ -103,7 +122,7 @@ export function frameCamera(camera: THREE.PerspectiveCamera, bbox: THREE.Box3): 
   const center = bbox.getCenter(new THREE.Vector3())
   const size = bbox.getSize(new THREE.Vector3())
   const radius = Math.max(size.x, size.y, size.z) * 0.5 || 1
-  const dist = radius * 2.9
+  const dist = radius * 2.35
   camera.position.set(center.x + dist * 0.7, center.y + dist * 0.6, center.z - dist * 0.7)
   camera.near = Math.max(radius / 100, 0.01)
   camera.far = dist * 100

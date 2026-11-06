@@ -10,7 +10,7 @@
 import type { GdlError, Token } from './types'
 import { makeError } from './errors'
 
-const OPS = ['<>', '<=', '>=', '+', '-', '*', '/', '^', '(', ')', ',', '=', '<', '>']
+const OPS = ['<>', '<=', '>=', '+', '-', '*', '/', '^', '(', ')', ',', '=', '<', '>', ':']
 
 export function tokenize(src: string): { tokens: Token[]; errors: GdlError[] } {
   const tokens: Token[] = []

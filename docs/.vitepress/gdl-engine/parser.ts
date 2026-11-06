@@ -9,7 +9,9 @@
 import type { Expr, GdlError, Pos, Stmt, Token } from './types'
 import { makeError } from './errors'
 
-const BLOCK_ENDERS = new Set(['ENDIF', 'ELSE', 'NEXT'])
+const BLOCK_ENDERS = new Set(['ENDIF', 'ELSE', 'NEXT', 'ENDWHILE'])
+
+/** 标签形式：数字或字符串后跟冒号（如 `100:`） */
 
 export function parse(tokens: Token[]): { ast: Stmt[]; errors: GdlError[] } {
   const p = new Parser(tokens)
@@ -60,6 +62,11 @@ class Parser {
   /* ---------- 语句 ---------- */
   private parseStatement(): Stmt | null {
     const t = this.peek()
+    // 标签：数字或字符串字面量后跟冒号（GOSUB 跳转目标）
+    if ((t.type === 'number' || t.type === 'string') && this.peek(1).type === 'op' && this.peek(1).value === ':') {
+      this.i += 2
+      return { kind: 'label', value: String(t.type === 'number' ? t.num! : t.value), pos: t }
+    }
     if (t.type !== 'ident') {
       // 跳到行尾
       while (!this.at('newline') && !this.at('eof')) this.i++
@@ -69,8 +76,16 @@ class Parser {
     const name = t.value
     if (name === 'IF') return this.parseIf()
     if (name === 'FOR') return this.parseFor()
-    if (name === 'ENDIF' || name === 'ELSE' || name === 'NEXT') {
-      this.err('syntax', name === 'ENDIF' ? 'dupEndif' : name === 'ELSE' ? 'elseWithoutIf' : 'nextWithoutFor', t)
+    if (name === 'WHILE') return this.parseWhile()
+    if (name === 'GOSUB') {
+      this.i++
+      const target = this.parseExpr()
+      return { kind: 'gosub', target, pos: t }
+    }
+    if (name === 'RETURN') { this.i++; return { kind: 'return', pos: t } }
+    if (name === 'END') { this.i++; return { kind: 'end', pos: t } }
+    if (name === 'ENDIF' || name === 'ELSE' || name === 'NEXT' || name === 'ENDWHILE') {
+      this.err('syntax', name === 'ENDIF' ? 'dupEndif' : name === 'ELSE' ? 'elseWithoutIf' : name === 'NEXT' ? 'nextWithoutFor' : 'dupEndwhile', t)
       this.i++
       return null
     }
@@ -106,8 +121,11 @@ class Parser {
     const args: Expr[] = []
     if (!this.at('newline') && !this.at('eof') && !this.at('op', ',')) {
       args.push(this.parseExpr())
+      // 逗号后可跨行：PRISM 顶点表、POLY2_ 状态位序列的标准写法
       while (this.at('op', ',')) {
         this.i++
+        this.skipNewlines()
+        if (this.at('eof')) break
         args.push(this.parseExpr())
       }
     }
@@ -154,6 +172,25 @@ class Parser {
     return { kind: 'if', cond, then, else: elseB, pos: start }
   }
 
+  private parseWhile(): Stmt {
+    const start = this.next() // WHILE
+    const cond = this.parseExpr()
+    if (this.at('ident', 'DO')) this.i++
+    const body: Stmt[] = []
+    let closed = false
+    this.eatNewlines()
+    while (!this.at('eof')) {
+      if (this.at('ident', 'ENDWHILE')) { this.i++; closed = true; break }
+      const before = this.i
+      const s = this.parseStatement()
+      if (s) body.push(s)
+      if (this.i === before) this.i++
+      this.eatNewlines()
+    }
+    if (!closed) this.err('syntax', 'expectedEndwhile', start)
+    return { kind: 'while', cond, body, pos: start }
+  }
+
   private parseFor(): Stmt {
     const start = this.next() // FOR
     const nameTok = this.next()
@@ -190,7 +227,7 @@ class Parser {
   }
 
   /* ---------- 表达式（优先级爬升） ----------
-   * GDL 优先级（低到高）：OR、AND、比较、加减、乘除、一元负号、幂、原子
+   * GDL 优先级（低到高）：OR、AND、比较、加减、乘除与 MOD、一元负号、幂、原子
    */
   private parseExpr(): Expr { return this.parseOr() }
 
@@ -224,10 +261,10 @@ class Parser {
   }
   private parseMul(): Expr {
     let left = this.parseUnary()
-    while (this.at('op', '*') || this.at('op', '/')) {
+    while (this.at('op', '*') || this.at('op', '/') || this.at('ident', 'MOD')) {
       const op = this.next()
       const right = this.parseUnary()
-      left = { kind: 'binary', op: op.value, left, right, pos: op }
+      left = { kind: 'binary', op: op.type === 'ident' ? 'MOD' : op.value, left, right, pos: op }
     }
     return left
   }

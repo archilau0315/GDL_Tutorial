@@ -29,18 +29,36 @@ export type Stmt =
   | { kind: 'assign'; name: string; value: Expr; pos: Pos }
   | { kind: 'cmd'; name: string; args: Expr[]; pos: Pos }
   | { kind: 'if'; cond: Expr; then: Stmt[]; else: Stmt[]; pos: Pos }
+  | { kind: 'while'; cond: Expr; body: Stmt[]; pos: Pos }
   | { kind: 'for'; varName: string; from: Expr; to: Expr; step?: Expr; body: Stmt[]; pos: Pos }
+  | { kind: 'label'; value: string; pos: Pos }
+  | { kind: 'gosub'; target: Expr; pos: Pos }
+  | { kind: 'return'; pos: Pos }
+  | { kind: 'end'; pos: Pos }
 
 export interface Pos { line: number; col: number }
 
-/* ---------- 几何 ---------- */
-export type Shape =
-  | { type: 'block'; a: number; b: number; c: number; matrix: number[] }
-  | { type: 'cylind'; h: number; r: number; matrix: number[] }
-  | { type: 'sphere'; r: number; matrix: number[] }
-  | { type: 'cone'; h: number; r1: number; r2: number; matrix: number[] }
+/* ---------- 几何（3D） ---------- */
+export interface ShapeBase { matrix: number[]; matIdx?: number; penIdx?: number }
 
-/** 4x4 列主序矩阵（与 WebGL/three 约定一致） */
+export type Shape =
+  | { type: 'block'; a: number; b: number; c: number } & ShapeBase
+  | { type: 'cylind'; h: number; r: number } & ShapeBase
+  | { type: 'sphere'; r: number } & ShapeBase
+  | { type: 'cone'; h: number; r1: number; r2: number } & ShapeBase
+  | { type: 'ellips'; h: number; r: number } & ShapeBase
+  | { type: 'prism'; n: number; h: number; pts: { x: number; y: number; s: number }[] } & ShapeBase
+
+/** 2D 形状（平面图形，y 向上） */
+export type Shape2 =
+  | { type: 'line2'; x1: number; y1: number; x2: number; y2: number } & ShapeBase
+  | { type: 'rect2'; x1: number; y1: number; x2: number; y2: number } & ShapeBase
+  | { type: 'circle2'; x: number; y: number; r: number } & ShapeBase
+  | { type: 'arc2'; x: number; y: number; r: number; a1: number; a2: number } & ShapeBase
+  | { type: 'poly2'; pts: { x: number; y: number; s: number }[]; fill: number } & ShapeBase
+  | { type: 'text2'; x: number; y: number; text: string } & ShapeBase
+
+/** 4x4 列主序矩阵（与 WebGL/three 约定一致；2D 用 z=0 的平面矩阵） */
 export type Mat4 = number[]
 
 /* ---------- 错误 ---------- */
