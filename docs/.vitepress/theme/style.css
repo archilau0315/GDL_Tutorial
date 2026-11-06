@@ -1,0 +1,113 @@
+/* ============================================================
+   GDL_Tutorial · 数字蓝图 Digital Blueprint 视觉规范
+   蓝图蓝七级色阶 + 制图橙强调；扁平、无渐变、无炫光动效
+   ============================================================ */
+
+/* ---- 色彩令牌（蓝图蓝七级） ---- */
+:root {
+  --bp-900: #042c53;
+  --bp-800: #0c447c;
+  --bp-600: #185fa5;
+  --bp-400: #378add;
+  --bp-200: #85b7eb;
+  --bp-100: #b5d4f4;
+  --bp-50:  #e6f1fb;
+  --bp-grid: rgba(133, 183, 235, 0.35);
+  --ink: #2c2c2a;          /* 暖灰正文 */
+  --ink-2: #5f5e5a;
+  --paper: #ffffff;
+  --amber: #ef9f27;         /* 制图橙：CTA / 进度 / 选中 */
+  --amber-deep: #854f0b;
+
+  /* 映射到 VitePress 品牌变量 */
+  --vp-c-brand-1: var(--bp-600);
+  --vp-c-brand-2: var(--bp-800);
+  --vp-c-brand-3: var(--bp-900);
+  --vp-c-brand-soft: var(--bp-50);
+  --vp-button-brand-bg: var(--bp-600);
+  --vp-button-brand-hover-bg: var(--bp-800);
+  --vp-code-color: var(--bp-800);
+}
+
+/* ---- 暗色模式：深夜蓝图底 + 亮青线条 ---- */
+.dark {
+  --vp-c-bg: #061a30;
+  --vp-c-bg-alt: #0a2340;
+  --vp-c-bg-soft: #0d2a4a;
+  --vp-c-border: rgba(133, 183, 235, 0.25);
+  --vp-c-divider: rgba(133, 183, 235, 0.2);
+  --vp-c-text-1: #e6f1fb;
+  --vp-c-text-2: #b5d4f4;
+  --vp-c-text-3: #85b7eb;
+  --vp-c-brand-1: var(--bp-200);
+  --vp-c-brand-2: var(--bp-100);
+  --vp-c-brand-3: var(--bp-200);
+  --vp-c-brand-soft: rgba(55, 138, 221, 0.16);
+  --bp-grid: rgba(55, 138, 221, 0.2);
+}
+
+/* ---- 首页 hero：坐标纸网格底纹 + 图框卡片 ---- */
+.VPHero {
+  background-image:
+    linear-gradient(var(--bp-grid) 0.5px, transparent 0.5px),
+    linear-gradient(90deg, var(--bp-grid) 0.5px, transparent 0.5px);
+  background-size: 24px 24px;
+}
+
+.VPHero .name,
+.VPHero .text {
+  color: var(--bp-900);
+}
+
+.dark .VPHero .name,
+.dark .VPHero .text {
+  color: var(--bp-100);
+}
+
+/* ---- CTA 按钮用制图橙 ---- */
+.VPButton.brand {
+  background-color: var(--amber) !important;
+  color: #ffffff !important;
+  border-color: var(--amber) !important;
+}
+.VPButton.brand:hover {
+  background-color: #ba7517 !important;
+}
+
+/* ---- 图纸编号风格的小节卡片 ---- */
+.gdl-sheet-card {
+  background: var(--vp-c-bg);
+  border: 0.5px solid var(--bp-200);
+  border-left: 3px solid var(--bp-400);
+  border-radius: 8px;
+  padding: 14px 16px;
+  font-family: var(--vp-font-family-base);
+}
+.gdl-sheet-card .sheet-no {
+  font-family: var(--vp-font-family-mono);
+  font-size: 11px;
+  color: var(--bp-600);
+  letter-spacing: 0.04em;
+}
+.dark .gdl-sheet-card .sheet-no { color: var(--bp-200); }
+
+/* ---- GDL 代码块：等宽 + 蓝图边框 ---- */
+.vp-code span.line { font-family: var(--vp-font-family-mono); }
+div[class*='language-gdl'] {
+  border: 0.5px solid var(--bp-200);
+}
+
+/* ---- 正文命令字（等宽强调） ---- */
+.vp-doc code {
+  font-family: var(--vp-font-family-mono);
+  color: var(--bp-800);
+  background: var(--bp-50);
+  border-radius: 4px;
+  padding: 1px 5px;
+  font-size: 0.9em;
+}
+.dark .vp-doc code { color: var(--bp-100); background: rgba(55, 138, 221, 0.16); }
+
+/* ---- 导航当前项：蓝图蓝底线 + 制图橙高亮 ---- */
+.VPNavBarMenuLink.active { color: var(--bp-600); }
+.dark .VPNavBarMenuLink.active { color: var(--bp-200); }

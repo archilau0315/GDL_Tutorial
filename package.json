@@ -1,0 +1,17 @@
+{
+  "name": "gdl-tutorial",
+  "version": "0.1.0",
+  "description": "Archicad GDL bilingual interactive tutorial site - Archicad GDL 中英双语交互教程网站",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vitepress dev docs",
+    "build": "vitepress build docs",
+    "preview": "vitepress preview docs",
+    "check:i18n": "node scripts/check-i18n.mjs"
+  },
+  "devDependencies": {
+    "vitepress": "^1.6.3",
+    "vue": "^3.5.13"
+  }
+}
