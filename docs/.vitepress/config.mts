@@ -113,7 +113,7 @@ export default defineConfig({
   },
   themeConfig: {
     logo: '/favicon.svg',
-    socialLinks: [{ icon: 'github', link: 'https://github.com/kbitai/GDL_Tutorial' }],
+    socialLinks: [{ icon: 'github', link: 'https://github.com/archilau0315/GDL_Tutorial' }],
     footer: {
       message: '内容原创 · 示例自写 · 命令数据整理自 Graphisoft 官方手册并注明出处'
     }
