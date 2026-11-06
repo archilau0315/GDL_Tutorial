@@ -24,9 +24,10 @@ const GDL_FUNCS = ['SQR', 'ABS', 'INT', 'FRA', 'CEIL', 'ROUND_INT', 'MIN', 'MAX'
 const esc = (w: string) => w.replace('_', '_?')
 
 export const gdlGrammar = {
-  name: 'GDL',
+  // Shiki 用 name 作为语言 id，须与代码块标记 ```gdl 完全一致（小写）
+  name: 'gdl',
   scopeName: 'source.gdl',
-  aliases: ['gdl'],
+  aliases: ['GDL'],
   patterns: [
     { match: `!.*$`, name: 'comment.line.gdl' },
     { match: `"[^"]*"`, name: 'string.quoted.double.gdl' },

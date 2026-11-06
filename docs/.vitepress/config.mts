@@ -74,13 +74,15 @@ const enSidebar = [
   }
 ]
 
+// 部署 base 路径抽为环境变量，改路径不改代码（上线公司资源目录时配置）
+const BASE = (process.env.GDL_BASE || '/').replace(/\/?$/, '/')
+
 export default defineConfig({
-  // 部署 base 路径抽为环境变量，改路径不改代码（上线公司资源目录时配置）
-  base: process.env.GDL_BASE || '/',
+  base: BASE,
   lang: 'zh-CN',
   title: 'GDL_Tutorial',
   description: 'Archicad GDL 从入门到精通 · 交互式双语教程与速查资料库',
-  head: [['link', { rel: 'icon', href: '/favicon.svg' }]],
+  head: [['link', { rel: 'icon', href: `${BASE}favicon.svg` }]],
   markdown: {
     // 自定义 GDL 语法（Shiki TextMate grammar）
     languages: [gdlGrammar]
