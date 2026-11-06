@@ -17,6 +17,8 @@
 - 2026-11-06 20:30 | gdl-engine | P1 沙盒引擎 MVP 完成：tokenizer/parser/interpreter/matrix/errors 五模块（单文件≤500行），支持基本体+变换+变量+IF/FOR；Three.js 渲染（z-up→y-up 映射）；LP XML 导出+转换命令 | 19 个单测全绿；GdlPlayground 组件、在线沙盒页、第1章嵌入完成；备注：three.js 打包>500kB，后续可懒加载优化；CONE 签名为 h,r1,r2
 - 2026-11-06 20:52 | theme/GdlPlayground | 沙盒交互细节：错误行行号标记、宽版布局（playground 页 pageClass=wide-playground）、示例标签与代码注释改中英对照、暗色标签对比度修正 | 本地 preview 实测四状态（中/英/暗/报错）
 - 2026-11-06 20:45 | gdl-engine/renderer | 修复几何体姿态错乱：几何改为先按 GDL 本地坐标构造再统一乘 COORD_C×M 映射（原实现预交换轴导致二次旋转）；相机取景距离 3.2→2.9 倍 | 桌面恢复水平、圆柱腿恢复竖直
+- 2026-11-06 22:15 | gdl-engine + theme + guide | P2 完成：引擎补 PRISM 族/WHILE/GOSUB/2D 命令全集/变换简写，新增 renderer-2d.ts（2D→SVG），沙盒 3D/2D 双视口 + 章节 preset；入门篇第 0-5 章中英双语全文（11 对页面） | 单测 33 例全绿；坑：① 命令名后 skipNewlines 会吞掉语句边界，导致 `DEL` 吃掉下一行 ② ':' 未进运算符表，数值标签 `100:` 词法报错 ③ TEXT2 字符串参数被 args.map(num) 数值化 ④ 2D 面板用 v-if 首帧未挂载导致 SVG 空白，改 v-show ⑤ canvas 固有宽度把 2D 面板挤成一条缝，需 min-width:0
+- 备注：堆栈对比示例初版教学错误（等量 ADD 加不加 DEL 结果相同），已改为「ROT+ADD 不做 DEL → 螺旋漂移 vs 规整圆环」，章节文字同步；取景距离 2.9→2.35
 - 计划文档：`开发计划.md` v1.5（沙盒逼真报错 + .gsm 导出三级路线）
 - 下一步：P2 引擎扩展（PRISM 族/材质/参数面板）+ 入门篇第 0-5 章全文
 
