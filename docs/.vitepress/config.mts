@@ -1,6 +1,7 @@
 // GDL_Tutorial 站点配置：双语 locale + 数字蓝图主题配置
 import { defineConfig } from 'vitepress'
 import { gdlGrammar } from './shiki-gdl/gdl.mts'
+import { blueprintLight, blueprintDark } from './shiki-gdl/theme.mts'
 
 const zhNav = [
   { text: '学习路径', link: '/guide/', activeMatch: '/guide/' },
@@ -84,8 +85,9 @@ export default defineConfig({
   description: 'Archicad GDL 从入门到精通 · 交互式双语教程与速查资料库',
   head: [['link', { rel: 'icon', href: `${BASE}favicon.svg` }]],
   markdown: {
-    // 自定义 GDL 语法（Shiki TextMate grammar）
-    languages: [gdlGrammar]
+    // 自定义 GDL 语法（Shiki TextMate grammar）+ 数字蓝图专用高亮主题
+    languages: [gdlGrammar],
+    theme: { light: blueprintLight, dark: blueprintDark }
   },
   locales: {
     root: {
