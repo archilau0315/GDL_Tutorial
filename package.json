@@ -8,7 +8,7 @@
     "dev": "vitepress dev docs",
     "predev": "node scripts/gen-command-pages.mjs",
     "build": "vitepress build docs",
-    "prebuild": "node scripts/gen-command-pages.mjs",
+    "prebuild": "node scripts/clean-dist.mjs && node scripts/gen-command-pages.mjs",
     "preview": "vitepress preview docs",
     "check:i18n": "node scripts/check-i18n.mjs",
     "check:data": "node scripts/check-data.mjs",

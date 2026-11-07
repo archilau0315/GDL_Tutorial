@@ -5,10 +5,9 @@
  */
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useData } from 'vitepress'
-import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
-import * as THREE from 'three'
+import type { OrbitControls } from 'three/addons/controls/OrbitControls.js'
+import type * as THREE from 'three'
 import { run as runGdl, generateLibpartXml, getConvertCommand } from '../../gdl-engine/index'
-import { buildGroup, frameCamera } from '../../gdl-engine/renderer'
 import { buildSvg2d } from '../../gdl-engine/renderer-2d'
 import type { GdlError, Shape, Shape2 } from '../../gdl-engine/types'
 import { t, tf, type Locale } from '../i18n'
@@ -403,12 +402,14 @@ function schedule(): void {
 
 watch(src, schedule)
 
-/* ---------- three.js ---------- */
+/* ---------- three.js（按需加载：不进首屏主包） ---------- */
+type GfxModule = typeof import('../../gdl-engine/renderer')
 let renderer: THREE.WebGLRenderer | null = null
 let scene: THREE.Scene | null = null
 let camera: THREE.PerspectiveCamera | null = null
 let controls: OrbitControls | null = null
 let modelGroup: THREE.Group | null = null
+let gfx: GfxModule | null = null
 let ro: ResizeObserver | undefined
 const view2d = ref<HTMLElement>()
 
@@ -419,7 +420,7 @@ function render2d(shapes2: Shape2[]): void {
 }
 
 function rebuild(shapes: Shape[]): void {
-  if (!scene) return
+  if (!scene || !gfx) return
   if (modelGroup) {
     scene.remove(modelGroup)
     modelGroup.traverse(o => {
@@ -428,40 +429,49 @@ function rebuild(shapes: Shape[]): void {
     })
   }
   const isDark = document.documentElement.classList.contains('dark')
-  const { group, bbox } = buildGroup(shapes, isDark)
+  const { group, bbox } = gfx.buildGroup(shapes, isDark)
   modelGroup = group
   scene.add(group)
-  if (camera) frameCamera(camera, bbox)
+  if (camera) gfx.frameCamera(camera, bbox)
   // OrbitControls 会把相机拽回 target 方向，模型不在原点时必须同步 target
   if (controls && !bbox.isEmpty()) bbox.getCenter(controls.target)
   controls?.update()
 }
 
-function initThree(): void {
+async function initThree(): Promise<void> {
   if (!viewport.value) return
-  renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true })
+  // three.js 与渲染器按需加载：没打开沙盒的页面不下载这 500KB
+  const [three, controlsMod, gfxMod] = await Promise.all([
+    import('three'),
+    import('three/addons/controls/OrbitControls.js'),
+    import('../../gdl-engine/renderer')
+  ])
+  if (!viewport.value) return
+  gfx = gfxMod
+
+  renderer = new three.WebGLRenderer({ antialias: true, alpha: true })
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
   viewport.value.appendChild(renderer.domElement)
 
-  scene = new THREE.Scene()
-  camera = new THREE.PerspectiveCamera(45, 1, 0.1, 100)
+  scene = new three.Scene()
+  camera = new three.PerspectiveCamera(45, 1, 0.1, 100)
 
   const isDark = document.documentElement.classList.contains('dark')
   // 灯光
-  const amb = new THREE.AmbientLight(0xffffff, isDark ? 0.55 : 0.75)
-  const dir = new THREE.DirectionalLight(0xffffff, isDark ? 0.9 : 0.7)
+  const amb = new three.AmbientLight(0xffffff, isDark ? 0.55 : 0.75)
+  const dir = new three.DirectionalLight(0xffffff, isDark ? 0.9 : 0.7)
   dir.position.set(5, 8, -6)
   scene.add(amb, dir)
   // 地面网格（蓝图坐标纸）
-  const grid = new THREE.GridHelper(20, 20, isDark ? 0x1d4f7c : 0x9cc3e6, isDark ? 0x143a5c : 0xd7e8f7)
+  const grid = new three.GridHelper(20, 20, isDark ? 0x1d4f7c : 0x9cc3e6, isDark ? 0x143a5c : 0xd7e8f7)
   grid.position.y = -0.001
   scene.add(grid)
   // 坐标轴（红X 绿Y 蓝Z——three 系；GDL 的 z 向上映射为 three 的 y）
-  const axes = new THREE.AxesHelper(0.5)
+  const axes = new three.AxesHelper(0.5)
   axes.renderOrder = 1
   scene.add(axes)
 
-  controls = new OrbitControls(camera, renderer.domElement)
+  controls = new controlsMod.OrbitControls(camera, renderer.domElement)
   controls.enableDamping = true
 
   const resize = (): void => {
@@ -546,11 +556,14 @@ async function copyCommand(): Promise<void> {
 
 /* ---------- 生命周期 ---------- */
 onMounted(() => {
-  initThree()
-  watchTheme()
-  const isDark = document.documentElement.classList.contains('dark')
-  renderer?.setClearColor(isDark ? 0x0a1626 : 0xf6fafd, 1)
+  // 先跑一遍：2D 与报错立即可见；3D 待 three.js 加载完成后再画
   execute()
+  void initThree().then(() => {
+    watchTheme()
+    const isDark = document.documentElement.classList.contains('dark')
+    renderer?.setClearColor(isDark ? 0x0a1626 : 0xf6fafd, 1)
+    execute()
+  })
 })
 onBeforeUnmount(() => {
   ro?.disconnect()

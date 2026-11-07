@@ -255,3 +255,17 @@
 | 12:31 | README.md、开发计划.md | 资料库表补术语表；校验说明补 glossary；P4c 状态同步 | 中英同步 |
 
 **验证**：check:data（59 / 28 / 12 / 24 / 39 / 19 章）、check:i18n 87 对、check:search 28/28、单测 41 例、build 成功；SSR 产物含全部 39 条术语与 37 个章节回链。
+
+## 2026-11-07 P5 第一批：性能与 SEO
+
+| 时间 | 模块 | 变更简述 | 备注 |
+|---|---|---|---|
+| 13:10 | theme/components/GdlPlayground.vue | three / OrbitControls / renderer 改为挂载时动态导入，类型用 `import type`；3D 未就绪时先出 2D 与报错 | 主题分块 731KB → 218KB；three 单独 668KB，仅沙盒页加载 |
+| 13:12 | theme/components/GdlPlayground.vue | `rebuild()` 增加 gfx 就绪守卫；`initThree` 改 async，加载中点离开时不再挂载 | 避免重复渲染与空指针 |
+| 13:20 | docs/.vitepress/config.mts | 新增 `GDL_SITE_URL`；`transformHead` 输出 canonical、zh-CN / en / x-default hreflang、OG 与 twitter 标签 | 中英自动互指，子路径一并带上 |
+| 13:22 | docs/.vitepress/config.mts | 启用 sitemap（`transformItems` 前缀 `GDL_BASE`）；`buildEnd` 生成 robots.txt | 域名与路径都不写死 |
+| 13:23 | docs/.vitepress/config.mts | 英文 locale 补 description | 原来英文页会继承中文站点描述 |
+| 13:26 | scripts/clean-dist.mjs（新增）、package.json | 构建前清空 dist | VitePress 不清理旧 hash 分块，dist 曾堆积 15 份 theme 包 |
+| 13:30 | README.md、开发计划.md | 部署说明补 `GDL_SITE_URL` 与按需加载；计划升 v2.3，取消版本标注 | 中英同步 |
+
+**验证**：check:data / check:i18n / check:search 28/28 / 单测 41 例全绿；默认构建与 `GDL_BASE=/resources/GDL_Tutorial/` 构建均成功；子路径构建下 canonical、sitemap、robots 均带 `/resources/GDL_Tutorial/`；英文页 og:description 为英文。

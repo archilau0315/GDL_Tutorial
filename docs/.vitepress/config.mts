@@ -1,5 +1,7 @@
 // GDL_Tutorial 站点配置：双语 locale + 数字蓝图主题配置
 import { defineConfig } from 'vitepress'
+import { writeFileSync } from 'node:fs'
+import { join } from 'node:path'
 import { gdlGrammar } from './shiki-gdl/gdl.mts'
 import { blueprintLight, blueprintDark } from './shiki-gdl/theme.mts'
 
@@ -142,6 +144,21 @@ const enSidebar = [
 // 部署 base 路径抽为环境变量，改路径不改代码（上线公司资源目录时配置）
 const BASE = (process.env.GDL_BASE || '/').replace(/\/?$/, '/')
 
+// 站点绝对地址：sitemap / canonical / hreflang 用，换域名只改环境变量
+const SITE_URL = (process.env.GDL_SITE_URL || 'https://www.kbitai.com.cn').replace(/\/+$/, '')
+const BASE_PATH = BASE.replace(/^\/+|\/+$/g, '')
+
+function absoluteUrl(rel: string): string {
+  const clean = rel.replace(/^\/+/, '').replace(/index\.html$/, '')
+  return `${SITE_URL}/${BASE_PATH ? `${BASE_PATH}/` : ''}${clean}`
+}
+
+/** 由任一语言页面推出中英两个地址（rel 为相对路径，已带 .html） */
+function localePair(rel: string): { zh: string; en: string } {
+  const zh = rel.startsWith('en/') ? rel.slice(3) : rel
+  return { zh, en: `en/${zh}` }
+}
+
 // 中文分词：默认分词按标点/空白切，整句中文会变成一个词，导致「堆栈」查不到「变换堆栈」。
 // 这里把中文串同时输出整串和相邻二字组合（变换堆栈 → 变换 / 换堆 / 堆栈），英文与命令名保持整词。
 function cjkTokenize(text: string): string[] {
@@ -164,6 +181,50 @@ export default defineConfig({
   title: 'GDL_Tutorial',
   description: 'Archicad GDL 从入门到精通 · 交互式双语教程与速查资料库',
   head: [['link', { rel: 'icon', href: `${BASE}favicon.svg` }]],
+
+  // SEO：canonical + 中英 hreflang + Open Graph
+  transformHead({ pageData }) {
+    const rel = pageData.relativePath.replace(/index\.md$/, '').replace(/\.md$/, '.html')
+    const isEn = pageData.relativePath.startsWith('en/')
+    const pair = localePair(rel)
+    const current = absoluteUrl(rel)
+    const title = pageData.title ? `${pageData.title} | GDL_Tutorial` : 'GDL_Tutorial'
+    const description = pageData.description || (isEn
+      ? 'Archicad GDL from zero to professional — an interactive, bilingual tutorial and reference.'
+      : 'Archicad GDL 从入门到精通 · 交互式双语教程与速查资料库')
+
+    return [
+      ['link', { rel: 'canonical', href: current }],
+      ['link', { rel: 'alternate', hreflang: 'zh-CN', href: absoluteUrl(pair.zh) }],
+      ['link', { rel: 'alternate', hreflang: 'en', href: absoluteUrl(pair.en) }],
+      ['link', { rel: 'alternate', hreflang: 'x-default', href: absoluteUrl(pair.zh) }],
+      ['meta', { property: 'og:type', content: 'website' }],
+      ['meta', { property: 'og:site_name', content: 'GDL_Tutorial' }],
+      ['meta', { property: 'og:title', content: title }],
+      ['meta', { property: 'og:description', content: description }],
+      ['meta', { property: 'og:url', content: current }],
+      ['meta', { property: 'og:locale', content: isEn ? 'en_US' : 'zh_CN' }],
+      ['meta', { name: 'twitter:card', content: 'summary' }]
+    ]
+  },
+
+  // sitemap 地址要带部署子路径，与 GDL_BASE 保持一致
+  sitemap: {
+    hostname: SITE_URL,
+    transformItems: (items) =>
+      items.map(i => ({
+        ...i,
+        url: BASE_PATH ? `${BASE_PATH}/${i.url.replace(/^\/+/, '')}` : i.url
+      }))
+  },
+
+  // robots.txt 里的 sitemap 地址随环境变量生成，避免写死域名
+  buildEnd(siteConfig) {
+    writeFileSync(
+      join(siteConfig.outDir, 'robots.txt'),
+      `User-agent: *\nAllow: /\n\nSitemap: ${SITE_URL}${BASE}sitemap.xml\n`
+    )
+  },
   markdown: {
     // 自定义 GDL 语法（Shiki TextMate grammar）+ 数字蓝图专用高亮主题
     languages: [gdlGrammar],
@@ -190,6 +251,7 @@ export default defineConfig({
       label: 'English',
       lang: 'en-US',
       link: '/en/',
+      description: 'Archicad GDL from zero to professional — an interactive, bilingual tutorial and reference.',
       themeConfig: {
         nav: enNav,
         sidebar: enSidebar,

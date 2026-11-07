@@ -109,10 +109,13 @@ debug_log_1.md                # 变更记录
 
 - 预览：GitHub Actions 推送 main 自动构建到 GitHub Pages
 - 正式：部署到公司站点的资源目录，用环境变量 `GDL_BASE` 指定子路径，**改路径不改代码**
+- 域名用 `GDL_SITE_URL` 指定，构建时自动生成 canonical、中英 hreflang、sitemap.xml 与 robots.txt，不需要手改
 
 ```bash
-GDL_BASE=/resources/GDL_Tutorial/ npm run build
+GDL_BASE=/resources/GDL_Tutorial/ GDL_SITE_URL=https://www.kbitai.com.cn npm run build
 ```
+
+构建前会清空旧产物；Three.js 按需加载，不打开沙盒的页面不会下载 3D 引擎。
 
 ### 授权 / License
 
@@ -203,10 +206,13 @@ tests/                        # engine tests
 
 - Preview: GitHub Actions builds `main` to GitHub Pages
 - Production: the same build served from the company site's resource directory; the sub-path comes from `GDL_BASE`, no code changes
+- The domain comes from `GDL_SITE_URL`; canonical links, zh/en hreflang, sitemap.xml and robots.txt are generated at build time
 
 ```bash
-GDL_BASE=/resources/GDL_Tutorial/ npm run build
+GDL_BASE=/resources/GDL_Tutorial/ GDL_SITE_URL=https://www.kbitai.com.cn npm run build
 ```
+
+Stale output is cleared before each build. Three.js is loaded on demand — pages without a sandbox never download the 3D engine.
 
 ### License
 
