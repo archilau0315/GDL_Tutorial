@@ -377,3 +377,16 @@
 **验证**：首页 / 英文首页 / 沙盒页 / sitemap / favicon 均 200；浏览器实测样式正常、搜索可搜 BLOCK、Gitee 图标指向正确、沙盒 3D 模型正常渲染、控制台无 404。
 
 **踩坑**：SSH 用 `root` + 本机 `~/.ssh/id_ed25519` 免密可登录，而文档里的账号密码不适用于 SSH（那是面板/其他服务的）；远端解包命令直接写在 `ssh "..."` 里会被 PowerShell 的引号规则打断，改为上传 `.sh` 再执行。
+
+## 2026-11-07 主站资源入口与展示卡
+
+| 时间 | 模块 | 变更简述 | 备注 |
+|---|---|---|---|
+| 17:10 | 主站 index.html | 「资源」下拉在 CI Tools 之后新增「Archicad GDL 从入门到精通」，指向 `./resources/GDL_Tutorial/`；中英 i18n 各加一条 `nav-res-gdl` | 英文名 Archicad GDL: Zero to Professional |
+| 17:12 | resources/index.html | CI Tools 卡片后新增 GDL 展示卡（交互教程 / 19 章双语 / 59 命令 / 28 GLOB / 内嵌沙盒），中英 i18n 各加 5 条 | 卡片用 `article-thumb square`，封面按正方形完整显示 |
+| 17:14 | resources/GDL_Tutorial.png（新增） | 用 Chrome headless 截线上首页 1200×1200 作封面 | `--headless=new --window-size=1200,1200` |
+| 17:16 | 服务器 | 上传 index.html、resources/index.html、GDL_Tutorial.png，属主 www:www、权限 644 | 上传前比对：主站 index.html 与仓库 HEAD 字节一致，无线上漂移 |
+
+**验证**：主站下拉含新入口且跳转正常；资源页 5 张卡片，GDL 卡缩略图 naturalWidth=1200 非裂图；切 EN 后标题变 Archicad GDL: Zero to Professional。
+
+**注意**：`resources/` 是独立 git 仓库（有自己的 `.git`），主站仓库无法直接提交其中的文件，两处分别提交；主站仓库当前比 origin/main 领先 14 个提交，本次只做本地提交未推送。
