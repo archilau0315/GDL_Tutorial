@@ -1,6 +1,6 @@
 /**
  * 速查数据校验：结构完整、中英字段成对、分类与章节链接合法。
- * 覆盖 commands / globals / snippets / errors / chapters 五份单源数据。
+ * 覆盖 commands / globals / snippets / errors / glossary / chapters 六份单源数据。
  * 用法：npm run check:data
  */
 import { readFileSync, existsSync } from 'node:fs'
@@ -118,6 +118,24 @@ for (const e of err.errors ?? []) {
   checkChapter(at, e.chapter)
 }
 
+/* ---------- 术语表 ---------- */
+const gloss = load('glossary.json')
+const glossCats = new Set((gloss.categories ?? []).map(c => c.id))
+const glossIds = new Set()
+if (!gloss.meta?.version) errors.push('glossary: 缺少 meta.version')
+
+for (const g of gloss.terms ?? []) {
+  const at = `术语 ${g.id ?? '(无 id)'}`
+  if (!g.id) errors.push(`${at}: 缺少 id`)
+  if (glossIds.has(g.id)) errors.push(`${at}: id 重复`)
+  glossIds.add(g.id)
+  if (!glossCats.has(g.category)) errors.push(`${at}: 未知分类 ${g.category}`)
+  checkPair(at, 'term', g.term)
+  checkPair(at, 'desc', g.desc)
+  if (g.aka) checkPair(at, 'aka', g.aka, true)
+  checkChapter(at, g.chapter)
+}
+
 /* ---------- 章节清单 ---------- */
 const book = load('chapters.json')
 const partIds = new Set((book.parts ?? []).map(p => p.id))
@@ -160,5 +178,6 @@ console.log(
   `${glob.globals.length} 个 GLOB 变量 / ${glob.categories.length} 类，` +
   `${snip.snippets.length} 个片段 / ${snip.categories.length} 类，` +
   `${err.errors.length} 条错误 / ${err.categories.length} 类，` +
+  `${gloss.terms.length} 个术语 / ${gloss.categories.length} 类，` +
   `${book.chapters.length} 章 / ${book.parts.length} 个分部`
 )

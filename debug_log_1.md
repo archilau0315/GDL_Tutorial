@@ -240,3 +240,18 @@
 | 12:07 | 开发计划.md | 3.3 资料库表：四模块标已上线，新增「术语表」行；3.4 术语库改「待建」；精通篇标题改「已上线」 | — |
 | 12:08 | 开发计划.md | 4.4 组件清单按真实文件重写（ProgressPanel / ProgressCard / ChapterFooter / useProgress），Quiz、VersionBadge 标待开发 | 原写的 ProgressTracker 并不存在 |
 | 12:09 | 开发计划.md | 命令数 42 → 59、分类 8 → 11；修订记录追加 v2.2 | — |
+
+## 2026-11-07 P4c 术语表上线
+
+| 时间 | 模块 | 变更简述 | 备注 |
+|---|---|---|---|
+| 12:20 | reference/data/glossary.json（新增） | 39 个易混术语 / 6 类（对象与图库、脚本与运行、几何与坐标、参数与界面、属性与材质、工具链与交付），每条含中英术语、别名、一句话解释、章节回链 | 术语以官方英文为准，只收真正容易混的 |
+| 12:24 | theme/components/GlossaryTable.vue（新增） | 中英术语同排 + 别名 + 说明 + 对应章节；搜索（中英皆可）与分类筛选；按用途分组 | 复用 globSearch 同类交互样式 |
+| 12:26 | reference/glossary.md + en 版（新增） | 页首说明 + 「三组最容易搞混的词」对照表 + 组件 | 中英内容等价 |
+| 12:27 | theme/index.ts、i18n.ts | 注册 `GlossaryTable`；新增 glSearch / glFound / glSource | 中英成对 |
+| 12:28 | config.mts、reference/index.md（中英） | 侧边栏加「术语表 / Glossary」；资料库总览加入口 | — |
+| 12:29 | scripts/check-data.mjs | 增加 glossary.json 校验（id、分类、中英 term/desc、aka、章节链接）与统计输出 | 六份数据统一校验 |
+| 12:30 | scripts/check-search.mjs | 新增「热区」「图库部件」两条查询 | 26 → 28 条 |
+| 12:31 | README.md、开发计划.md | 资料库表补术语表；校验说明补 glossary；P4c 状态同步 | 中英同步 |
+
+**验证**：check:data（59 / 28 / 12 / 24 / 39 / 19 章）、check:i18n 87 对、check:search 28/28、单测 41 例、build 成功；SSR 产物含全部 39 条术语与 37 个章节回链。

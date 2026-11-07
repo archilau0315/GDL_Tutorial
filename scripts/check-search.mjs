@@ -72,6 +72,8 @@ const cases = [
   ['沙盒可运行', ['reference/snippets']],
   ['常见错误', ['reference/errors', 'reference/index']],
   ['报错信息', ['reference/errors']],
+  ['热区', ['reference/glossary', 'guide/part3-advanced/14-boolean-and-hotspots']],
+  ['图库部件', ['reference/glossary']],
   ['我的进度', ['guide/index']],
   ['学习路径', ['guide/index']]
 ]
