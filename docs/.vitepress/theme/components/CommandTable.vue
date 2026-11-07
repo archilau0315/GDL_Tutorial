@@ -229,7 +229,12 @@ const list = computed(() => {
   gap: 12px 20px;
 }
 @media (max-width: 640px) {
-  .cmd-body { grid-template-columns: 1fr; }
+  .cmd-body { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* 示例代码块有长行，网格项必须允许收缩，否则整页被撑宽 */
+.cmd-block {
+  min-width: 0;
 }
 
 .cmd-label {
