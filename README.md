@@ -6,7 +6,7 @@
 [**中文**](#中文) · [**English**](#english)
 
 [![GitHub](https://img.shields.io/badge/GitHub-archilau0315%2FGDL__Tutorial-181717?logo=github&logoColor=white)](https://github.com/archilau0315/GDL_Tutorial)
-[![Gitee](https://img.shields.io/badge/Gitee-archilau0315%2FGDL__Tutorial-c71d23?logo=gitee&logoColor=white)](https://gitee.com/archilau0315/GDL_Tutorial)
+[![Gitee](https://img.shields.io/badge/Gitee-archilau%2FGDL__Tutorial-c71d23?logo=gitee&logoColor=white)](https://gitee.com/archilau/GDL_Tutorial)
 [![VitePress](https://img.shields.io/badge/VitePress-1.x-646cff?logo=vite&logoColor=white)](https://vitepress.dev)
 [![Vue 3](https://img.shields.io/badge/Vue-3-42b883?logo=vue.js&logoColor=white)](https://vuejs.org)
 [![Three.js](https://img.shields.io/badge/Three.js-r170-000000?logo=three.js&logoColor=white)](https://threejs.org)
@@ -77,7 +77,7 @@ GitHub 主仓，Gitee 镜像同步，两边内容一致：
 
 ```bash
 git clone https://github.com/archilau0315/GDL_Tutorial.git
-git clone https://gitee.com/archilau0315/GDL_Tutorial.git   # 国内镜像
+git clone https://gitee.com/archilau/GDL_Tutorial.git   # 国内镜像
 ```
 
 国内拉取慢时走 Gitee；issue 与 PR 两边都收，合并以 GitHub 为准。
@@ -203,7 +203,7 @@ Primary repository on GitHub, mirrored to Gitee — same history, same content:
 
 ```bash
 git clone https://github.com/archilau0315/GDL_Tutorial.git
-git clone https://gitee.com/archilau0315/GDL_Tutorial.git   # mirror in mainland China
+git clone https://gitee.com/archilau/GDL_Tutorial.git   # mirror in mainland China
 ```
 
 Use Gitee when GitHub is slow. Issues and PRs are welcome on either side; merges land on GitHub first.

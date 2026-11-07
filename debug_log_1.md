@@ -334,6 +334,6 @@
 | 18:47 | README.md | 英文「Quick start」后新增「Source code」对应段落 | 与中文信息一致 |
 | 18:50 | README.md | 英文补「Core modules」表（10 行），与中文核心模块表对齐；中文补「编辑器补全」一行 | 两语结构对齐 |
 
-**备注**：Gitee 地址按 GitHub 同名推断为 `https://gitee.com/archilau0315/GDL_Tutorial`，实测当前返回 404（镜像尚未创建）；GitHub 主仓已验证 200。镜像建好后徽章自动生效，地址不同只需改两处链接。
+**备注**：Gitee 用户名确认为 `archilau`（`archilau0315` 在 Gitee 不存在），README 三处链接已由 `archilau0315` 改为 `archilau`；`https://gitee.com/archilau/GDL_Tutorial` 实测目前 404（仓库尚未创建），建好后徽章自动生效。GitHub 主仓已验证 200。
 
 **验证**：README 中英两段结构一一对应（这是什么/现在有什么/资料库/快速开始/代码托管/目录结构/核心模块/写一章/部署/授权），无缺段。
