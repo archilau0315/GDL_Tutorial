@@ -3,6 +3,10 @@
 **Archicad GDL 从入门到精通 · 交互式双语教程与查询资料库**
 *Archicad GDL from zero to professional — an interactive, bilingual tutorial and reference.*
 
+[**中文**](#中文) · [**English**](#english)
+
+[![GitHub](https://img.shields.io/badge/GitHub-archilau0315%2FGDL__Tutorial-181717?logo=github&logoColor=white)](https://github.com/archilau0315/GDL_Tutorial)
+[![Gitee](https://img.shields.io/badge/Gitee-archilau0315%2FGDL__Tutorial-c71d23?logo=gitee&logoColor=white)](https://gitee.com/archilau0315/GDL_Tutorial)
 [![VitePress](https://img.shields.io/badge/VitePress-1.x-646cff?logo=vite&logoColor=white)](https://vitepress.dev)
 [![Vue 3](https://img.shields.io/badge/Vue-3-42b883?logo=vue.js&logoColor=white)](https://vuejs.org)
 [![Three.js](https://img.shields.io/badge/Three.js-r170-000000?logo=three.js&logoColor=white)](https://threejs.org)
@@ -67,6 +71,17 @@ npm run check:search   # 搜索命中率实测（28 条固定查询）
 npm run gen:commands   # 重新生成命令详情页（dev/build 前自动执行）
 ```
 
+### 代码托管
+
+GitHub 主仓，Gitee 镜像同步，两边内容一致：
+
+```bash
+git clone https://github.com/archilau0315/GDL_Tutorial.git
+git clone https://gitee.com/archilau0315/GDL_Tutorial.git   # 国内镜像
+```
+
+国内拉取慢时走 Gitee；issue 与 PR 两边都收，合并以 GitHub 为准。
+
 ### 目录结构
 
 ```text
@@ -98,6 +113,7 @@ debug_log_1.md                # 变更记录
 | 章末自测 | `reference/data/quizzes.json` + `theme/components/ChapterQuiz.vue` | 按当前页路径匹配章节题库，全局插槽挂载，无题自动隐藏 |
 | 命令详情页 | `scripts/gen-command-pages.mjs` | 由 JSON 生成每条命令的中英页面，构建前自动运行 |
 | 2D 渲染 | `gdl-engine/renderer-2d.ts` | 形状 → SVG，自适应取景与主题色 |
+| 编辑器补全 | `theme/useEditorSuggest.ts` | 光标前命令名识别、气泡坐标计算、前缀排序 |
 
 ### 写一章新教程
 
@@ -181,6 +197,17 @@ npm run check:search   # 28 fixed queries against the real index
 npm run gen:commands   # regenerate command pages (runs before dev/build)
 ```
 
+### Source code
+
+Primary repository on GitHub, mirrored to Gitee — same history, same content:
+
+```bash
+git clone https://github.com/archilau0315/GDL_Tutorial.git
+git clone https://gitee.com/archilau0315/GDL_Tutorial.git   # mirror in mainland China
+```
+
+Use Gitee when GitHub is slow. Issues and PRs are welcome on either side; merges land on GitHub first.
+
 ### Architecture
 
 ```text
@@ -196,6 +223,21 @@ docs/
 scripts/                      # generators and checks
 tests/                        # engine tests
 ```
+
+### Core modules
+
+| Module | Path | Responsibility |
+|---|---|---|
+| Sandbox engine | `docs/.vitepress/gdl-engine/` | tokenizer → parser → bytecode → execution, emits shapes for rendering |
+| Sandbox UI | `theme/components/GdlPlayground.vue` | code left, 3D right, line-level errors, bilingual messages, example switcher |
+| Command search | `theme/components/CommandFinder.vue`, `EditorSuggest.vue` | instant search by name / alias / Chinese description, Enter inserts syntax with parameters selected; prefix suggestions while typing, Tab or Enter to accept |
+| Command index | `reference/data/commands.json` | one bilingual record per command, the single source of truth |
+| GLOB index | `reference/data/globals.json` + `theme/components/GlobTable.vue` | globals grouped by purpose, one dataset for search and filters |
+| Learning progress | `reference/data/chapters.json` + `theme/useProgress.ts` | single chapter list; path page and chapter footer share state, synced across tabs |
+| Chapter quiz | `reference/data/quizzes.json` + `theme/components/ChapterQuiz.vue` | matches the quiz by current page path, mounted globally, hidden when empty |
+| Command pages | `scripts/gen-command-pages.mjs` | generates zh/en detail pages from JSON before dev and build |
+| 2D renderer | `gdl-engine/renderer-2d.ts` | shapes → SVG with auto framing and theme colors |
+| Editor completion | `theme/useEditorSuggest.ts` | word detection, caret coordinates, prefix ranking |
 
 ### Adding a chapter
 

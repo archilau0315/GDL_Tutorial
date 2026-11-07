@@ -323,3 +323,17 @@
 **踩坑**：翻转到光标上方时写了 `let top = ...`，遮蔽了同名 ref，触发 `Cannot create property 'value' on number`，改名 `topY`；气泡以 `.pg-code-wrap` 为定位父级，坐标需加 `textarea.offsetLeft`（行号槽 40px）。
 
 **验证**：输入 `blo` → BLOCK 气泡出现在光标下方；Tab → 插入 `BLOCK a, b, c` 且 `a, b, c` 选中；继续输入 `add` → 6 个候选；Esc 后同词不再弹；顶部搜索框（Ctrl+Space）不受影响。
+
+## 2026-11-07 README 双语与 Gitee 镜像
+
+| 时间 | 模块 | 变更简述 | 备注 |
+|---|---|---|---|
+| 18:40 | README.md | 标题下加语言跳转 `中文 / English`，两语各自锚点直达 | 一个文件承载双语 |
+| 18:42 | README.md | 徽章区首位加 GitHub、Gitee 双徽章，视觉与原有技术徽章一致 | Gitee 用 `logo=gitee` + 品牌红 |
+| 18:45 | README.md | 中文「快速开始」后新增「代码托管」：两条 clone 地址、国内走 Gitee、合并以 GitHub 为准 | — |
+| 18:47 | README.md | 英文「Quick start」后新增「Source code」对应段落 | 与中文信息一致 |
+| 18:50 | README.md | 英文补「Core modules」表（10 行），与中文核心模块表对齐；中文补「编辑器补全」一行 | 两语结构对齐 |
+
+**备注**：Gitee 地址按 GitHub 同名推断为 `https://gitee.com/archilau0315/GDL_Tutorial`，实测当前返回 404（镜像尚未创建）；GitHub 主仓已验证 200。镜像建好后徽章自动生效，地址不同只需改两处链接。
+
+**验证**：README 中英两段结构一一对应（这是什么/现在有什么/资料库/快速开始/代码托管/目录结构/核心模块/写一章/部署/授权），无缺段。
