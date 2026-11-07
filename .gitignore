@@ -1,6 +1,7 @@
 node_modules/
 docs/.vitepress/dist/
 docs/.vitepress/cache/
+.deploy/
 .playwright-cli/
 screenshots/
 .DS_Store

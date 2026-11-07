@@ -136,6 +136,12 @@ GDL_BASE=/resources/GDL_Tutorial/ GDL_SITE_URL=https://www.kbitai.com.cn npm run
 
 构建前会清空旧产物；Three.js 按需加载，不打开沙盒的页面不会下载 3D 引擎。
 
+线上地址：**https://www.kbitai.com.cn/resources/GDL_Tutorial/** 。Windows 更新线上只需一条命令（构建 + 打包 + 上传 + 校验 HTTP）：
+
+```bash
+powershell -File scripts\deploy.ps1
+```
+
 ### 授权 / License
 
 本项目由匡形无界开发并开源发布，欢迎转载、教学使用与二次开发：
@@ -259,6 +265,12 @@ GDL_BASE=/resources/GDL_Tutorial/ GDL_SITE_URL=https://www.kbitai.com.cn npm run
 ```
 
 Stale output is cleared before each build. Three.js is loaded on demand — pages without a sandbox never download the 3D engine.
+
+Live site: **https://www.kbitai.com.cn/resources/GDL_Tutorial/** . On Windows one command builds, uploads and checks the response:
+
+```bash
+powershell -File scripts\deploy.ps1
+```
 
 ### License
 

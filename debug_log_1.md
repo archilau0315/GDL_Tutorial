@@ -362,3 +362,18 @@
 | 15:39 | config.mts | `socialLinks` 增加 Gitee：默认主题没有内置图标，用 `icon: { svg }` 传 simple-icons 的官方路径 | 链接 `https://gitee.com/archilau/GDL_Tutorial`，与 README 一致 |
 
 **复验**：`build` 后 `/` 与 `/en/` 产物均含 `DocSearch-Button` 与 gitee 链接；dev 实测导航右侧按钮文案分别为「搜索」「Search」，Gitee 图标 href 指向 gitee.com/archilau。
+
+## 2026-11-07 正式上线（公司站点子路径）
+
+| 时间 | 模块 | 变更简述 | 备注 |
+|---|---|---|---|
+| 16:20 | 构建 | `GDL_BASE=/resources/GDL_Tutorial/`、`GDL_SITE_URL=https://www.kbitai.com.cn` 构建，1658 个文件 / 5.33MB tar | canonical 与资源前缀均带子路径 |
+| 16:22 | 服务器 | 上传解包到 `/www/wwwroot/kbitai.com.cn/resources/GDL_Tutorial`，属主 `www:www`，目录 755 / 文件 644，共 31MB | nginx 站点根为 `/www/wwwroot/kbitai.com.cn`，静态直出，无需改配置 |
+| 16:24 | scripts/deploy.ps1（新增）、scripts/remote-extract.sh（新增） | 一键部署：构建 → tar → scp → 远端解包 → HTTP 校验 | 远端脚本用环境变量 `T` 传目标目录，避免引号转义坑 |
+| 16:26 | .gitignore、README.md、开发计划.md | 忽略 `.deploy/`；README 中英补线上地址与一键命令；计划 P5 标完成 | — |
+
+**线上地址**：https://www.kbitai.com.cn/resources/GDL_Tutorial/
+
+**验证**：首页 / 英文首页 / 沙盒页 / sitemap / favicon 均 200；浏览器实测样式正常、搜索可搜 BLOCK、Gitee 图标指向正确、沙盒 3D 模型正常渲染、控制台无 404。
+
+**踩坑**：SSH 用 `root` + 本机 `~/.ssh/id_ed25519` 免密可登录，而文档里的账号密码不适用于 SSH（那是面板/其他服务的）；远端解包命令直接写在 `ssh "..."` 里会被 PowerShell 的引号规则打断，改为上传 `.sh` 再执行。
