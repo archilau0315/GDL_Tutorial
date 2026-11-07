@@ -195,6 +195,35 @@ BLOCK w, d, th
 DEL 1`
   },
   {
+    key: 'boolean',
+    label: { zh: '🧩 拼块开洞', en: '🧩 Hole without booleans' },
+    code: `! 沙盒用「拼块」模拟带洞的板；真正挖洞在 Archicad 里用 SUBGROUP
+! the sandbox fakes a holed panel with blocks; use SUBGROUP in Archicad
+w = 0.60
+h = 2.00
+th = 0.02
+holeX = 0.30
+holeZ = 1.20
+holeR = 0.06
+
+! 左条 / left strip
+BLOCK holeX - holeR, th, h
+
+! 右条 / right strip
+ADD holeX + holeR, 0, 0
+BLOCK w - holeX - holeR, th, h
+DEL 1
+
+! 孔下方 / below the hole
+ADD holeX - holeR, 0, 0
+BLOCK 2 * holeR, th, holeZ - holeR
+
+! 孔上方 / above the hole
+ADD 0, 0, holeZ + holeR
+BLOCK 2 * holeR, th, h - holeZ - holeR
+DEL 2`
+  },
+  {
     key: 'chair2d',
     label: { zh: '🪑 椅子平面符号', en: '🪑 Chair plan symbol' },
     code: `! 椅子平面符号（2D 脚本）

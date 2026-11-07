@@ -8,7 +8,7 @@ The full learning path of GDL_Tutorial has three parts, 19 chapters in total (GD
 |---|---|---|---|
 | Part 1 · Basics | GDL-00 ~ 05 | GDL overview, primitives, transformation stack, parameters, 2D scripts, control flow | ✅ complete (bilingual) |
 | Part 2 · Intermediate | GDL-06 ~ 12 | PRISM family, revolve/loft, materials, macros, doors & windows, strings, practice | ✅ complete (bilingual) |
-| Part 3 · Advanced | GDL-13 ~ 18 | UI script, booleans & hotspots, REQUEST and GLOB, data & files, toolchain, final project | Planned |
+| Part 3 · Advanced | GDL-13 ~ 18 | UI script, booleans & hotspots, REQUEST and GLOB, data & files, toolchain, final project | In progress (13–15 done) |
 
 ## How to Learn
 
@@ -31,3 +31,6 @@ The full learning path of GDL_Tutorial has three parts, 19 chapters in total (GD
 - [x] Chapter 10 Doors and Windows → [Read](/en/guide/part2-intermediate/10-doors-and-windows)
 - [x] Chapter 11 Text and Strings → [Read](/en/guide/part2-intermediate/11-text-and-strings)
 - [x] Chapter 12 Practice: A Parametric Cabinet → [Read](/en/guide/part2-intermediate/12-practice-furniture)
+- [x] Chapter 13 UI Script and the Parameter Interface → [Read](/en/guide/part3-advanced/13-ui-script)
+- [x] Chapter 14 Booleans, GROUP and Hotspots → [Read](/en/guide/part3-advanced/14-boolean-and-hotspots)
+- [x] Chapter 15 REQUEST and GLOB → [Read](/en/guide/part3-advanced/15-request-and-glob)

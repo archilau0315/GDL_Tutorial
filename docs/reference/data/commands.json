@@ -16,7 +16,9 @@
     { "id": "draw2d", "zh": "2D 绘制", "en": "2D Drawing" },
     { "id": "transform2d", "zh": "2D 变换", "en": "2D Transformations" },
     { "id": "attribute", "zh": "属性与材质", "en": "Attributes" },
-    { "id": "flow", "zh": "控制流", "en": "Control Flow" }
+    { "id": "flow", "zh": "控制流", "en": "Control Flow" },
+    { "id": "solid", "zh": "实体与布尔", "en": "Solids & Booleans" },
+    { "id": "ui", "zh": "参数与界面", "en": "Parameters & UI" }
   ],
   "commands": [
     {
@@ -389,27 +391,31 @@
     {
       "name": "HOTSPOT2",
       "category": "draw2d",
-      "syntax": "HOTSPOT2 x, y, unID, type, dir",
+      "syntax": "HOTSPOT2 x, y [, unID [, paramRef [, flags [, displayParam [, \"desc\"]]]]]",
       "params": {
         "zh": [
           "x, y — 热点坐标（2D 符号空间）",
-          "unID — 热点编号，在对象内唯一",
-          "type — 1 / 2 / 3，分别对应主点、附加点、可编辑点",
-          "dir — 0 为固定点，1 / 2 为沿 X / Y 方向可拖动"
+          "unID — 热点编号，同一对象内唯一；沙盒只接受前两个参数",
+          "paramRef — 该热点可拖动的参数名",
+          "flags — 类型 + 属性：类型 1 基准点 / 2 移动点 / 3 参考点（长度编辑），4~7 为角度编辑；属性 128 隐藏、256 基准点可拖",
+          "displayParam — 信息面板里显示的参数，可写数组元素如 Arr[5]",
+          "\"desc\" — 信息面板里的自定义说明，必须同时给 displayParam"
         ],
         "en": [
           "x, y — hotspot position in 2D symbol space",
-          "unID — unique hotspot ID inside the object",
-          "type — 1 / 2 / 3 for main, additional and editable nodes",
-          "dir — 0 fixed, 1 / 2 draggable along X / Y"
+          "unID — unique ID inside the object; the sandbox accepts only the first two arguments",
+          "paramRef — parameter that this hotspot edits by dragging",
+          "flags — type + attribute: 1 base / 2 moving / 3 reference (length), 4~7 for angle editing; attribute 128 hides it, 256 makes the base draggable",
+          "displayParam — parameter shown in the info palette; array members such as Arr[5] are allowed",
+          "\"desc\" — custom description in the info palette; requires displayParam"
         ]
       },
       "desc": {
-        "zh": "在 2D 符号上定义一个热点（又称编辑点），不画任何图形。用户拖动热点即可改变参数，这是参数化对象「手拉改尺寸」的入口。热点必须与 3D 几何、参数联动一起设计，否则拖了没反应。",
-        "en": "Defines an editable hotspot (editing node) in the plan symbol without drawing geometry. Dragging it changes a parameter; combined with 3D geometry and parameter feedback it becomes the visible handles of a parametric object."
+        "zh": "在 2D 符号上定义热点（编辑点），本身不画图形，是「拖动改尺寸」的抓手。长度编辑必须凑齐三个点：基准 (1)、移动 (2)、参考 (3)，参数值等于基准到移动点的距离，正方向由参考点指向基准点。沙盒只接受 x, y 两个参数且不显示热点。",
+        "en": "Defines an editable hotspot in the plan symbol — no geometry, just a handle for dragging a parameter. Length editing needs three matched points: base (1), moving (2) and reference (3); the value is the distance from base to moving, positive towards the reference-to-base direction. The sandbox accepts x, y only and draws nothing."
       },
-      "example": "HOTSPOT2 0, 0, 1, 1, 0\nHOTSPOT2 A, 0, 2, 3, 1\nHOTSPOT2 0, B, 3, 3, 2",
-      "chapter": { "zh": "/guide/part1-basics/04-2d-script", "en": "/en/guide/part1-basics/04-2d-script" },
+      "example": "HOTSPOT2 0, 0, 3, corner_y, 1 + 128\nHOTSPOT2 0, -1, 4, corner_y, 3\nHOTSPOT2 0, corner_y, 5, corner_y, 2",
+      "chapter": { "zh": "/guide/part3-advanced/14-boolean-and-hotspots", "en": "/en/guide/part3-advanced/14-boolean-and-hotspots" },
       "aliases": { "zh": ["热点", "编辑点", "手柄", "2D 热点"], "en": ["hotspot", "editing node", "handle"] }
     },
     {
@@ -588,6 +594,180 @@
       },
       "example": "GOSUB draw_leg\nEND",
       "chapter": { "zh": "/guide/part1-basics/05-control-flow", "en": "/en/guide/part1-basics/05-control-flow" }
+    },
+    {
+      "name": "GROUP",
+      "category": "solid",
+      "syntax": "GROUP \"name\" ... ENDGROUP",
+      "params": {
+        "zh": ["name — 组名字符串，同一脚本内不能重复"],
+        "en": ["name — group name string, unique within the script"]
+      },
+      "desc": {
+        "zh": "把一对 GROUP / ENDGROUP 之间的实体打包成一个可运算的组，供 SUBGROUP、ADDGROUP、ISECTGROUP 使用。组本身不出现在模型里，必须 PLACEGROUP 才落位。组不能嵌套，组内变换不影响组外。沙盒暂不支持。",
+        "en": "Packs all bodies between GROUP and ENDGROUP into an operable group for SUBGROUP, ADDGROUP or ISECTGROUP. The group is not placed automatically — call PLACEGROUP. Groups cannot be nested, and transforms inside do not leak out. Not supported by the sandbox."
+      },
+      "example": "GROUP \"box\"\n  BLOCK 1, 1, 1\nENDGROUP\nPLACEGROUP \"box\"",
+      "chapter": { "zh": "/guide/part3-advanced/14-boolean-and-hotspots", "en": "/en/guide/part3-advanced/14-boolean-and-hotspots" },
+      "aliases": { "zh": ["组", "实体组", "编组", "分组"], "en": ["group", "solid group"] }
+    },
+    {
+      "name": "SUBGROUP",
+      "category": "solid",
+      "syntax": "SUBGROUP (g_expr1, g_expr2)",
+      "params": {
+        "zh": ["g_expr1 — 被减的组（保留）", "g_expr2 — 减掉的组（挖去的部分）"],
+        "en": ["g_expr1 — base group that remains", "g_expr2 — tool group that is removed"]
+      },
+      "desc": {
+        "zh": "布尔差集：从 g_expr1 中减去 g_expr2，返回一个新组。顺序敏感，写反了会得到完全不同的结果。常用于在一块板上挖洞。沙盒暂不支持。",
+        "en": "Boolean difference: subtracts g_expr2 from g_expr1 and returns a new group. Order matters — swapping the arguments changes the result completely. Typical use: cutting a hole in a board. Not supported by the sandbox."
+      },
+      "example": "GROUP \"panel\"\n  BLOCK 0.6, 0.02, 2.0\nENDGROUP\nGROUP \"hole\"\n  ADD 0.3, -0.01, 1.2\n  ROTX -90\n  CYLIND 0.06, 0.03\nENDGROUP\nPLACEGROUP SUBGROUP(\"panel\", \"hole\")",
+      "chapter": { "zh": "/guide/part3-advanced/14-boolean-and-hotspots", "en": "/en/guide/part3-advanced/14-boolean-and-hotspots" },
+      "aliases": { "zh": ["布尔减", "差集", "挖洞", "减法"], "en": ["boolean difference", "subtract", "cut hole"] }
+    },
+    {
+      "name": "ADDGROUP",
+      "category": "solid",
+      "syntax": "ADDGROUP (g_expr1, g_expr2)",
+      "params": {
+        "zh": ["g_expr1 — 第一个组", "g_expr2 — 第二个组"],
+        "en": ["g_expr1 — first group", "g_expr2 — second group"]
+      },
+      "desc": {
+        "zh": "布尔并集：把两个组合成一个，参数顺序不影响结果。相邻面会被合并，所以两个刚好贴合的体会被当成一个整体。沙盒暂不支持。",
+        "en": "Boolean union: merges two groups into one; the order does not matter. Touching faces are merged, so two bodies that exactly meet become one. Not supported by the sandbox."
+      },
+      "example": "c = ADDGROUP(\"result_1\", \"result_2\")\nPLACEGROUP c",
+      "chapter": { "zh": "/guide/part3-advanced/14-boolean-and-hotspots", "en": "/en/guide/part3-advanced/14-boolean-and-hotspots" },
+      "aliases": { "zh": ["布尔并", "并集", "合并", "加法"], "en": ["boolean union", "union", "merge"] }
+    },
+    {
+      "name": "ISECTGROUP",
+      "category": "solid",
+      "syntax": "ISECTGROUP (g_expr1, g_expr2)",
+      "params": {
+        "zh": ["g_expr1 — 第一个组", "g_expr2 — 第二个组"],
+        "en": ["g_expr1 — first group", "g_expr2 — second group"]
+      },
+      "desc": {
+        "zh": "布尔交集：只保留两个组的重叠部分，顺序不敏感。常用来「用切刀截取一段」。沙盒暂不支持。",
+        "en": "Boolean intersection: keeps only the overlapping part, order insensitive. Often used to slice a shape with a cutting plane. Not supported by the sandbox."
+      },
+      "example": "b = ISECTGROUP(\"dome\", \"slab\")\nPLACEGROUP b",
+      "chapter": { "zh": "/guide/part3-advanced/14-boolean-and-hotspots", "en": "/en/guide/part3-advanced/14-boolean-and-hotspots" },
+      "aliases": { "zh": ["布尔交", "交集", "相交"], "en": ["boolean intersection", "intersect"] }
+    },
+    {
+      "name": "PLACEGROUP",
+      "category": "solid",
+      "syntax": "PLACEGROUP g_expr",
+      "params": {
+        "zh": ["g_expr — 组名或组变量"],
+        "en": ["g_expr — group name or group variable"]
+      },
+      "desc": {
+        "zh": "把组真正生成到模型里。定义 GROUP 只是登记，不写 PLACEGROUP 就什么也看不见，脚本也不会报错。当前的变换和剖切面在这里生效。",
+        "en": "Generates the group into the model. Defining a GROUP only registers it; without PLACEGROUP nothing appears and no error is raised. Current transforms and cut planes apply here."
+      },
+      "example": "PLACEGROUP SUBGROUP(\"panel\", \"hole\")",
+      "chapter": { "zh": "/guide/part3-advanced/14-boolean-and-hotspots", "en": "/en/guide/part3-advanced/14-boolean-and-hotspots" },
+      "aliases": { "zh": ["放置组", "落位", "生成实体"], "en": ["place group", "generate solid"] }
+    },
+    {
+      "name": "KILLGROUP",
+      "category": "solid",
+      "syntax": "KILLGROUP g_expr",
+      "params": {
+        "zh": ["g_expr — 要释放的组名"],
+        "en": ["g_expr — name of the group to release"]
+      },
+      "desc": {
+        "zh": "清空并释放组占用的内存。用完的组要立刻释放，否则一直占到脚本结束；释放后组名不能再用。脚本结束或宏返回时也会自动释放。",
+        "en": "Clears the group and frees its memory. Release groups as soon as they are no longer needed; a killed group name cannot be reused. Everything is released automatically when the script ends or a macro returns."
+      },
+      "example": "KILLGROUP \"panel\"\nKILLGROUP \"hole\"",
+      "chapter": { "zh": "/guide/part3-advanced/14-boolean-and-hotspots", "en": "/en/guide/part3-advanced/14-boolean-and-hotspots" },
+      "aliases": { "zh": ["释放组", "清理内存", "删除组"], "en": ["kill group", "free memory", "release group"] }
+    },
+    {
+      "name": "VALUES",
+      "category": "ui",
+      "syntax": "VALUES \"param\" min, max, step\nVALUES \"param\" \"value1\", \"value2\", ...",
+      "params": {
+        "zh": [
+          "param — 参数名（字符串）",
+          "min, max, step — 数值参数的上下限与步长",
+          "\"value1\", \"value2\" — 字符串参数的候选值，界面上变下拉"
+        ],
+        "en": [
+          "param — parameter name as a string",
+          "min, max, step — range and step for numeric parameters",
+          "\"value1\", \"value2\" — candidate strings shown as a dropdown"
+        ]
+      },
+      "desc": {
+        "zh": "参数脚本里限制参数取值：数值给范围与步长，字符串给候选列表。写在 IF 里可以做条件约束（例如窄柜只允许 2 扇门）。沙盒暂不支持参数脚本。",
+        "en": "Restricts parameter values inside the parameter script: a range and step for numbers, a candidate list for strings. Wrap it in IF for conditional limits (a narrow cabinet allowing only two doors, for instance). The sandbox does not run parameter scripts."
+      },
+      "example": "VALUES \"w\" 0.6, 3.0, 0.05\nVALUES \"doorType\" \"Single\", \"Double\"",
+      "chapter": { "zh": "/guide/part3-advanced/13-ui-script", "en": "/en/guide/part3-advanced/13-ui-script" },
+      "aliases": { "zh": ["取值范围", "下拉选项", "参数范围", "限制取值"], "en": ["value range", "dropdown", "allowed values"] }
+    },
+    {
+      "name": "PARAMETERS",
+      "category": "ui",
+      "syntax": "PARAMETERS param = expression",
+      "params": {
+        "zh": ["param — 被驱动的参数名", "expression — 由其它参数组成的表达式"],
+        "en": ["param — parameter being driven", "expression — formula built from other parameters"]
+      },
+      "desc": {
+        "zh": "在参数脚本里把参数设为推导值：每次运行参数脚本都会按表达式重算，界面上的输入框表现为只读。适合做「高 = 宽 × 0.75」这类联动尺寸。",
+        "en": "Marks a parameter as derived inside the parameter script: it is recomputed from the expression on every run and appears read-only in the dialog. Ideal for linked sizes such as height = width * 0.75."
+      },
+      "example": "PARAMETERS h = w * 0.75",
+      "chapter": { "zh": "/guide/part3-advanced/13-ui-script", "en": "/en/guide/part3-advanced/13-ui-script" },
+      "aliases": { "zh": ["参数联动", "推导参数", "只读参数"], "en": ["derived parameter", "linked parameter", "read-only"] }
+    },
+    {
+      "name": "LOCK",
+      "category": "ui",
+      "syntax": "LOCK \"param\"\nUNLOCK \"param\"",
+      "params": {
+        "zh": ["param — 参数名（字符串）"],
+        "en": ["param — parameter name as a string"]
+      },
+      "desc": {
+        "zh": "在参数脚本里锁住参数，界面上的对应输入框变灰不可编辑，但仍显示在参数列表。用它防止用户改内部参数；要让参数由公式算，用 PARAMETERS。",
+        "en": "Locks a parameter from the parameter script: its field turns grey and cannot be edited, but it stays visible. Use it for internal values; use PARAMETERS when a formula should drive the value."
+      },
+      "example": "PARAMETERS h = w * 0.75\nLOCK \"h\"",
+      "chapter": { "zh": "/guide/part3-advanced/13-ui-script", "en": "/en/guide/part3-advanced/13-ui-script" },
+      "aliases": { "zh": ["锁定参数", "禁用参数", "变灰"], "en": ["lock parameter", "read only", "disable field"] }
+    },
+    {
+      "name": "HIDEPARAMETER",
+      "category": "ui",
+      "syntax": "HIDEPARAMETER \"param\"\nHIDEPARAMETER ALL [\"name1\", ...]",
+      "params": {
+        "zh": [
+          "param — 要隐藏的参数名",
+          "ALL — 隐藏全部；后面跟参数名则只保留这些"
+        ],
+        "en": [
+          "param — parameter to hide",
+          "ALL — hide everything; names listed after it stay visible"
+        ]
+      },
+      "desc": {
+        "zh": "把参数从参数列表里彻底隐藏，脚本里仍能读写。适合纯内部的计算参数。被隐藏的参数用户改不了，永远保持默认值，别把需要用户填的参数藏起来。",
+        "en": "Removes a parameter from the parameter list entirely; scripts can still read and write it. Good for internal calculation values. A hidden parameter keeps its default forever, so never hide something the user must fill in."
+      },
+      "example": "HIDEPARAMETER \"n\"",
+      "chapter": { "zh": "/guide/part3-advanced/13-ui-script", "en": "/en/guide/part3-advanced/13-ui-script" },
+      "aliases": { "zh": ["隐藏参数", "内部参数", "不显示"], "en": ["hide parameter", "internal parameter", "invisible"] }
     }
   ]
 }

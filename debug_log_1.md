@@ -108,3 +108,16 @@
 | 10:12 | check-search.mjs | 默认使用站点现用分词，--default 对比旧基线；查询增至 17 条并加入详情页期望 | 结果 17/17（100%），修复前 11/16（69%） |
 
 **验证**：check:i18n 60 对、check:data 42 条、check:search 17/17、单测 41 例、build 成功（仅 Three.js chunk 体积提示）。
+
+## 2026-11-07 P4b 精通篇 13-15 章
+
+| 时间 | 模块 | 变更简述 | 备注 |
+|---|---|---|---|
+| 10:40 | docs/guide/part3-advanced/13-ui-script.md + en 版 | 新章：参数列表 / 参数脚本 / UI 脚本三层，VALUES、PARAMETERS、LOCK、HIDEPARAMETER，UI_DIALOG 结构示意 | 沙盒不支持参数脚本与 UI_*，代码块明示「结构示意」 |
+| 10:48 | docs/guide/part3-advanced/14-boolean-and-hotspots.md + en 版 | 新章：GROUP/ENDGROUP、SUBGROUP/ADDGROUP/ISECTGROUP、PLACEGROUP/KILLGROUP、HOTSPOT2 三点长度编辑 | 签名依据官方 GDL Center 的 Solid Geometry 与 Hotspots 章节 |
+| 10:52 | GdlPlayground.vue | 新增 preset `boolean`：四块拼出带洞的板，演示无布尔时的写法 | 沙盒不支持组运算 |
+| 11:05 | docs/guide/part3-advanced/15-request-and-glob.md + en 版 | 新章：GLOB 常用表、脚本类型限制、SYMB_POS、REQUEST 为函数形式 | REQUEST 签名查官方 Height_of_style 条目 |
+| 11:10 | commands.json | 修正 HOTSPOT2 为官方签名 x,y[,unID[,paramRef[,flags[,displayParam[,desc]]]]]；新增分类「实体与布尔」「参数与界面」及 GROUP/SUBGROUP/ADDGROUP/ISECTGROUP/PLACEGROUP/KILLGROUP/VALUES/PARAMETERS/LOCK/HIDEPARAMETER | 42 → 52 条，10 分类 |
+| 11:12 | config.mts、guide/index.md（中英） | 侧边栏第三部分展开并登记 13-15 章；进度清单同步 | 第三部分改为默认展开 |
+
+**验证**：check:i18n 62 对、check:data 52 条、check:search 17/17、单测 41 例、build 成功。

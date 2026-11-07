@@ -46,8 +46,12 @@ const zhSidebar = [
   },
   {
     text: '第三部分 · 精通篇',
-    collapsed: true,
-    items: [{ text: '待开放', link: '/guide/' }]
+    collapsed: false,
+    items: [
+      { text: '第 13 章 UI 脚本与参数界面', link: '/guide/part3-advanced/13-ui-script' },
+      { text: '第 14 章 布尔、GROUP 与热区', link: '/guide/part3-advanced/14-boolean-and-hotspots' },
+      { text: '第 15 章 REQUEST 与 GLOB', link: '/guide/part3-advanced/15-request-and-glob' }
+    ]
   },
   {
     text: '资料库',
@@ -95,8 +99,12 @@ const enSidebar = [
   },
   {
     text: 'Part 3 · Advanced',
-    collapsed: true,
-    items: [{ text: 'Coming soon', link: '/en/guide/' }]
+    collapsed: false,
+    items: [
+      { text: 'Ch 13 UI Script and the Parameter Interface', link: '/en/guide/part3-advanced/13-ui-script' },
+      { text: 'Ch 14 Booleans, GROUP and Hotspots', link: '/en/guide/part3-advanced/14-boolean-and-hotspots' },
+      { text: 'Ch 15 REQUEST and GLOB', link: '/en/guide/part3-advanced/15-request-and-glob' }
+    ]
   },
   {
     text: 'Reference',
