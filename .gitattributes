@@ -1,0 +1,4 @@
+# 统一换行：脚本类文件必须 LF，否则远端 sh 会报 \r 错误
+*.sh text eol=lf
+*.ps1 text eol=crlf
+*.md text eol=lf
