@@ -16,6 +16,7 @@ interface Entry {
   desc: Record<Locale, string>
   example: string
   chapter: Record<Locale, string> | null
+  aliases?: Record<Locale, string[]>
 }
 
 const props = defineProps<{ locale?: Locale }>()
@@ -32,13 +33,19 @@ const cats = computed(() => [
   ...data.categories.map(c => ({ id: c.id, label: c[loc.value] }))
 ])
 
+// 每条命令都有独立详情页（构建期由 commands.json 生成），便于搜索与外部引用
+const slug = (name: string) => name.toLowerCase().replace(/_/g, '-').replace(/[^a-z0-9-]/g, '')
+const detail = (name: string) =>
+  withBase(`${loc.value === 'en' ? '/en' : ''}/reference/commands/${slug(name)}`)
+
 const list = computed(() => {
   const q = query.value.trim().toUpperCase()
   return data.commands.filter(c => {
     if (active.value !== 'all' && c.category !== active.value) return false
     if (!q) return true
     const hay = [
-      c.name, c.syntax, c.desc[loc.value], ...c.params[loc.value], c.example
+      c.name, c.syntax, c.desc[loc.value], ...c.params[loc.value], c.example,
+      ...(c.aliases?.[loc.value] ?? [])
     ].join(' ').toUpperCase()
     return hay.includes(q)
   })
@@ -75,7 +82,7 @@ const list = computed(() => {
 
     <article v-for="c in list" :id="`cmd-${c.name}`" :key="c.name" class="cmd-card">
       <header class="cmd-head">
-        <h3 class="cmd-name">{{ c.name }}</h3>
+        <h3 class="cmd-name"><a :href="detail(c.name)">{{ c.name }}</a></h3>
         <code class="cmd-syntax">{{ c.syntax }}</code>
       </header>
 
@@ -189,6 +196,16 @@ const list = computed(() => {
   letter-spacing: 0.02em;
 }
 .dark .cmd-name { color: var(--bp-100); }
+
+.cmd-name a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.cmd-name a:hover {
+  color: var(--vp-c-brand-1);
+  text-decoration: underline;
+}
 
 .cmd-syntax {
   font-family: var(--vp-font-family-mono);

@@ -24,8 +24,10 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
+      - run: npm run gen:commands
       - run: npm run check:i18n
       - run: npm run check:data
+      - run: npm run check:search
       - run: npm run test
       - run: npm run build
         env:

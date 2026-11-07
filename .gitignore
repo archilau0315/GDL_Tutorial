@@ -7,3 +7,9 @@ screenshots/
 *.log
 .env
 .workbuddy/
+
+# 命令详情页为构建期生成物（数据源 docs/reference/data/commands.json），不入库
+docs/reference/commands/*.md
+!docs/reference/commands/index.md
+docs/en/reference/commands/*.md
+!docs/en/reference/commands/index.md

@@ -21,6 +21,8 @@ Archicad GDL 从入门到精通——中英双语交互式教程网站。浏览�
 | 沙盒组件 | `docs/.vitepress/theme/components/GdlPlayground.vue` | 左代码右 3D、行号错误高亮、双语错误面板、示例切换、导出 |
 | 命令速查组件 | `docs/.vitepress/theme/components/CommandTable.vue` | 关键词搜索 + 分类筛选，签名/参数/示例/章节回链 |
 | 速查数据 | `docs/reference/data/commands.json` | 中英字段同文件（单源双语），42 条命令 / 8 个分类 |
+| 命令详情页生成 | `scripts/gen-command-pages.mjs` | 由 JSON 生成每条命令的独立页面（中英各一份），构建前自动执行，生成物不入库 |
+| 站内搜索 | `docs/.vitepress/config.mts` | 中文二元分词，解决「堆栈」查不到「变换堆栈」 |
 | 2D 渲染 | `docs/.vitepress/gdl-engine/renderer-2d.ts` | 2D 形状 → SVG（自适应取景、主题色） |
 | 引擎单测 | `tests/engine.test.ts` | vitest 41 例，覆盖基本体/挤出/旋转/2D/流程/报错定位/导出 |
 | 中文内容 | `docs/guide/`、`docs/reference/` | 教程章节 + 资料库页面 |
@@ -41,7 +43,8 @@ npm run preview    # 本地预览构建产物
 npm run test       # 沙盒引擎单元测试（vitest，41 例）
 npm run check:i18n # 检查中英文页面文件对齐
 npm run check:data # 校验命令速查 JSON 数据
-npm run check:search # 搜索命中率实测（加 --cjk 对比中文分词修复效果）
+npm run check:search # 搜索命中率实测（默认站点现用分词，--default 对比旧基线）
+npm run gen:commands # 手动重新生成命令详情页（dev/build 前会自动执行）
 ```
 
 - 新增章节：在 `docs/guide/` 建 md 文件，**必须同时在 `docs/en/guide/` 建对应英文文件**（CI 会检查），并在 `config.mts` 侧边栏登记

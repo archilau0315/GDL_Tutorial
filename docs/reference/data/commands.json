@@ -32,7 +32,8 @@
         "en": "Creates a rectangular block with one corner at the current origin, extending towards +X, +Y and +Z. All three sizes must be positive."
       },
       "example": "BLOCK 1.2, 0.6, 0.04",
-      "chapter": { "zh": "/guide/part1-basics/01-first-3d-object", "en": "/en/guide/part1-basics/01-first-3d-object" }
+      "chapter": { "zh": "/guide/part1-basics/01-first-3d-object", "en": "/en/guide/part1-basics/01-first-3d-object" },
+      "aliases": { "zh": ["立方体", "长方体", "方块", "长方体块"], "en": ["box", "cuboid", "rectangular block"] }
     },
     {
       "name": "CYLIND",
@@ -388,17 +389,28 @@
     {
       "name": "HOTSPOT2",
       "category": "draw2d",
-      "syntax": "HOTSPOT2 x, y",
+      "syntax": "HOTSPOT2 x, y, unID, type, dir",
       "params": {
-        "zh": ["x, y — 热点位置"],
-        "en": ["x, y — hotspot position"]
+        "zh": [
+          "x, y — 热点坐标（2D 符号空间）",
+          "unID — 热点编号，在对象内唯一",
+          "type — 1 / 2 / 3，分别对应主点、附加点、可编辑点",
+          "dir — 0 为固定点，1 / 2 为沿 X / Y 方向可拖动"
+        ],
+        "en": [
+          "x, y — hotspot position in 2D symbol space",
+          "unID — unique hotspot ID inside the object",
+          "type — 1 / 2 / 3 for main, additional and editable nodes",
+          "dir — 0 fixed, 1 / 2 draggable along X / Y"
+        ]
       },
       "desc": {
-        "zh": "在 2D 符号上放一个可拖拽的编辑点，不画任何图形。参数化对象能不能「手拉改尺寸」，靠的就是它。",
-        "en": "Places an editable hotspot in the plan symbol without drawing geometry; this is how parametric objects become draggable."
+        "zh": "在 2D 符号上定义一个热点（又称编辑点），不画任何图形。用户拖动热点即可改变参数，这是参数化对象「手拉改尺寸」的入口。热点必须与 3D 几何、参数联动一起设计，否则拖了没反应。",
+        "en": "Defines an editable hotspot (editing node) in the plan symbol without drawing geometry. Dragging it changes a parameter; combined with 3D geometry and parameter feedback it becomes the visible handles of a parametric object."
       },
-      "example": "HOTSPOT2 0, 0\nHOTSPOT2 1.2, 0\nHOTSPOT2 1.2, 0.6",
-      "chapter": { "zh": "/guide/part1-basics/04-2d-script", "en": "/en/guide/part1-basics/04-2d-script" }
+      "example": "HOTSPOT2 0, 0, 1, 1, 0\nHOTSPOT2 A, 0, 2, 3, 1\nHOTSPOT2 0, B, 3, 3, 2",
+      "chapter": { "zh": "/guide/part1-basics/04-2d-script", "en": "/en/guide/part1-basics/04-2d-script" },
+      "aliases": { "zh": ["热点", "编辑点", "手柄", "2D 热点"], "en": ["hotspot", "editing node", "handle"] }
     },
     {
       "name": "PROJECT2",

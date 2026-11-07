@@ -95,3 +95,16 @@
 | 11:58 | README.md | 补定位说明、check:search 模块与命令、计划版本号 | — |
 
 **实测发现**：①「堆栈」查不到「变换堆栈」、「柜体」命中错页——中文词内子串缺失；②/reference/commands 由组件渲染，构建期搜索索引里没有命令名，查 BLOCK 找不到速查页，搜索引擎同样收录不到；③热点/HOTSPOT2 无内容，属章节缺口。
+
+## 2026-11-07 P4a 查询能力：分词 + 命令页静态化 + 别名
+
+| 时间 | 模块 | 变更简述 | 备注 |
+|---|---|---|---|
+| 10:00 | scripts/gen-command-pages.mjs（新增） | 由 commands.json 生成每条命令的独立 md 页（中英各一份），含分类/别名/语法/参数/说明/示例/相关章节/同类命令；自动清理孤儿页 | 生成物 gitignore，构建与 dev 前自动执行 |
+| 10:02 | docs/.vitepress/config.mts | 新增 cjkTokenize 中文二元分词并接入 localSearch | 中文串输出整串 + 相邻二字组合，解决词内子串搜不到 |
+| 10:05 | CommandTable.vue | 命令名改为详情页链接；搜索 haystack 纳入 aliases | 详情页由 JSON 生成，便于外部引用 |
+| 10:06 | commands.json | 增 HOTSPOT2 完整签名（x,y,unID,type,dir）与 aliases；BLOCK 增中文别名；修正原 HOTSPOT2 两参数错误签名 | check:data 增 aliases 中英成对校验 |
+| 10:10 | package.json / deploy.yml | 新增 predev/prebuild 生成、gen:commands、check:search 入 CI | CI 顺序：gen → i18n → data → search → test → build |
+| 10:12 | check-search.mjs | 默认使用站点现用分词，--default 对比旧基线；查询增至 17 条并加入详情页期望 | 结果 17/17（100%），修复前 11/16（69%） |
+
+**验证**：check:i18n 60 对、check:data 42 条、check:search 17/17、单测 41 例、build 成功（仅 Three.js chunk 体积提示）。

@@ -30,6 +30,12 @@ for (const c of data.commands ?? []) {
   for (const lang of ['zh', 'en']) {
     if (!c.desc?.[lang]?.trim()) errors.push(`${at}: 缺少 desc.${lang}`)
     if (!Array.isArray(c.params?.[lang]) || !c.params[lang].length) errors.push(`${at}: 缺少 params.${lang}`)
+    // aliases 可选，但一旦出现必须中英成对、非空字符串（参与站内搜索）
+    if (c.aliases) {
+      const list = c.aliases[lang]
+      if (!Array.isArray(list) || !list.length) errors.push(`${at}: aliases.${lang} 缺失或为空`)
+      else if (list.some(a => typeof a !== 'string' || !a.trim())) errors.push(`${at}: aliases.${lang} 含空值`)
+    }
     const chapter = c.chapter?.[lang]
     if (chapter && !existsSync(resolve(docsDir, chapter.replace(/^\//, '') + '.md'))) {
       errors.push(`${at}: 章节文件不存在 ${chapter}`)

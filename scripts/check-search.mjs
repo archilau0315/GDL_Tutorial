@@ -1,12 +1,12 @@
 // 搜索验收：按 VitePress local search 同等配置重建索引，实测查询命中率
-// 用法：node scripts/check-search.mjs [--cjk]   --cjk 模拟「中文二元分词」修复后的效果
+// 用法：node scripts/check-search.mjs [--default]   --default 用 VitePress 原始分词做对比
 import { readFileSync, readdirSync, statSync } from 'node:fs'
 import { join, relative } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import MiniSearch from 'minisearch'
 
 const root = join(fileURLToPath(new URL('.', import.meta.url)), '..', 'docs')
-const useCjk = process.argv.includes('--cjk')
+const useCjk = !process.argv.includes('--default')
 
 // 中文二元分词：整串 + 每个相邻二字组合，解决「堆栈」查不到「变换堆栈」的问题
 function cjkTokenize(text) {
@@ -48,22 +48,23 @@ index.addAll(docs)
 
 // 查询 → 期望命中的页面（任一出现在前 5 即算通过）
 const cases = [
-  ['BLOCK', ['guide/part1-basics/01-first-3d-object']],
-  ['PRISM_', ['guide/part2-intermediate/06-prism-family']],
-  ['REVOLVE', ['guide/part2-intermediate/07-sweeps-and-revolves']],
-  ['MATERIAL', ['guide/part2-intermediate/08-materials']],
-  ['ADDX', ['guide/part1-basics/02-transform-stack']],
-  ['TEXT2', ['guide/part1-basics/04-2d-script', 'guide/part2-intermediate/11-text-and-strings']],
+  ['BLOCK', ['reference/commands/block', 'guide/part1-basics/01-first-3d-object']],
+  ['PRISM_', ['guide/part2-intermediate/06-prism-family', 'reference/commands/prism-']],
+  ['REVOLVE', ['guide/part2-intermediate/07-sweeps-and-revolves', 'reference/commands/revolve']],
+  ['MATERIAL', ['guide/part2-intermediate/08-materials', 'reference/commands/material']],
+  ['ADDX', ['guide/part1-basics/02-transform-stack', 'reference/commands/addx']],
+  ['TEXT2', ['guide/part1-basics/04-2d-script', 'guide/part2-intermediate/11-text-and-strings', 'reference/commands/text2']],
   ['变换堆栈', ['guide/part1-basics/02-transform-stack']],
   ['堆栈', ['guide/part1-basics/02-transform-stack']],
   ['参数化柜体', ['guide/part2-intermediate/12-practice-furniture']],
   ['柜体', ['guide/part2-intermediate/12-practice-furniture']],
   ['门窗', ['guide/part2-intermediate/10-doors-and-windows']],
-  ['材质', ['guide/part2-intermediate/08-materials']],
+  ['材质', ['guide/part2-intermediate/08-materials', 'reference/commands/material']],
   ['放样', ['guide/part2-intermediate/07-sweeps-and-revolves']],
-  ['挤出', ['guide/part2-intermediate/07-sweeps-and-revolves']],
-  ['圆弧', ['guide/part1-basics/04-2d-script']],
-  ['热点', ['guide/part1-basics/04-2d-script']]
+  ['挤出', ['guide/part2-intermediate/07-sweeps-and-revolves', 'reference/commands/extrude']],
+  ['圆弧', ['guide/part1-basics/04-2d-script', 'reference/commands/arc2']],
+  ['热点', ['reference/commands/hotspot2', 'guide/part1-basics/04-2d-script']],
+  ['立方体', ['reference/commands/block']]
 ]
 
 let pass = 0
@@ -77,6 +78,6 @@ for (const [q, expect] of cases) {
 }
 
 const rate = Math.round((pass / cases.length) * 100)
-console.log(`\n${useCjk ? '中文二元分词' : '当前默认分词'}：${pass}/${cases.length} 命中，${rate}%`)
+console.log(`\n${useCjk ? '中文二元分词（站点现用配置）' : 'VitePress 原始分词（对比基线）'}：${pass}/${cases.length} 命中，${rate}%`)
 if (failed.length) console.log('未命中：' + failed.join('；'))
 process.exit(rate >= 95 ? 0 : 1)

@@ -118,6 +118,22 @@ const enSidebar = [
 // 部署 base 路径抽为环境变量，改路径不改代码（上线公司资源目录时配置）
 const BASE = (process.env.GDL_BASE || '/').replace(/\/?$/, '/')
 
+// 中文分词：默认分词按标点/空白切，整句中文会变成一个词，导致「堆栈」查不到「变换堆栈」。
+// 这里把中文串同时输出整串和相邻二字组合（变换堆栈 → 变换 / 换堆 / 堆栈），英文与命令名保持整词。
+function cjkTokenize(text: string): string[] {
+  const out: string[] = []
+  for (const part of text.split(/[^\p{L}\p{N}_]+/u)) {
+    if (!part) continue
+    if (!/[\u4e00-\u9fff]/.test(part)) {
+      out.push(part.toLowerCase())
+      continue
+    }
+    out.push(part)
+    for (let i = 0; i < part.length - 1; i++) out.push(part.slice(i, i + 2))
+  }
+  return out
+}
+
 export default defineConfig({
   base: BASE,
   lang: 'zh-CN',
@@ -140,7 +156,10 @@ export default defineConfig({
         docFooter: { prev: '上一页', next: '下一页' },
         lastUpdated: { text: '最后更新' },
         search: { provider: 'local',
-          options: { locales: { root: { translations: { button: { buttonText: '搜索', buttonAriaLabel: '搜索' } } } } } }
+          options: {
+            miniSearch: { options: { tokenize: cjkTokenize } },
+            locales: { root: { translations: { button: { buttonText: '搜索', buttonAriaLabel: '搜索' } } } }
+          } }
       }
     },
     en: {
