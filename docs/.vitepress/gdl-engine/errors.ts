@@ -32,7 +32,10 @@ const T: Record<string, Msg> = {
   divZero: { zh: '除数为零', en: 'Division by zero' },
   negRadius: { zh: '几何参数不能为负数', en: 'Geometric parameter cannot be negative' },
   loopLimit: { zh: '循环次数超过安全上限（10000 次）', en: 'Loop iteration limit exceeded (10000)' },
-  badDel: { zh: 'DEL 回退层数超过当前变换栈深度', en: 'DEL exceeds current transformation stack depth' }
+  badDel: { zh: 'DEL 回退层数超过当前变换栈深度', en: 'DEL exceeds current transformation stack depth' },
+  zeroExtrude: { zh: 'EXTRUDE 的挤出向量不能为零', en: 'EXTRUDE vector must not be zero' },
+  zeroRevolve: { zh: 'REVOLVE 的旋转角度不能为 0', en: 'REVOLVE angle must not be zero' },
+  revolveY: { zh: 'REVOLVE 截面点的 y 坐标不能为负数', en: 'REVOLVE profile points must have non-negative y' }
 }
 
 function fill(s: string, kv: Record<string, string | number>): string {

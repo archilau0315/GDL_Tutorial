@@ -33,8 +33,16 @@ const zhSidebar = [
   },
   {
     text: '第二部分 · 进阶篇',
-    collapsed: true,
-    items: [{ text: '待开放', link: '/guide/' }]
+    collapsed: false,
+    items: [
+      { text: '第 6 章 PRISM 全家族', link: '/guide/part2-intermediate/06-prism-family' },
+      { text: '第 7 章 旋转与放样', link: '/guide/part2-intermediate/07-sweeps-and-revolves' },
+      { text: '第 8 章 材质与属性', link: '/guide/part2-intermediate/08-materials' },
+      { text: '第 9 章 宏与对象组织', link: '/guide/part2-intermediate/09-macros' },
+      { text: '第 10 章 门窗对象', link: '/guide/part2-intermediate/10-doors-and-windows' },
+      { text: '第 11 章 文本与字符串', link: '/guide/part2-intermediate/11-text-and-strings' },
+      { text: '第 12 章 实战：参数化柜体', link: '/guide/part2-intermediate/12-practice-furniture' }
+    ]
   },
   {
     text: '第三部分 · 精通篇',
@@ -74,8 +82,16 @@ const enSidebar = [
   },
   {
     text: 'Part 2 · Intermediate',
-    collapsed: true,
-    items: [{ text: 'Coming soon', link: '/en/guide/' }]
+    collapsed: false,
+    items: [
+      { text: 'Ch 6 The PRISM Family', link: '/en/guide/part2-intermediate/06-prism-family' },
+      { text: 'Ch 7 Sweeps and Revolutions', link: '/en/guide/part2-intermediate/07-sweeps-and-revolves' },
+      { text: 'Ch 8 Materials and Attributes', link: '/en/guide/part2-intermediate/08-materials' },
+      { text: 'Ch 9 Macros and Object Structure', link: '/en/guide/part2-intermediate/09-macros' },
+      { text: 'Ch 10 Doors and Windows', link: '/en/guide/part2-intermediate/10-doors-and-windows' },
+      { text: 'Ch 11 Text and Strings', link: '/en/guide/part2-intermediate/11-text-and-strings' },
+      { text: 'Ch 12 Practice: A Parametric Cabinet', link: '/en/guide/part2-intermediate/12-practice-furniture' }
+    ]
   },
   {
     text: 'Part 3 · Advanced',

@@ -11,6 +11,7 @@
   "categories": [
     { "id": "prim3d", "zh": "3D 基本体", "en": "3D Primitives" },
     { "id": "extrude", "zh": "截面挤出", "en": "Profile Extrusion" },
+    { "id": "form", "zh": "旋转与放样", "en": "Sweeps & Revolves" },
     { "id": "transform3d", "zh": "3D 变换", "en": "3D Transformations" },
     { "id": "draw2d", "zh": "2D 绘制", "en": "2D Drawing" },
     { "id": "transform2d", "zh": "2D 变换", "en": "2D Transformations" },
@@ -106,7 +107,7 @@
         "en": "Extrudes a closed XY polygon up the Z axis. All vertices must be supplied in one statement (continue lines with a trailing comma). The workhorse for non-rectangular sections."
       },
       "example": "PRISM 4, 0.9,\n  0, 0, 1,\n  1, 0, 0,\n  1, 0.6, 0,\n  0, 0.6, -1",
-      "chapter": null
+      "chapter": { "zh": "/guide/part2-intermediate/06-prism-family", "en": "/en/guide/part2-intermediate/06-prism-family" }
     },
     {
       "name": "PRISM_",
@@ -121,7 +122,37 @@
         "en": "The extended form of PRISM supporting multiple contours and holes. The sandbox currently handles a single contour; verify holes in Archicad."
       },
       "example": "PRISM_ 4, 1.0,\n  0, 0, 1,\n  2, 0, 0,\n  2, 1, 0,\n  0, 1, -1",
-      "chapter": null
+      "chapter": { "zh": "/guide/part2-intermediate/06-prism-family", "en": "/en/guide/part2-intermediate/06-prism-family" }
+    },
+    {
+      "name": "EXTRUDE",
+      "category": "extrude",
+      "syntax": "EXTRUDE n, dx, dy, dz, mask, x1, y1, s1, … , xn, yn, sn",
+      "params": {
+        "zh": ["n — 截面顶点数", "dx, dy, dz — 挤出向量（三个分量不能全为 0）", "mask — 端面/侧面可见性掩码", "xi, yi — 截面顶点", "si — 顶点状态码：1 起点、0 中间点、-1 终点"],
+        "en": ["n — profile vertex count", "dx, dy, dz — extrusion vector (not all zero)", "mask — face visibility mask", "xi, yi — profile vertices", "si — vertex status: 1 first, 0 intermediate, -1 last"]
+      },
+      "desc": {
+        "zh": "把截面沿任意方向的向量挤出，是 PRISM（只能沿 +Z）的通用版。截面仍在 x-y 平面，挤出方向由向量决定，做斜向挑檐、坡道、斜撑最顺手。沙盒忽略 mask，零向量会报错。",
+        "en": "Extrudes a profile along an arbitrary vector — the general form of PRISM, which can only go up +Z. The profile stays in the x-y plane while the vector sets the direction; ideal for slanted canopies, ramps and braces. The sandbox ignores mask and rejects a zero vector."
+      },
+      "example": "EXTRUDE 4, 1.0, 0, 0.45, 0,\n  0, 0, 1,\n  1.2, 0, 0,\n  1.2, 0.6, 0,\n  0, 0.6, -1",
+      "chapter": { "zh": "/guide/part2-intermediate/07-sweeps-and-revolves", "en": "/en/guide/part2-intermediate/07-sweeps-and-revolves" }
+    },
+    {
+      "name": "REVOLVE",
+      "category": "form",
+      "syntax": "REVOLVE n, alpha, mask, x1, y1, s1, … , xn, yn, sn",
+      "params": {
+        "zh": ["n — 截面顶点数", "alpha — 旋转角度（度，可负；不能为 0）", "mask — 端面/侧面可见性掩码", "xi, yi — 截面顶点，yi 必须 ≥ 0（就是半径）", "si — 顶点状态码：1 起点、0 中间点、-1 终点"],
+        "en": ["n — profile vertex count", "alpha — sweep angle in degrees (may be negative, not zero)", "mask — face visibility mask", "xi, yi — profile vertices; yi must be ≥ 0 (it is the radius)", "si — vertex status: 1 first, 0 intermediate, -1 last"]
+      },
+      "desc": {
+        "zh": "截面绕 X 轴旋转成回转体：截面画在 x-y 平面，x 是轴向位置、y 是半径，y 不能为负。做柱础、花瓶、圆角线脚最省事；想让轴线立起来，先 `ROT 0, 90, 0`。沙盒忽略 mask，非整周时自动补端盖。",
+        "en": "Revolves a profile around the X axis: draw it in the x-y plane where x is the axial position and y the radius (never negative). Great for column bases, vases and mouldings; add `ROT 0, 90, 0` first to stand the axis up. The sandbox ignores mask and caps partial sweeps."
+      },
+      "example": "ROT 0, 90, 0\nREVOLVE 6, 360, 0,\n  0, 0.00, 1,\n  0, 0.18, 0,\n  0.06, 0.18, 0,\n  0.06, 0.10, 0,\n  0.30, 0.10, 0,\n  0.30, 0.00, -1\nDEL 1",
+      "chapter": { "zh": "/guide/part2-intermediate/07-sweeps-and-revolves", "en": "/en/guide/part2-intermediate/07-sweeps-and-revolves" }
     },
     {
       "name": "ADD",
@@ -445,7 +476,7 @@
         "en": "Assigns a material index to following geometry, referring to the project's material table. The sandbox uses a fixed palette, so colours differ from Archicad."
       },
       "example": "MATERIAL 8\nBLOCK 0.6, 0.6, 0.05",
-      "chapter": null
+      "chapter": { "zh": "/guide/part2-intermediate/08-materials", "en": "/en/guide/part2-intermediate/08-materials" }
     },
     {
       "name": "PEN",
@@ -460,7 +491,7 @@
         "en": "Selects the pen colour for subsequent lines: contour edges in 3D, line colour in 2D."
       },
       "example": "PEN 2\nLINE2 0, 0, 1, 0",
-      "chapter": null
+      "chapter": { "zh": "/guide/part2-intermediate/08-materials", "en": "/en/guide/part2-intermediate/08-materials" }
     },
     {
       "name": "IF",

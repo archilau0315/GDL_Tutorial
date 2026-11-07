@@ -245,6 +245,57 @@ END
 CYLIND 0.95, 0.02
 RETURN`
   },
+  {
+    key: 'revolve',
+    label: { zh: '🏺 旋转体（REVOLVE）', en: '🏺 Revolved solid (REVOLVE)' },
+    code: `! REVOLVE：截面绕 X 轴旋转，y 就是半径
+! 这里先绕 Y 转 90°，让轴线立起来成柱子
+ROT 0, 90, 0
+REVOLVE 6, 360, 0,
+  0,    0.00, 1,
+  0,    0.18, 0,
+  0.06, 0.18, 0,
+  0.06, 0.10, 0,
+  0.30, 0.10, 0,
+  0.30, 0.00, -1
+DEL 1
+
+! 再做一个半球形柱头：截面是一段圆弧
+MATERIAL 6
+ADD 0, 0, 0.30
+ROT 0, 90, 0
+REVOLVE 8, 360, 0,
+  0.00, 0.00, 1,
+  0.00, 0.16, 0,
+  0.02, 0.15, 0,
+  0.05, 0.13, 0,
+  0.08, 0.09, 0,
+  0.10, 0.05, 0,
+  0.11, 0.02, 0,
+  0.11, 0.00, -1
+DEL 2`
+  },
+  {
+    key: 'extrude',
+    label: { zh: '📐 斜向挤出（EXTRUDE）', en: '📐 Slanted extrusion (EXTRUDE)' },
+    code: `! EXTRUDE：截面沿任意向量挤出，比 PRISM 多两个方向
+! 一块斜向挑出的雨棚
+EXTRUDE 4, 1.0, 0, 0.45, 0,
+  0,   0,   1,
+  1.2, 0,   0,
+  1.2, 0.6, 0,
+  0,   0.6, -1
+
+! 下面用 PRISM 做等高的直柱，对比两者差别
+MATERIAL 3
+ADD 0.2, 0.6, 0
+PRISM 4, 1.0,
+  0, 0, 1,
+  0.8, 0, 0,
+  0.8, 0.15, 0,
+  0, 0.15, -1
+DEL 1`
+  },
 ]
 
 const exLabel = (i: number): string => EXAMPLES[i].label[loc.value]

@@ -17,6 +17,64 @@ const COORD_C = new THREE.Matrix4().set(
 const gdlToThree = (m: number[]): THREE.Matrix4 =>
   new THREE.Matrix4().multiplyMatrices(COORD_C, new THREE.Matrix4().fromArray(m))
 
+/** 顶点序列 → 闭合平面轮廓（PRISM / EXTRUDE 共用） */
+function contourShape(pts: { x: number; y: number }[]): THREE.Shape {
+  const shape = new THREE.Shape()
+  pts.forEach((p, i) => (i ? shape.lineTo(p.x, p.y) : shape.moveTo(p.x, p.y)))
+  shape.closePath()
+  return shape
+}
+
+/**
+ * GDL REVOLVE：截面 (x, y≥0) 绕 X 轴旋转 alpha 度。
+ * 逐环生成顶点，按四边形连面；非整周时补两端封盖。
+ */
+function revolveGeometry(pts: { x: number; y: number }[], alpha: number): THREE.BufferGeometry {
+  const profile = pts.filter((p, i) =>
+    i === 0 || Math.hypot(p.x - pts[i - 1].x, p.y - pts[i - 1].y) > 1e-9
+  )
+  const full = Math.abs(Math.abs(alpha) % 360) < 1e-6
+  const segs = Math.max(8, Math.min(72, Math.ceil(Math.abs(alpha) / 5)))
+  const rad = (alpha * Math.PI) / 180
+  const n = profile.length
+  const pos: number[] = []
+
+  for (let j = 0; j <= segs; j++) {
+    const t = rad * (j / segs)
+    const c = Math.cos(t), sn = Math.sin(t)
+    for (const p of profile) pos.push(p.x, p.y * c, p.y * sn)
+  }
+
+  const idx: number[] = []
+  for (let j = 0; j < segs; j++) {
+    for (let i = 0; i < n - 1; i++) {
+      const a = j * n + i, b = a + 1, c = a + n, d = c + 1
+      idx.push(a, c, b, b, c, d)
+    }
+  }
+
+  if (!full) {
+    const faces = THREE.ShapeUtils.triangulateShape(
+      profile.map(p => new THREE.Vector2(p.x, p.y)), []
+    )
+    for (const [ang, flip] of [[0, true], [rad, false]] as const) {
+      const base = pos.length / 3
+      const c = Math.cos(ang), sn = Math.sin(ang)
+      for (const p of profile) pos.push(p.x, p.y * c, p.y * sn)
+      for (const f of faces) {
+        if (flip) idx.push(base + f[0], base + f[2], base + f[1])
+        else idx.push(base + f[0], base + f[1], base + f[2])
+      }
+    }
+  }
+
+  const g = new THREE.BufferGeometry()
+  g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3))
+  g.setIndex(idx)
+  g.computeVertexNormals()
+  return g
+}
+
 /** 材质调色板：MATERIAL 索引 → 蓝图系颜色（未设置用默认蓝） */
 const PALETTE = [
   0x5b93cf, // 默认
@@ -61,14 +119,25 @@ function geometryFor(s: Shape): THREE.BufferGeometry {
     }
     case 'prism': {
       // GDL PRISM：底面多边形沿 +z 挤出 h；shape 在 x/y 平面，挤出沿 +z
-      const shape = new THREE.Shape()
-      let first = true
-      for (const p of s.pts) {
-        if (first) { shape.moveTo(p.x, p.y); first = false }
-        else shape.lineTo(p.x, p.y)
-      }
-      shape.closePath()
-      return new THREE.ExtrudeGeometry(shape, { depth: s.h, bevelEnabled: false, curveSegments: 4 })
+      return new THREE.ExtrudeGeometry(contourShape(s.pts), {
+        depth: s.h, bevelEnabled: false, curveSegments: 4
+      })
+    }
+    case 'extrude': {
+      // GDL EXTRUDE：截面沿任意向量挤出，长度与方向由 dx/dy/dz 决定
+      const len = Math.hypot(s.dx, s.dy, s.dz)
+      const g = new THREE.ExtrudeGeometry(contourShape(s.pts), {
+        depth: len, bevelEnabled: false, curveSegments: 4
+      })
+      const q = new THREE.Quaternion().setFromUnitVectors(
+        new THREE.Vector3(0, 0, 1),
+        new THREE.Vector3(s.dx, s.dy, s.dz).normalize()
+      )
+      g.applyQuaternion(q)
+      return g
+    }
+    case 'revolve': {
+      return revolveGeometry(s.pts, s.alpha)
     }
   }
 }
@@ -92,7 +161,8 @@ export function buildGroup(shapes: Shape[], isDark = false): BuildResult {
       roughness: 0.55,
       metalness: 0.1,
       transparent: true,
-      opacity: 0.92
+      opacity: 0.92,
+      side: THREE.DoubleSide
     })
     const edgeMat = new THREE.LineBasicMaterial({
       color: isDark ? 0x9fd0f0 : 0x042c53

@@ -7,7 +7,7 @@ The full learning path of GDL_Tutorial has three parts, 21 chapters in total, fr
 | Part | Sheet No. | Topics | Status |
 |---|---|---|---|
 | Part 1 · Basics | GDL-00 ~ 05 | GDL overview, primitives, transformation stack, parameters, 2D scripts, control flow | ✅ complete (bilingual) |
-| Part 2 · Intermediate | GDL-06 ~ 12 | PRISM family, revolve/loft, materials, macros, doors & windows, strings, practice | Planned |
+| Part 2 · Intermediate | GDL-06 ~ 12 | PRISM family, revolve/loft, materials, macros, doors & windows, strings, practice | ✅ complete (bilingual) |
 | Part 3 · Advanced | GDL-13 ~ 21 | UI script, boolean groups, REQUEST, GLOB variables, final project | Planned |
 
 ## How to Learn
@@ -24,3 +24,10 @@ The full learning path of GDL_Tutorial has three parts, 21 chapters in total, fr
 - [x] Chapter 3 Introduction to Parametrics → [Read](/en/guide/part1-basics/03-parameters)
 - [x] Chapter 4 The 2D Script → [Read](/en/guide/part1-basics/04-2d-script)
 - [x] Chapter 5 Control Flow → [Read](/en/guide/part1-basics/05-control-flow)
+- [x] Chapter 6 The PRISM Family → [Read](/en/guide/part2-intermediate/06-prism-family)
+- [x] Chapter 7 Sweeps and Revolutions → [Read](/en/guide/part2-intermediate/07-sweeps-and-revolves)
+- [x] Chapter 8 Materials and Attributes → [Read](/en/guide/part2-intermediate/08-materials)
+- [x] Chapter 9 Macros and Object Structure → [Read](/en/guide/part2-intermediate/09-macros)
+- [x] Chapter 10 Doors and Windows → [Read](/en/guide/part2-intermediate/10-doors-and-windows)
+- [x] Chapter 11 Text and Strings → [Read](/en/guide/part2-intermediate/11-text-and-strings)
+- [x] Chapter 12 Practice: A Parametric Cabinet → [Read](/en/guide/part2-intermediate/12-practice-furniture)

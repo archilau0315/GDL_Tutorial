@@ -28,6 +28,10 @@ const CMD_SIG: Record<string, [number, number | null]> = {
 const VAR_3N = new Set(['PRISM', 'PRISM_'])
 const VAR_2N = new Set(['POLY2', 'POLY2_'])
 
+/** 挤出/旋转成形：EXTRUDE n, dx,dy,dz, mask, (x,y,s)×n；REVOLVE n, alpha, mask, (x,y,s)×n */
+const EXTRUDE_HEAD = 5
+const REVOLVE_HEAD = 3
+
 const FUNCS: Record<string, (xs: number[]) => number> = {
   SIN: ([x]) => Math.sin(x * D2R),
   COS: ([x]) => Math.cos(x * D2R),
@@ -141,6 +145,8 @@ export function interpret(ast: Stmt[]): RunResult {
 
     if (VAR_3N.has(name)) { prismCmd(name, s, args); return }
     if (VAR_2N.has(name)) { polyCmd(name, s, args); return }
+    if (name === 'EXTRUDE') { extrudeCmd(s, args); return }
+    if (name === 'REVOLVE') { revolveCmd(s, args); return }
 
     // DEL 特殊形态：无参默认回退 1 层；DEL TOP 回退全部
     if (name === 'DEL' || name === 'DEL2') {
@@ -253,6 +259,56 @@ export function interpret(ast: Stmt[]): RunResult {
       return
     }
     if (ge0(h, s.pos)) shapes.push({ type: 'prism', n, h, pts, ...base() })
+  }
+
+  /** EXTRUDE：n, dx, dy, dz, mask, (x, y, s) × n —— 沿任意向量挤出 */
+  function extrudeCmd(s: any, args: Expr[]): void {
+    if (args.length < 8 || (args.length - EXTRUDE_HEAD) % 3 !== 0) {
+      errors.push(makeError('syntax', 'prismArgs', s.pos, { cmd: 'EXTRUDE' }))
+      return
+    }
+    const n = Math.trunc(num(args[0]))
+    const dx = num(args[1]), dy = num(args[2]), dz = num(args[3])
+    const pts: { x: number; y: number; s: number }[] = []
+    for (let i = EXTRUDE_HEAD; i + 2 <= args.length - 1; i += 3) {
+      pts.push({ x: num(args[i]), y: num(args[i + 1]), s: Math.trunc(num(args[i + 2])) })
+    }
+    if (pts.length !== n || n < 3) {
+      errors.push(makeError('undefined', 'argCount', s.pos, { cmd: 'EXTRUDE', n: `${n} 个顶点`, m: pts.length }))
+      return
+    }
+    if (Math.abs(dx) + Math.abs(dy) + Math.abs(dz) === 0) {
+      errors.push(makeError('runtime', 'zeroExtrude', s.pos))
+      return
+    }
+    shapes.push({ type: 'extrude', n, dx, dy, dz, pts, ...base() })
+  }
+
+  /** REVOLVE：n, alpha, mask, (x, y, s) × n —— 截面绕 X 轴旋转 alpha 度 */
+  function revolveCmd(s: any, args: Expr[]): void {
+    if (args.length < 6 || (args.length - REVOLVE_HEAD) % 3 !== 0) {
+      errors.push(makeError('syntax', 'prismArgs', s.pos, { cmd: 'REVOLVE' }))
+      return
+    }
+    const n = Math.trunc(num(args[0]))
+    const alpha = num(args[1])
+    const pts: { x: number; y: number; s: number }[] = []
+    for (let i = REVOLVE_HEAD; i + 2 <= args.length - 1; i += 3) {
+      pts.push({ x: num(args[i]), y: num(args[i + 1]), s: Math.trunc(num(args[i + 2])) })
+    }
+    if (pts.length !== n || n < 2) {
+      errors.push(makeError('undefined', 'argCount', s.pos, { cmd: 'REVOLVE', n: `${n} 个顶点`, m: pts.length }))
+      return
+    }
+    if (alpha === 0) {
+      errors.push(makeError('runtime', 'zeroRevolve', s.pos))
+      return
+    }
+    if (pts.some(p => p.y < 0)) {
+      errors.push(makeError('runtime', 'revolveY', s.pos))
+      return
+    }
+    shapes.push({ type: 'revolve', n, alpha, pts, ...base() })
   }
 
   /** POLY2 / POLY2_：n, frame_fill, (x, y [, s]) × n */

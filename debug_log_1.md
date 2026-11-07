@@ -61,3 +61,18 @@
 | 09:36 | config.mts | 删除中英侧边栏重复的第 2-5 章条目 | 第 1 章之后重复了一遍 |
 | 09:37 | playground 页（中英） | 沙盒能力说明更新为实际支持集（PRISM/2D/MATERIAL/WHILE 等） | 原文案停留 P1 |
 | 09:40 | 验证 | check:data 40 条通过、check:i18n 11 对通过、单测 38 例全绿、构建成功 | 下一批：第 6-12 章 + 引擎补 REVOLVE/TUBE 等 |
+
+## 2026-11-07 P3 第二批：进阶篇 7 章 + 引擎放样能力
+
+| 时间 | 模块 | 变更简述 | 备注 |
+|---|---|---|---|
+| 10:05 | gdl-engine（types/interpreter/renderer） | 新增 `EXTRUDE`（任意向量挤出）与 `REVOLVE`（截面绕 X 轴旋转，非整周自动补端盖），含零向量/零角度/负半径报错 | 签名按官方手册核对；mask 沙盒忽略；`RULED` / `SWEEP` / `TUBE` 未实现 |
+| 10:10 | gdl-engine/errors.ts | 新增 `zeroExtrude` / `zeroRevolve` / `revolveY` 三条双语错误 | 沿用 Archicad 风格报错结构 |
+| 10:12 | theme/GdlPlayground.vue | 新增 `revolve` / `extrude` 两个示例预设 | 原已有 `prism` 预设，避免重复 key 未再加 |
+| 10:18 | tests/engine.test.ts | 新增 5 例：EXTRUDE 正常/零向量、REVOLVE 正常/负 y、ELLIPS 三参 | 单测 41 例 |
+| 10:30 | guide/part2-intermediate（中英 14 页） | 第 6-12 章全文：PRISM 家族、旋转放样、材质属性、宏、门窗、字符串、参数化柜体 | 每章 159-180 行，结构统一；未支持命令只讲概念不编签名 |
+| 10:40 | config.mts | 第二部分侧边栏由「待开放」改为 7 章实链，默认展开 | 中英同步 |
+| 10:42 | guide/index（中英） | 路线图状态改「已完成」，进度清单补 6-12 章入口 | — |
+| 10:45 | reference/data/commands.json | 新增 `EXTRUDE` / `REVOLVE` 与「旋转与放样」分类；PRISM/PRISM_/MATERIAL/PEN 回填章节链接 | 42 条 / 8 分类 |
+| 10:50 | 修复 | 第 12 章英文 frontmatter 标题含冒号需加引号；两处 `/reference/commands` 补尾斜杠 | 死链检查与 YAML 解析报错 |
+| 10:55 | 验证 | check:i18n 18 对、check:data 42 条、单测 41 例、build 成功 | 下一步 P4：精通篇 + 片段库 |

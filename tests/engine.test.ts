@@ -184,6 +184,29 @@ describe('P2 扩展：PRISM 族', () => {
   })
 })
 
+describe('P3 扩展：EXTRUDE / REVOLVE', () => {
+  it('EXTRUDE 沿任意向量挤出截面', () => {
+    const r = run('EXTRUDE 3, 0.5, 0, 0.5, 0,\n  0, 0, 1,\n  1, 0, 0,\n  0, 1, -1')
+    expect(r.errors).toEqual([])
+    expect(r.shapes[0]).toMatchObject({ type: 'extrude', dx: 0.5, dy: 0, dz: 0.5 })
+    expect((r.shapes[0] as any).pts).toHaveLength(3)
+  })
+
+  it('EXTRUDE 零向量报错', () => {
+    const r = run('EXTRUDE 3, 0, 0, 0, 0, 0,0,1, 1,0,0, 0,1,-1')
+    expect(r.errors[0].messageEn).toContain('must not be zero')
+  })
+
+  it('REVOLVE 生成旋转体，负 y 截面报错', () => {
+    const ok = run('REVOLVE 3, 360, 0,\n  0, 0.2, 1,\n  0.3, 0.2, 0,\n  0.3, 0, -1')
+    expect(ok.errors).toEqual([])
+    expect(ok.shapes[0]).toMatchObject({ type: 'revolve', alpha: 360 })
+
+    const bad = run('REVOLVE 2, 360, 0, 0, -0.1, 1, 0.2, 0.1, -1')
+    expect(bad.errors[0].messageEn).toContain('non-negative')
+  })
+})
+
 describe('P2 扩展：2D 命令', () => {
   it('LINE2/RECT2/CIRCLE2/ARC2 产出 2D 形状', () => {
     const r = run('LINE2 0, 0, 1, 1\nRECT2 0, 0, 2, 2\nCIRCLE2 1, 1, 0.5\nARC2 0, 0, 1, 0, 90')

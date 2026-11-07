@@ -48,6 +48,8 @@ export type Shape =
   | { type: 'cone'; h: number; r1: number; r2: number } & ShapeBase
   | { type: 'ellips'; h: number; rx: number; ry: number } & ShapeBase
   | { type: 'prism'; n: number; h: number; pts: { x: number; y: number; s: number }[] } & ShapeBase
+  | { type: 'extrude'; n: number; dx: number; dy: number; dz: number; pts: { x: number; y: number; s: number }[] } & ShapeBase
+  | { type: 'revolve'; n: number; alpha: number; pts: { x: number; y: number; s: number }[] } & ShapeBase
 
 /** 2D 形状（平面图形，y 向上） */
 export type Shape2 =
