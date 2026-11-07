@@ -1,6 +1,6 @@
 # Learning Path
 
-The full learning path of GDL_Tutorial has three parts, 21 chapters in total, from zero to professional level. Each chapter follows the same structure: **goals → concepts → step-by-step examples → common pitfalls → sandbox exercises → self-check list**.
+The full learning path of GDL_Tutorial has three parts, 19 chapters in total (GDL-00 ~ GDL-18), from zero to professional level. Each chapter follows the same structure: **goals → concepts → step-by-step examples → common pitfalls → sandbox exercises**.
 
 ## Roadmap
 
@@ -8,7 +8,7 @@ The full learning path of GDL_Tutorial has three parts, 21 chapters in total, fr
 |---|---|---|---|
 | Part 1 · Basics | GDL-00 ~ 05 | GDL overview, primitives, transformation stack, parameters, 2D scripts, control flow | ✅ complete (bilingual) |
 | Part 2 · Intermediate | GDL-06 ~ 12 | PRISM family, revolve/loft, materials, macros, doors & windows, strings, practice | ✅ complete (bilingual) |
-| Part 3 · Advanced | GDL-13 ~ 21 | UI script, boolean groups, REQUEST, GLOB variables, final project | Planned |
+| Part 3 · Advanced | GDL-13 ~ 18 | UI script, booleans & hotspots, REQUEST and GLOB, data & files, toolchain, final project | Planned |
 
 ## How to Learn
 
