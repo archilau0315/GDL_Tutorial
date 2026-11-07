@@ -135,3 +135,16 @@
 | 11:20 | commands.json | 新增「数据与文件」分类及 DIM/OPEN/INPUT/OUTPUT/CLOSE/VARTYPE 6 条 | 52 → 58 条，11 分类 |
 
 **验证**：check:data 58 条、check:i18n 76 对、check:search 17/17、单测 41 例、build 成功。
+
+## 2026-11-07 内容校对批次（官方语法核对）
+
+| 时间 | 模块 | 变更简述 | 备注 |
+|---|---|---|---|
+| 10:38 | 13-ui-script.md（中英） | UI 示例改为官方签名：`UI_DIALOG` 只带标题、`UI_PAGE` 用页号、`UI_RADIOBUTTON` 补齐参数名与值；删除不存在的 `UI_CHECKBOX` 与尺寸参数；补命令参数表与「无 UI_ENDDIALOG/UI_ENDPAGE」提示 | `UI_DIALOG` 可用区固定约 444×296 px，尺寸参数无效 |
+| 10:38 | 13-ui-script.md（中英） | 参考答案 2 改为合法写法：两页用 `UI_PAGE 1` / `UI_PAGE 2`，去掉标题当页号的错误 | 同步修正 warning 措辞 |
+| 10:40 | 16-data-and-files.md（中英） | 修正数组越界说法（固定数组报错、动态数组不检查）；新增 `VARDIM1` / `VARDIM2`；`OPEN` 模式改为 ro/wo/wa 并声明无 rw；说明 INPUT 位置从 1 起、OUTPUT 只认 recordID 变化；CLOSE 措辞改为刷盘与截断风险 | 导出示例与参考答案 2 的 `mode = rw` 全部改 `wo` |
+| 10:41 | 18-final-project.md（中英） | UI 示例去掉 `UI_DIALOG` 尺寸参数与 `UI_CHECKBOX`，`swing` 改为一组单选按钮 | 页号改为 1 / 2 |
+| 10:42 | commands.json | 修正 DIM / OPEN / INPUT / OUTPUT / CLOSE / VARTYPE 的描述与参数；VARTYPE 示例换成类型转换写法；新增 VARDIM1 | 58 → 59 条 |
+| 10:43 | README.md | 命令数 58 → 59（badge 与中英正文） | — |
+
+**验证**：check:data 59 条 11 分类、check:i18n 82 对、check:search 17/17、单测 41 例、build 成功。

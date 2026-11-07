@@ -35,10 +35,13 @@ NEXT i
 
 | 写法 | 含义 | 注意 |
 |---|---|---|
-| `DIM a[10]` | 固定长度 | 越界不会报错，会读到垃圾值 |
-| `DIM a[]` | 动态长度 | 赋值时自动扩展，适合读文件 |
+| `DIM a[10]` | 固定长度 | 下标超出声明范围会报错并中止脚本 |
+| `DIM a[]` | 动态长度 | 赋值时自动扩展，适合读文件；不检查越界 |
 | `a[i]` | 第 i 个元素 | 下标从 1 开始，不是 0 |
 | `DIM m[4][3]` | 二维数组 | 最多两维 |
+| `VARDIM1(a)` / `VARDIM2(a)` | 取数组长度 | 动态数组读完文件后，用它拿到实际元素个数 |
+
+固定长度的数组自带边界检查，写错下标会当场报错；动态数组把边界交给你自己管，越界读到的是内存里的垃圾值，而且不一定报错。读文件的循环结束后，用 `VARDIM1(codeArr)` 拿到的才是真实行数，别拿循环变量以外的数去猜。
 
 数组最常见的用途是「把参数表变成几何」：一张层高表、一组门窗分格、一列五金件。**数据放在数组里，几何用循环生成**，改数据不用改代码。
 
@@ -69,7 +72,13 @@ GDL 本身不碰磁盘，文件操作由 **Add-On** 完成。文本文件用官�
 | `OUTPUT` | `OUTPUT channel, recordID, fieldID, expr1, ...` | 无 |
 | `CLOSE` | `CLOSE channel` | 无 |
 
-`recordID` / `fieldID` 是「从哪条记录、哪个字段开始」，具体解释权在 Add-On。文本文件一般按行/分隔符理解。
+`paramString` 里最常用的三项：
+
+- `mode = ro` 只读，`wo` 只写（先清空原文件），`wa` 追加写。**没有 `rw`**，读写要分两次开
+- `SEPARATOR = ','` 指定字段分隔符
+- `LIBRARY` 表示相对当前库部件所在目录找文件
+
+文本 Add-On 里，`INPUT` 的 `recordID` 是行号、`fieldID` 是行内第几个字段，都从 1 起；`OUTPUT` 不看这两个数的具体值，**只认它们变没变**——`recordID` 一变就换一行。所以导出时第 1 行写 `recordID = 1`、第 2 行写 `2`，纯粹是让人读起来对得上。
 
 ```gdl
 ! 读一个 3 列的 CSV：编号,宽,高
@@ -90,10 +99,10 @@ ENDIF
 
 四步走：`OPEN` 判返回值 → 循环 `INPUT` 直到 `-1` → 存进动态数组 → `CLOSE`。**`OPEN` 一定要判 `> 0`**，否则后面所有 `INPUT` 都在对不存在的通道说话。
 
-导出方向同理：
+导出方向换 `mode = wo`（新建或覆盖）：
 
 ```gdl
-ch = OPEN ("TEXT", "schedule.csv", "SEPARATOR = ',', mode = rw, LIBRARY")
+ch = OPEN ("TEXT", "schedule.csv", "SEPARATOR = ',', mode = wo, LIBRARY")
 IF ch > 0 THEN
   OUTPUT ch, 1, 1, "CODE", "WIDTH", "HEIGHT"
   FOR i = 1 TO n
@@ -102,6 +111,8 @@ IF ch > 0 THEN
   CLOSE ch
 ENDIF
 ```
+
+`CLOSE` 负责把缓冲区刷到磁盘。写到一半直接崩掉，文件多半是残缺的，所以导出完立刻 `CLOSE`，别留在循环后面忘了。
 
 ::: warning 沙盒暂未支持数组与文件
 沙盒引擎只实现章节需要的几何与流程命令，`DIM`、`OPEN`、`INPUT`、`OUTPUT` 都不在其中，本章因此没有交互演示。练习请直接在 Archicad 的库部件编辑器里做，用「检查脚本」看返回值。
@@ -133,7 +144,7 @@ FILE_DEPENDENCE "cabinet.csv"
 ## 常见坑
 
 ::: warning 三个高频错误
-1. **数组下标用 0**：`a[0]` 不是第一个元素，读到的值没有意义
+1. **数组下标用 0**：固定数组直接报错，动态数组读到的是无意义的值
 2. **`OPEN` 不判返回值**：文件缺失时 `-1` 被当成通道号，后面全是无效操作
 3. **`STR` 宽度给小了**：数字变成 `****`，导出的表全是星号
 :::
@@ -165,7 +176,7 @@ NEXT i
 
 ::: details 参考答案 2
 ```gdl
-ch = OPEN ("TEXT", "shelf.csv", "SEPARATOR = ',', mode = rw, LIBRARY")
+ch = OPEN ("TEXT", "shelf.csv", "SEPARATOR = ',', mode = wo, LIBRARY")
 IF ch > 0 THEN
   OUTPUT ch, 1, 1, "INDEX", "HEIGHT"
   FOR i = 1 TO 5

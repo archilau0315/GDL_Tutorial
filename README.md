@@ -7,7 +7,7 @@
 [![Vue 3](https://img.shields.io/badge/Vue-3-42b883?logo=vue.js&logoColor=white)](https://vuejs.org)
 [![Three.js](https://img.shields.io/badge/Three.js-r170-000000?logo=three.js&logoColor=white)](https://threejs.org)
 [![Tests](https://img.shields.io/badge/tests-41%20passed-2ea44f)](tests/engine.test.ts)
-[![Commands](https://img.shields.io/badge/commands-58-0b7285)](docs/reference/data/commands.json)
+[![Commands](https://img.shields.io/badge/commands-59-0b7285)](docs/reference/data/commands.json)
 [![License](https://img.shields.io/badge/license-internal-lightgrey)](#授权--license)
 
 天津匡形无界智能科技 · 内部学习资源 / *Tianjin Kuangxing Wujie Intelligent Technology · internal learning resource*
@@ -21,7 +21,7 @@
 一个网页版的 GDL 学习站，两个身份合一：
 
 - **教程**：19 章（GDL-00 ~ GDL-18）分步教学，从画第一个立方体到交付一个完整门窗对象
-- **资料库**：命令速查（58 条 / 11 类）、可搜索的签名与示例、章节回链，中文检索为第一优先级
+- **资料库**：命令速查（59 条 / 11 类）、可搜索的签名与示例、章节回链，中文检索为第一优先级
 
 页面里嵌了自研的 GDL 沙盒：左边写代码，右边实时出 3D 或 2D 平面符号。**沙盒是可运行的插图，不是在线编译器**——它只实现章节需要的命令，用来把「改一个数，模型怎么变」讲清楚。
 
@@ -111,7 +111,7 @@ GDL_BASE=/resources/GDL_Tutorial/ npm run build
 A web-based GDL learning site with two roles in one place:
 
 - **Tutorial**: 19 chapters (GDL-00 ~ GDL-18), from the first cube to a delivered door/window object
-- **Reference**: 58 commands in 11 categories with searchable signatures, examples and chapter back-links — Chinese lookup first
+- **Reference**: 59 commands in 11 categories with searchable signatures, examples and chapter back-links — Chinese lookup first
 
 Every chapter can embed our own GDL sandbox: code on the left, live 3D or 2D plan symbol on the right. **The sandbox is a runnable illustration, not an online compiler** — it implements only the commands the chapters need, so "change one number, see what moves" stays honest.
 

@@ -71,21 +71,26 @@ Do not confuse `PARAMETERS` with `LOCK`: the first means "this value is computed
 
 ## The UI script: lay the parameters out
 
-Since Archicad 25 the Library Part Editor has a UI Script page, where commands draw a custom settings panel instead of the default flat parameter list. The structure has three levels: dialog → page → control.
+The UI Script page in the Library Part Editor draws a custom settings panel with commands. The structure has three levels — dialog → page → control — and **the whole script is one dialog**: there is no end statement and no way to open a second dialog in the same part.
 
 ```gdl
-! 结构示意；坐标单位与参数顺序以官方 GDL Reference 为准
-UI_DIALOG "Cabinet Settings", 320, 240    ! title, width, height
-UI_PAGE "Size"
-  UI_OUTFIELD "Width",  10, 10, 70, 20
-  UI_INFIELD  "w",      85, 10, 90, 20
-  UI_OUTFIELD "Height", 10, 40, 70, 20
-  UI_INFIELD  "h",      85, 40, 90, 20
-UI_PAGE "Doors"
-  UI_RADIOBUTTON "Single", 10, 10, 80, 20
-  UI_RADIOBUTTON "Double", 10, 35, 80, 20
-  UI_CHECKBOX    "Handle", 10, 70, 100, 20
+UI_DIALOG "Cabinet Settings"
+  ! coordinates are pixels, origin at the top-left, y grows downwards
+  UI_OUTFIELD "Width",  15, 40, 180, 20
+  UI_INFIELD  "w",      200, 40, 105, 20
+  UI_OUTFIELD "Height", 15, 70, 180, 20
+  UI_INFIELD  "h",      200, 70, 105, 20
+  UI_RADIOBUTTON "doorType", 0, "Single", 15, 110, 100, 20
+  UI_RADIOBUTTON "doorType", 1, "Double", 15, 130, 100, 20
 ```
+
+| Command | Argument order | Notes |
+|---|---|---|
+| `UI_DIALOG` | title | Only one allowed; the usable area is fixed at about 444 × 296 px, so size arguments change nothing |
+| `UI_PAGE` | page number [, parent page, page title] | Controls belong to the nearest `UI_PAGE`; the title only shows with hierarchical tabs |
+| `UI_OUTFIELD` | text, x, y [, width, height] | Display only, not bound to a parameter |
+| `UI_INFIELD` | parameter name, x, y, width, height | Input field, writes straight back to the parameter |
+| `UI_RADIOBUTTON` | parameter name, value, text, x, y, width, height | Buttons on the same parameter form one mutually exclusive group |
 
 Three layout principles:
 
@@ -93,10 +98,12 @@ Three layout principles:
 2. Label on the left, input on the right, aligned in two columns so the eye does not jump
 3. Frequent parameters top-left of page one; rare ones (materials, pens) on the last page
 
+Two blanks that trip people up: **there is no `UI_CHECKBOX` command** — a checkbox is the checkbox mode of `UI_INFIELD` (written `UI_INFIELD{3}` in the official examples; see the reference for the argument order); **there is no `UI_ENDDIALOG` / `UI_ENDPAGE`** — do not add closing tags out of habit from other languages.
+
 The UI script only displays and writes back — it never models. `UI_INFIELD "w"` just binds a control to parameter `w`; the 3D script still draws the cabinet with `w`.
 
 ::: warning The sandbox does not support parameter tables or UI scripts
-The sandbox only executes variables and geometry commands. `VALUES` / `PARAMETERS` / `UI_*` are unknown there. The code blocks in this chapter are **structural sketches** — verify them in the Library Part Editor. Argument order also follows the official reference; the fastest way to compare is to open a stock library part with a custom panel and read its UI script.
+The sandbox only executes variables and geometry commands. `VALUES` / `PARAMETERS` / `UI_*` are unknown there. The code blocks in this chapter follow the official signatures but only run in the Library Part Editor; the fastest way to compare is to open a stock library part with a custom panel and read its UI script.
 :::
 
 ## Sandbox demo: variables are a parameter table in embryo
@@ -139,13 +146,13 @@ Numbers inside `VALUES` carry no unit — the parameter type (`Length`) decides 
 
 ::: details Answer 2
 ```gdl
-UI_DIALOG "Cabinet Settings", 300, 200
-UI_PAGE "Size"
+UI_DIALOG "Cabinet Settings"
+UI_PAGE 1
   UI_OUTFIELD "Width", 10, 10, 70, 20
   UI_INFIELD  "w",    85, 10, 90, 20
   UI_OUTFIELD "Height", 10, 40, 70, 20
   UI_INFIELD  "h",    85, 40, 90, 20
-UI_PAGE "Boards"
+UI_PAGE 2
   UI_OUTFIELD "Depth", 10, 10, 70, 20
   UI_INFIELD  "d",    85, 10, 90, 20
   UI_OUTFIELD "Thickness", 10, 40, 70, 20
@@ -153,7 +160,7 @@ UI_PAGE "Boards"
   UI_OUTFIELD "Shelves", 10, 70, 70, 20
   UI_INFIELD  "n",    85, 70, 90, 20
 ```
-Controls on each page start again from `y = 10`: coordinates are page-relative, not dialog-relative.
+Page numbers start at 1, and every page starts again from its own top-left corner. The tab title is the third argument of `UI_PAGE` and only appears with hierarchical tabs.
 :::
 
 ---

@@ -118,19 +118,20 @@ HOTSPOT2 0, -0.1, 5, B, 3
 HOTSPOT2 0, B, 6, B, 2
 ```
 
-界面按第 13 章的三层结构，把 8 个参数分两页：
+界面按第 13 章的三层结构，把最常用的几个参数分两页：
 
 ```gdl
-UI_DIALOG "门 / Door", 320, 220
-UI_PAGE "尺寸 / Size"
+UI_DIALOG "门 / Door"
+UI_PAGE 1
   UI_OUTFIELD "洞口宽", 10, 10, 70, 20
   UI_INFIELD  "A",     85, 10, 90, 20
   UI_OUTFIELD "洞口高", 10, 40, 70, 20
   UI_INFIELD  "B",     85, 40, 90, 20
-UI_PAGE "构造 / Build"
+UI_PAGE 2
   UI_OUTFIELD "墙厚", 10, 10, 70, 20
   UI_INFIELD  "wallT", 85, 10, 90, 20
-  UI_CHECKBOX "右开", 10, 45, 120, 20
+  UI_RADIOBUTTON "swing", 0, "左开", 10, 45, 80, 20
+  UI_RADIOBUTTON "swing", 1, "右开", 10, 70, 80, 20
 ```
 
 ## 第四步：验收清单

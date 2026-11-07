@@ -35,10 +35,13 @@ NEXT i
 
 | Form | Meaning | Note |
 |---|---|---|
-| `DIM a[10]` | fixed length | out-of-range reads return garbage, no error |
-| `DIM a[]` | dynamic length | grows on assignment, ideal for file input |
+| `DIM a[10]` | fixed length | an index outside the declared range raises an error and stops the script |
+| `DIM a[]` | dynamic length | grows on assignment, ideal for file input; bounds are not checked |
 | `a[i]` | element i | 1-based, not 0 |
 | `DIM m[4][3]` | two-dimensional | two dimensions maximum |
+| `VARDIM1(a)` / `VARDIM2(a)` | array length | use it to get the real element count after reading a file |
+
+Fixed-length arrays are bounds-checked, so a bad index fails immediately; dynamic arrays leave bounds to you, where an overflow reads whatever memory holds and may not complain. After the read loop, `VARDIM1(codeArr)` is the true row count — do not guess it from anything else.
 
 The classic use is "turn a table into geometry": storey heights, door mullions, a hardware list. **Data in the array, geometry in the loop** — changing data never touches code.
 
@@ -69,7 +72,13 @@ GDL does not touch disks itself — file access comes from an **Add-On**. For te
 | `OUTPUT` | `OUTPUT channel, recordID, fieldID, expr1, ...` | nothing |
 | `CLOSE` | `CLOSE channel` | nothing |
 
-`recordID` / `fieldID` mean "which record and field to start from"; the Add-On interprets them, which for text files usually means line and separator.
+`recordID` / `fieldID` are interpreted by the Add-On. Three `paramString` keys matter most:
+
+- `mode = ro` read-only, `wo` write (truncates the file first), `wa` append. **There is no `rw`** — open twice if you need both directions
+- `SEPARATOR = ','` sets the field separator
+- `LIBRARY` resolves the path relative to the library part
+
+In the text Add-On, `INPUT`'s `recordID` is the line number and `fieldID` the field within that line, both 1-based; `OUTPUT` ignores the values themselves and **only watches whether they change** — a new `recordID` starts a new line. That is why exports number rows 1, 2, 3: purely for human readability.
 
 ```gdl
 ! read a 3-column CSV: code,width,height
@@ -90,10 +99,10 @@ ENDIF
 
 Four steps: `OPEN` and check the return value → loop `INPUT` until `-1` → store into dynamic arrays → `CLOSE`. **Always test `OPEN > 0`**, otherwise every later `INPUT` talks to a channel that does not exist.
 
-Export is the mirror image:
+Export the other way round with `mode = wo` (create or overwrite):
 
 ```gdl
-ch = OPEN ("TEXT", "schedule.csv", "SEPARATOR = ',', mode = rw, LIBRARY")
+ch = OPEN ("TEXT", "schedule.csv", "SEPARATOR = ',', mode = wo, LIBRARY")
 IF ch > 0 THEN
   OUTPUT ch, 1, 1, "CODE", "WIDTH", "HEIGHT"
   FOR i = 1 TO n
@@ -102,6 +111,8 @@ IF ch > 0 THEN
   CLOSE ch
 ENDIF
 ```
+
+`CLOSE` flushes the buffer to disk. If the object dies midway the file is usually truncated, so close as soon as the export loop ends.
 
 ::: warning The sandbox supports neither arrays nor files
 The engine implements only the geometry and flow commands the chapters need. `DIM`, `OPEN`, `INPUT` and `OUTPUT` are not among them, so this chapter has no interactive demo. Do the exercises in the Library Part Editor and use Check Script to inspect return values.
@@ -133,7 +144,7 @@ Test with `IF VARTYPE (v) = 2 THEN` before converting. GDL will not catch a type
 ## Common pitfalls
 
 ::: warning Three frequent mistakes
-1. **Indexing from 0**: `a[0]` is not the first element and returns nothing meaningful
+1. **Indexing from 0**: `a[0]` fails outright on a fixed array and returns noise on a dynamic one
 2. **Ignoring the `OPEN` return value**: `-1` becomes the channel and everything after fails quietly
 3. **A too-narrow `STR`**: numbers export as `****` and the whole table is unusable
 :::
@@ -165,7 +176,7 @@ NEXT i
 
 ::: details Answer 2
 ```gdl
-ch = OPEN ("TEXT", "shelf.csv", "SEPARATOR = ',', mode = rw, LIBRARY")
+ch = OPEN ("TEXT", "shelf.csv", "SEPARATOR = ',', mode = wo, LIBRARY")
 IF ch > 0 THEN
   OUTPUT ch, 1, 1, "INDEX", "HEIGHT"
   FOR i = 1 TO 5

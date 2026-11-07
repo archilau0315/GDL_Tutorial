@@ -118,19 +118,20 @@ HOTSPOT2 0, -0.1, 5, B, 3
 HOTSPOT2 0, B, 6, B, 2
 ```
 
-The interface uses the three-level structure from Chapter 13 to split eight parameters over two pages:
+The interface uses the three-level structure from Chapter 13 to split the most-used parameters over two pages:
 
 ```gdl
-UI_DIALOG "Door", 320, 220
-UI_PAGE "Size"
+UI_DIALOG "Door"
+UI_PAGE 1
   UI_OUTFIELD "Opening width", 10, 10, 70, 20
   UI_INFIELD  "A",            85, 10, 90, 20
   UI_OUTFIELD "Opening height", 10, 40, 70, 20
   UI_INFIELD  "B",            85, 40, 90, 20
-UI_PAGE "Build"
+UI_PAGE 2
   UI_OUTFIELD "Wall thickness", 10, 10, 70, 20
   UI_INFIELD  "wallT",         85, 10, 90, 20
-  UI_CHECKBOX "Open right",    10, 45, 120, 20
+  UI_RADIOBUTTON "swing", 0, "Left",  10, 45, 80, 20
+  UI_RADIOBUTTON "swing", 1, "Right", 10, 70, 80, 20
 ```
 
 ## Step 4: acceptance list
