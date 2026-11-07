@@ -163,3 +163,18 @@
 | 10:54 | README.md / reference/index.md | 补「资料库」模块表、GLOB 徽章与入口链接；命令页与目录说明同步 | 中英双语 |
 
 **验证**：check:data 59 条命令 + 28 个变量、check:i18n 84 对、check:search 20/20、单测 41 例、build 成功。
+
+## 2026-11-07 开源定位修正 + 代码片段库（P4c 第二模块）
+
+| 时间 | 模块 | 变更简述 | 备注 |
+|---|---|---|---|
+| 10:56 | README.md | 定位由「公司内部学习资源」改为「公司开发并开源发布的资料」：徽章改 open source，授权段改为内容 CC BY 4.0 + 代码 MIT，中英同步 | 补「与 Graphisoft 无隶属关系」声明 |
+| 10:57 | reference/data/snippets.json | 新建 12 段片段 / 4 类（几何阵列、参数联动、2D 符号、数据文件），字段含标题、说明、代码、标签、章节回链、沙盒可运行标记 | 全部为原创写法 |
+| 10:57 | theme/components/SnippetList.vue | 新建片段库组件：搜索（标题/说明/代码/标签）+ 分类筛选 + 一键复制（含降级方案） | 注册为 `SnippetList` |
+| 10:58 | theme/i18n.ts | 新增 9 组文案：搜索、全部、计数、空态、复制、已复制、沙盒可运行、章节、来源 | 中英成对 |
+| 10:58 | reference/snippets.md（中英） | 新建页面：用法说明 + 片段列表 + 单源数据提示 | 中英镜像 |
+| 10:59 | config.mts / reference/index.md | 侧边栏与资料库入口加入片段库 | 两语 |
+| 10:59 | scripts/check-data.mjs | 扩展校验 snippets.json：id 唯一、分类、中英字段、sandbox 布尔、章节存在 | 一份脚本校验三份数据 |
+| 11:00 | scripts/check-search.mjs | 新增 2 条片段查询用例；「圆形阵列」改为页面实有文案「沙盒可运行」 | 20 → 22 条，22/22 命中 |
+
+**验证**：check:data 59 条命令 + 28 个变量 + 12 个片段、check:i18n 85 对、check:search 22/22、单测 41 例、build 成功。

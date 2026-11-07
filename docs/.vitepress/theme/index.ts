@@ -3,6 +3,7 @@ import DefaultTheme from 'vitepress/theme'
 import GdlPlayground from './components/GdlPlayground.vue'
 import CommandTable from './components/CommandTable.vue'
 import GlobTable from './components/GlobTable.vue'
+import SnippetList from './components/SnippetList.vue'
 import './style.css'
 
 export default {
@@ -11,5 +12,6 @@ export default {
     app.component('GdlPlayground', GdlPlayground)
     app.component('CommandTable', CommandTable)
     app.component('GlobTable', GlobTable)
+    app.component('SnippetList', SnippetList)
   }
 }

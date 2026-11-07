@@ -78,6 +78,26 @@ for (const g of glob.globals ?? []) {
   checkChapter(at, g.chapter)
 }
 
+/* ---------- 代码片段 ---------- */
+const snip = load('snippets.json')
+const snipCats = new Set((snip.categories ?? []).map(c => c.id))
+const snipIds = new Set()
+if (!snip.meta?.version) errors.push('snippets: 缺少 meta.version')
+
+for (const s of snip.snippets ?? []) {
+  const at = `片段 ${s.id ?? '(无 id)'}`
+  if (!s.id) errors.push(`${at}: 缺少 id`)
+  if (snipIds.has(s.id)) errors.push(`${at}: id 重复`)
+  snipIds.add(s.id)
+  if (!snipCats.has(s.category)) errors.push(`${at}: 未知分类 ${s.category}`)
+  if (!s.code?.trim()) errors.push(`${at}: 缺少 code`)
+  if (typeof s.sandbox !== 'boolean') errors.push(`${at}: sandbox 必须是布尔值`)
+  checkPair(at, 'title', s.title)
+  checkPair(at, 'desc', s.desc)
+  checkPair(at, 'tags', s.tags, true)
+  checkChapter(at, s.chapter)
+}
+
 if (errors.length) {
   console.error(`速查数据校验失败（${errors.length} 项）：`)
   errors.forEach(e => console.error('  - ' + e))
@@ -85,5 +105,6 @@ if (errors.length) {
 }
 console.log(
   `速查数据校验通过：${cmd.commands.length} 条命令 / ${cmd.categories.length} 类，` +
-  `${glob.globals.length} 个 GLOB 变量 / ${glob.categories.length} 类`
+  `${glob.globals.length} 个 GLOB 变量 / ${glob.categories.length} 类，` +
+  `${snip.snippets.length} 个片段 / ${snip.categories.length} 类`
 )

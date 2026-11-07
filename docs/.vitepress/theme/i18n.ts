@@ -34,7 +34,16 @@ export const dict = {
     globTypeString: '字符串',
     globTypeArray: '数组',
     globChapter: '对应章节',
-    globSource: '变量名与类型按官方 Global Variables 章节整理，示例为本站原创'
+    globSource: '变量名与类型按官方 Global Variables 章节整理，示例为本站原创',
+    snipSearch: '搜索片段、标签或代码…',
+    snipAll: '全部',
+    snipFound: '{n} 个片段',
+    snipEmpty: '没有匹配的片段，换个关键词试试',
+    snipCopy: '复制',
+    snipCopied: '已复制',
+    snipRunnable: '沙盒可运行',
+    snipChapter: '对应章节',
+    snipSource: '片段为本站原创，按需取用；标「沙盒可运行」的可直接粘进在线沙盒验证'
   },
   en: {
     run: 'Run',
@@ -69,7 +78,16 @@ export const dict = {
     globTypeString: 'string',
     globTypeArray: 'array',
     globChapter: 'Related chapter',
-    globSource: 'Names and types follow the official Global Variables chapter; examples are original'
+    globSource: 'Names and types follow the official Global Variables chapter; examples are original',
+    snipSearch: 'Search a snippet, tag or code…',
+    snipAll: 'All',
+    snipFound: '{n} snippet(s)',
+    snipEmpty: 'No snippet matches — try another keyword',
+    snipCopy: 'Copy',
+    snipCopied: 'Copied',
+    snipRunnable: 'runs in sandbox',
+    snipChapter: 'Related chapter',
+    snipSource: 'Snippets are original; those marked "runs in sandbox" can be pasted into the playground as-is'
   }
 } as const
 

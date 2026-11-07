@@ -67,7 +67,9 @@ const cases = [
   ['立方体', ['reference/commands/block']],
   ['GLOB_SCALE', ['reference/globals']],
   ['楼层标高', ['reference/globals']],
-  ['全局变量', ['reference/globals', 'guide/part3-advanced/15-request-and-glob']]
+  ['全局变量', ['reference/globals', 'guide/part3-advanced/15-request-and-glob']],
+  ['代码片段', ['reference/snippets']],
+  ['沙盒可运行', ['reference/snippets']]
 ]
 
 let pass = 0

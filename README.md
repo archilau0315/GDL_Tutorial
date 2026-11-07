@@ -9,9 +9,9 @@
 [![Tests](https://img.shields.io/badge/tests-41%20passed-2ea44f)](tests/engine.test.ts)
 [![Commands](https://img.shields.io/badge/commands-59-0b7285)](docs/reference/data/commands.json)
 [![Globals](https://img.shields.io/badge/GLOB-28-5f3dc4)](docs/reference/data/globals.json)
-[![License](https://img.shields.io/badge/license-internal-lightgrey)](#授权--license)
+[![License](https://img.shields.io/badge/license-open%20source-2ea44f)](#授权--license)
 
-天津匡形无界智能科技 · 内部学习资源 / *Tianjin Kuangxing Wujie Intelligent Technology · internal learning resource*
+天津匡形无界智能科技 · 开源项目 / *Tianjin Kuangxing Wujie Intelligent Technology · open source project*
 
 ---
 
@@ -40,7 +40,7 @@
 |---|---|---|
 | 命令速查 | 59 条 / 11 类，支持关键词与分类筛选，每条有独立详情页 | ✅ |
 | GLOB 变量速查 | 28 个常用全局变量 / 7 类，附最小示例与「常见误传」 | ✅ |
-| 代码片段库 | 可直接粘贴的常用片段 | 规划 |
+| 代码片段库 | 12 段常用写法，一键复制，标注沙盒可运行与对应章节 | ✅ |
 | 常见错误手册 | 报错信息 → 原因 → 改法 | 规划 |
 
 所有速查数据存放在 `docs/reference/data/*.json`，中英字段同文件保存，`npm run check:data` 校验结构、分类与章节链接。
@@ -105,7 +105,7 @@ debug_log_1.md                # 变更记录
 ### 部署
 
 - 预览：GitHub Actions 推送 main 自动构建到 GitHub Pages
-- 正式：部署到公司网站资源目录，用环境变量 `GDL_BASE` 指定子路径，**改路径不改代码**
+- 正式：部署到公司站点的资源目录，用环境变量 `GDL_BASE` 指定子路径，**改路径不改代码**
 
 ```bash
 GDL_BASE=/resources/GDL_Tutorial/ npm run build
@@ -113,7 +113,12 @@ GDL_BASE=/resources/GDL_Tutorial/ npm run build
 
 ### 授权 / License
 
-公司内部学习资源，内容原创，示例自写；命令签名整理自 Graphisoft 官方 GDL Reference 并注明出处。Archicad、GDL 为 Graphisoft 商标。
+本项目由天津匡形无界智能科技开发并开源发布，欢迎转载、教学使用与二次开发：
+
+- **内容**（章节、图示、示例代码）：CC BY 4.0，署名即可使用
+- **代码**（沙盒引擎、组件、脚本）：MIT
+
+命令签名整理自 Graphisoft 官方 GDL Reference 并注明出处；Archicad、GDL 为 Graphisoft 商标，本项目与 Graphisoft 无隶属关系。
 
 ---
 
@@ -142,7 +147,7 @@ Every chapter can embed our own GDL sandbox: code on the left, live 3D or 2D pla
 |---|---|---|
 | Command index | 59 commands in 11 categories, searchable and filterable, one detail page each | ✅ |
 | GLOB variables | 28 common globals in 7 groups, with minimal examples and a "common myths" table | ✅ |
-| Snippet library | Copy-paste ready fragments | planned |
+| Snippet library | 12 common patterns with one-click copy, sandbox support and chapter links | ✅ |
 | Error handbook | Error message → cause → fix | planned |
 
 All reference data lives in `docs/reference/data/*.json` with both languages in one record; `npm run check:data` validates structure, categories and chapter links.
@@ -192,7 +197,7 @@ tests/                        # engine tests
 ### Deployment
 
 - Preview: GitHub Actions builds `main` to GitHub Pages
-- Production: the same build served from the company resource directory; the sub-path comes from `GDL_BASE`, no code changes
+- Production: the same build served from the company site's resource directory; the sub-path comes from `GDL_BASE`, no code changes
 
 ```bash
 GDL_BASE=/resources/GDL_Tutorial/ npm run build
@@ -200,4 +205,9 @@ GDL_BASE=/resources/GDL_Tutorial/ npm run build
 
 ### License
 
-Internal learning resource. All explanations and examples are original; command signatures are compiled from the official Graphisoft GDL Reference with attribution. Archicad and GDL are trademarks of Graphisoft.
+Developed and open-sourced by Tianjin Kuangxing Wujie Intelligent Technology. Reuse, teaching and derivative work are welcome:
+
+- **Content** (chapters, diagrams, example code): CC BY 4.0 — reuse with attribution
+- **Code** (sandbox engine, components, scripts): MIT
+
+Command signatures are compiled from the official Graphisoft GDL Reference with attribution. Archicad and GDL are trademarks of Graphisoft; this project is not affiliated with Graphisoft.

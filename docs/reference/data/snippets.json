@@ -1,0 +1,174 @@
+{
+  "meta": {
+    "version": "1.0",
+    "updated": "2026-11-07",
+    "note": {
+      "zh": "片段可直接粘贴进库部件脚本；标「沙盒可运行」的能在本站沙盒里看到效果，其余需要 Archicad 环境。",
+      "en": "Snippets can be pasted into a library part script. Those marked \"runs in sandbox\" work in the site sandbox; the rest need Archicad."
+    }
+  },
+  "categories": [
+    { "id": "geometry", "zh": "几何与阵列", "en": "Geometry & Arrays" },
+    { "id": "param", "zh": "参数与联动", "en": "Parameters & Linking" },
+    { "id": "twod", "zh": "2D 符号", "en": "2D Symbols" },
+    { "id": "data", "zh": "数据与文件", "en": "Data & Files" }
+  ],
+  "snippets": [
+    {
+      "id": "table",
+      "category": "geometry",
+      "title": { "zh": "四腿桌：桌面 + 双层循环", "en": "Four-leg table: top + nested loop" },
+      "desc": {
+        "zh": "用两层 FOR 摆四条腿，位置按桌面尺寸算，改 w/d 腿自动跟随。每轮结束 DEL 1 清掉 ADD。",
+        "en": "Two nested FOR loops place four legs from the top size; change w/d and the legs follow. DEL 1 clears each ADD."
+      },
+      "code": "w = 1.2\nd = 0.6\nh = 0.72\nth = 0.04\nlegR = 0.03\n\nADD 0, 0, h - th\nBLOCK w, d, th\nDEL 1\n\nFOR i = 1 TO 2\n  FOR j = 1 TO 2\n    ADD legR + (i - 1) * (w - 2 * legR), legR + (j - 1) * (d - 2 * legR), 0\n    CYLIND h - th, legR\n    DEL 1\n  NEXT j\nNEXT i",
+      "chapter": { "zh": "/guide/part1-basics/01-first-3d-object", "en": "/en/guide/part1-basics/01-first-3d-object" },
+      "tags": { "zh": ["桌子", "循环", "家具"], "en": ["table", "loop", "furniture"] },
+      "sandbox": true
+    },
+    {
+      "id": "radial-array",
+      "category": "geometry",
+      "title": { "zh": "圆形阵列：ROTZ 每轮转一点", "en": "Radial array with ROTZ" },
+      "desc": {
+        "zh": "把「旋转 → 平移 → 建模」放进循环，每轮转 360/n 度。DEL 2 同时清掉旋转和平移，避免累积。",
+        "en": "Put rotate → move → model inside the loop, turning 360/n each pass. DEL 2 clears both transforms so nothing accumulates."
+      },
+      "code": "n = 12\nr = 1.5\n\nFOR i = 1 TO n\n  ROTZ i * 360 / n\n  ADD r, 0, 0\n  BLOCK 0.2, 0.1, 0.6\n  DEL 2\nNEXT i",
+      "chapter": { "zh": "/guide/part1-basics/02-transform-stack", "en": "/en/guide/part1-basics/02-transform-stack" },
+      "tags": { "zh": ["阵列", "旋转", "环形"], "en": ["array", "rotate", "circular"] },
+      "sandbox": true
+    },
+    {
+      "id": "railing",
+      "category": "geometry",
+      "title": { "zh": "等距立柱：按长度自动分格", "en": "Evenly spaced posts" },
+      "desc": {
+        "zh": "间距由总长和根数算出，改 len 或 n 都能均分。位置用绝对坐标算，不靠累加。",
+        "en": "Spacing is derived from length and count, so changing len or n keeps it even; positions are absolute, not accumulated."
+      },
+      "code": "len = 3.6\nn = 7\ngap = len / (n - 1)\n\nFOR i = 1 TO n\n  ADD (i - 1) * gap, 0, 0\n  CYLIND 1.1, 0.03\n  DEL 2\nNEXT i\n\nADD 0, 0, 1.1\nBLOCK len, 0.06, 0.04\nDEL 1",
+      "chapter": { "zh": "/guide/part1-basics/05-control-flow", "en": "/en/guide/part1-basics/05-control-flow" },
+      "tags": { "zh": ["栏杆", "均分", "间距"], "en": ["railing", "spacing", "divide"] },
+      "sandbox": true
+    },
+    {
+      "id": "holed-panel",
+      "category": "geometry",
+      "title": { "zh": "带洞板：四块拼出洞口", "en": "Holed panel from four blocks" },
+      "desc": {
+        "zh": "沙盒没有布尔运算，用左右两条 + 上下两块拼出圆孔；Archicad 里可换成 SUBGROUP 挖洞。",
+        "en": "Without booleans, split the panel into two side strips and two filler blocks; replace with SUBGROUP in Archicad."
+      },
+      "code": "w = 0.60\nh = 2.00\nth = 0.02\nholeX = 0.30\nholeZ = 1.20\nholeR = 0.06\n\nBLOCK holeX - holeR, th, h\n\nADD holeX + holeR, 0, 0\nBLOCK w - holeX - holeR, th, h\nDEL 1\n\nADD holeX - holeR, 0, 0\nBLOCK 2 * holeR, th, holeZ - holeR\n\nADD 0, 0, holeZ + holeR\nBLOCK 2 * holeR, th, h - holeZ - holeR\nDEL 2",
+      "chapter": { "zh": "/guide/part3-advanced/14-boolean-and-hotspots", "en": "/en/guide/part3-advanced/14-boolean-and-hotspots" },
+      "tags": { "zh": ["开洞", "布尔", "拼块"], "en": ["hole", "boolean", "split"] },
+      "sandbox": true
+    },
+    {
+      "id": "clamp-params",
+      "category": "param",
+      "title": { "zh": "参数夹紧：把输入限制在合理区间", "en": "Clamp parameters to a valid range" },
+      "desc": {
+        "zh": "写在参数脚本里，用户输错值会被自动拉回边界，同时保证高度不小于宽度的两倍。",
+        "en": "Put it in the parameter script: out-of-range input is pulled back, and height stays at least twice the width."
+      },
+      "code": "! 参数脚本 / parameter script\nIF b < 0.4 THEN b = 0.4\nIF b > 1.2 THEN b = 1.2\nIF h < b * 2 THEN h = b * 2",
+      "chapter": { "zh": "/guide/part1-basics/03-parameters", "en": "/en/guide/part1-basics/03-parameters" },
+      "tags": { "zh": ["参数", "校验", "范围"], "en": ["parameter", "validate", "range"] },
+      "sandbox": false
+    },
+    {
+      "id": "material-follow",
+      "category": "param",
+      "title": { "zh": "材质跟随参数", "en": "Materials driven by parameters" },
+      "desc": {
+        "zh": "把材质索引做成参数，用户选材质即可整件切换；`MATERIAL` 只影响其后的建模命令。",
+        "en": "Expose material indices as parameters; `MATERIAL` affects only the commands that follow it."
+      },
+      "code": "! matFrame、matLeaf 为整数型材质参数\nMATERIAL matFrame\nBLOCK 0.05, 0.20, 2.10\n\nMATERIAL matLeaf\nADD 0.05, 0, 0\nBLOCK 0.90, 0.04, 2.00\nDEL 1",
+      "chapter": { "zh": "/guide/part2-intermediate/08-materials", "en": "/en/guide/part2-intermediate/08-materials" },
+      "tags": { "zh": ["材质", "参数", "门窗"], "en": ["material", "parameter", "door"] },
+      "sandbox": true
+    },
+    {
+      "id": "storey-filter",
+      "category": "param",
+      "title": { "zh": "只在本层绘制", "en": "Draw only on the home storey" },
+      "desc": {
+        "zh": "`GLOB_CH_STORY_DIST` 不为 0 说明当前平面不是对象所在层，跳过重负载绘制，平面图更轻。",
+        "en": "A non-zero `GLOB_CH_STORY_DIST` means the plan is on another storey; skip heavy drawing to keep plans light."
+      },
+      "code": "IF GLOB_CH_STORY_DIST = 0 THEN\n  ! 本层：画完整细节 / home storey: full detail\n  BLOCK 1.0, 0.6, 2.0\nELSE\n  ! 他层：只画占位轮廓 / other storeys: outline only\n  RECT2 0, 0, 1.0, 0.6\nENDIF",
+      "chapter": { "zh": "/guide/part3-advanced/15-request-and-glob", "en": "/en/guide/part3-advanced/15-request-and-glob" },
+      "tags": { "zh": ["楼层", "性能", "GLOB"], "en": ["storey", "performance", "GLOB"] },
+      "sandbox": false
+    },
+    {
+      "id": "plan-symbol",
+      "category": "twod",
+      "title": { "zh": "平面符号：轮廓 + 对角线 + 标注", "en": "Plan symbol: outline, diagonal, label" },
+      "desc": {
+        "zh": "2D 脚本的最小骨架：矩形轮廓、一条对角线表示方向、一个中心圆点、一行文字。",
+        "en": "The minimal 2D skeleton: rectangle, a diagonal for orientation, a centre dot and one line of text."
+      },
+      "code": "RECT2 0, 0, 1.2, 0.6\nLINE2 0, 0, 1.2, 0.6\nCIRCLE2 0.6, 0.3, 0.05\nTEXT2 0.05, 0.68, \"1200 x 600\"",
+      "chapter": { "zh": "/guide/part1-basics/04-2d-script", "en": "/en/guide/part1-basics/04-2d-script" },
+      "tags": { "zh": ["2D", "符号", "平面"], "en": ["2D", "symbol", "plan"] },
+      "sandbox": true
+    },
+    {
+      "id": "scaled-text",
+      "category": "twod",
+      "title": { "zh": "文字大小不随比例变", "en": "Text that ignores the scale" },
+      "desc": {
+        "zh": "`GLOB_SCALE` 是比例分母，1:50 得 50。乘上它，文字在图纸上保持固定字高。",
+        "en": "`GLOB_SCALE` is the denominator (1:50 gives 50); multiplying keeps text a constant size on paper."
+      },
+      "code": "s = GLOB_SCALE / 100\nTEXT2 0, -0.15 * s, \"DETAIL 01\"\nLINE2 0, 0, 1.0, 0",
+      "chapter": { "zh": "/guide/part1-basics/04-2d-script", "en": "/en/guide/part1-basics/04-2d-script" },
+      "tags": { "zh": ["文字", "比例", "出图"], "en": ["text", "scale", "drawing"] },
+      "sandbox": false
+    },
+    {
+      "id": "read-csv",
+      "category": "data",
+      "title": { "zh": "读 CSV 到动态数组", "en": "Read a CSV into dynamic arrays" },
+      "desc": {
+        "zh": "先判 `OPEN` 返回值，再循环 `INPUT` 到 -1，行数用循环变量累加，最后 `CLOSE`。",
+        "en": "Check the `OPEN` return, loop `INPUT` until -1, count rows as you go, then `CLOSE`."
+      },
+      "code": "DIM codeArr[]\nDIM wArr[]\n\nch = OPEN (\"TEXT\", \"sizes.csv\", \"SEPARATOR = ',', mode = ro, LIBRARY\")\nn = 0\nIF ch > 0 THEN\n  WHILE INPUT (ch, n + 1, 1, code, cw) > 0\n    n = n + 1\n    codeArr[n] = code\n    wArr[n] = cw\n  ENDWHILE\n  CLOSE ch\nENDIF",
+      "chapter": { "zh": "/guide/part3-advanced/16-data-and-files", "en": "/en/guide/part3-advanced/16-data-and-files" },
+      "tags": { "zh": ["CSV", "文件", "数组"], "en": ["CSV", "file", "array"] },
+      "sandbox": false
+    },
+    {
+      "id": "write-csv",
+      "category": "data",
+      "title": { "zh": "写 CSV：一行一行输出", "en": "Write a CSV line by line" },
+      "desc": {
+        "zh": "`mode = wo` 覆盖写；`recordID` 换个值就换行。写完立刻 `CLOSE` 刷盘。",
+        "en": "`mode = wo` overwrites; changing `recordID` starts a new line. `CLOSE` immediately to flush."
+      },
+      "code": "ch = OPEN (\"TEXT\", \"out.csv\", \"SEPARATOR = ',', mode = wo, LIBRARY\")\nIF ch > 0 THEN\n  OUTPUT ch, 1, 1, \"CODE\", \"WIDTH\"\n  FOR i = 1 TO VARDIM1 (codeArr)\n    OUTPUT ch, i + 1, 1, codeArr[i], STR (wArr[i], 8, 3)\n  NEXT i\n  CLOSE ch\nENDIF",
+      "chapter": { "zh": "/guide/part3-advanced/16-data-and-files", "en": "/en/guide/part3-advanced/16-data-and-files" },
+      "tags": { "zh": ["CSV", "导出", "写文件"], "en": ["CSV", "export", "write"] },
+      "sandbox": false
+    },
+    {
+      "id": "join-labels",
+      "category": "data",
+      "title": { "zh": "把数组拼成一行标签", "en": "Join an array into one label" },
+      "desc": {
+        "zh": "用 `+` 拼字符串，结尾去掉多余的分隔符，适合给 2D 标注生成汇总文字。",
+        "en": "Build the string with `+` and trim the trailing separator — handy for a summary 2D label."
+      },
+      "code": "s = \"\"\nFOR i = 1 TO n\n  IF i > 1 THEN s = s + \", \"\n  s = s + codeArr[i]\nNEXT i\nTEXT2 0, 0, s",
+      "chapter": { "zh": "/guide/part2-intermediate/11-text-and-strings", "en": "/en/guide/part2-intermediate/11-text-and-strings" },
+      "tags": { "zh": ["字符串", "拼接", "标注"], "en": ["string", "concat", "label"] },
+      "sandbox": false
+    }
+  ]
+}
