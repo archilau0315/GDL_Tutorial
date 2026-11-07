@@ -1,0 +1,403 @@
+{
+  "meta": {
+    "version": "1.0",
+    "updated": "2026-11-07",
+    "note": {
+      "zh": "前半部分来自本站沙盒的真实报错（消息与代码逐字对应），后半部分是 Archicad 里最常见的环境问题。",
+      "en": "The first half lists real sandbox errors (messages match the engine verbatim); the second half covers the most common Archicad environment issues."
+    }
+  },
+  "categories": [
+    { "id": "syntax", "zh": "语法结构", "en": "Syntax & Blocks" },
+    { "id": "command", "zh": "命令与参数", "en": "Commands & Arguments" },
+    { "id": "variable", "zh": "变量与表达式", "en": "Variables & Expressions" },
+    { "id": "geometry", "zh": "几何与变换", "en": "Geometry & Transforms" },
+    { "id": "archicad", "zh": "Archicad 环境", "en": "Archicad Environment" }
+  ],
+  "errors": [
+    {
+      "id": "unexpected-char",
+      "category": "syntax",
+      "message": { "zh": "无法识别的字符", "en": "Unrecognized character" },
+      "cause": {
+        "zh": "多半是在中文输入法下敲了全角符号：全角逗号、全角引号、全角括号，或者从文档里粘进了不换行空格。",
+        "en": "Usually a full-width symbol typed with an IME — full-width comma, quote or bracket — or a non-breaking space pasted from a document."
+      },
+      "fix": {
+        "zh": "切到英文输入法重敲该行；把全角 `，` `“”` 换成半角 `,` `\"\"`。编辑器里全角符号看起来只胖一点点，很难用眼睛发现。",
+        "en": "Retype the line in an ASCII keyboard layout and replace full-width `，` `“”` with `,` `\"\"`. Full-width marks are only slightly wider and very hard to spot."
+      },
+      "bad": "BLOCK 1，0.5，0.2",
+      "good": "BLOCK 1, 0.5, 0.2",
+      "chapter": { "zh": "/guide/part1-basics/01-first-3d-object", "en": "/en/guide/part1-basics/01-first-3d-object" }
+    },
+    {
+      "id": "unterminated-string",
+      "category": "syntax",
+      "message": { "zh": "字符串缺少结束引号", "en": "Unterminated string literal" },
+      "cause": {
+        "zh": "字符串只写了开头引号。常见于长文本换行后忘了补引号，或用中文引号包了英文内容。",
+        "en": "A string opens but never closes — often after wrapping a long line, or when Chinese quotes wrap English content."
+      },
+      "fix": {
+        "zh": "补齐结尾的 `\"`；字符串里要出现引号本身，就把它拆成两段用 `+` 拼接。",
+        "en": "Add the closing `\"`. To include a quote inside a string, split it into two parts and join with `+`."
+      },
+      "bad": "TEXT2 0, 0, \"hello",
+      "good": "TEXT2 0, 0, \"hello\"",
+      "chapter": { "zh": "/guide/part2-intermediate/11-text-and-strings", "en": "/en/guide/part2-intermediate/11-text-and-strings" }
+    },
+    {
+      "id": "expected-equal",
+      "category": "syntax",
+      "message": { "zh": "赋值语句应为 \"=\"", "en": "\"=\" expected in assignment" },
+      "cause": {
+        "zh": "把赋值写成了 `==`（C 语言习惯），或者变量和等号之间塞了别的东西。GDL 赋值只用单个 `=`。",
+        "en": "Assignment written as `==` (a C habit), or something sits between the variable and the equals sign. GDL uses a single `=`."
+      },
+      "fix": {
+        "zh": "赋值一律 `变量 = 表达式`；比较也在 IF 里用 `=`，GDL 没有 `==`。",
+        "en": "Always `variable = expression`; comparisons in IF also use `=` — GDL has no `==`."
+      },
+      "bad": "w == 1.2",
+      "good": "w = 1.2",
+      "chapter": { "zh": "/guide/part1-basics/03-parameters", "en": "/en/guide/part1-basics/03-parameters" }
+    },
+    {
+      "id": "if-block",
+      "category": "syntax",
+      "message": { "zh": "IF 语句未用 ENDIF 闭合 / 多余的 ENDIF / ELSE 没有对应的 IF", "en": "IF block not closed with ENDIF / Unexpected ENDIF / ELSE without matching IF" },
+      "cause": {
+        "zh": "IF 与 ENDIF 数量对不上：嵌套时少写一个 ENDIF，或复制代码后多留了一个 ELSE。报错行号往往落在块尾，不是真正出错的那行。",
+        "en": "IF and ENDIF counts mismatch: a missing ENDIF in nested blocks, or a stray ELSE after copying code. The reported line is often the block end, not the real culprit."
+      },
+      "fix": {
+        "zh": "从最外层往下数配对；长脚本给每层加缩进，一眼就能看出哪层缺尾巴。",
+        "en": "Count pairs from the outermost level; indent each level so a missing tail is visible at a glance."
+      },
+      "bad": "IF w > 1 THEN\n  BLOCK w, 0.6, 0.04\nELSE\n  BLOCK w, 0.4, 0.04",
+      "good": "IF w > 1 THEN\n  BLOCK w, 0.6, 0.04\nELSE\n  BLOCK w, 0.4, 0.04\nENDIF",
+      "chapter": { "zh": "/guide/part1-basics/05-control-flow", "en": "/en/guide/part1-basics/05-control-flow" }
+    },
+    {
+      "id": "for-block",
+      "category": "syntax",
+      "message": { "zh": "FOR 循环未用 NEXT 闭合 / NEXT 没有对应的 FOR / 缺少 \"TO\"", "en": "FOR loop not closed with NEXT / NEXT without matching FOR / \"TO\" expected" },
+      "cause": {
+        "zh": "FOR 三件套写残了：漏 `TO`、漏 `NEXT`，或嵌套循环只写了一个 NEXT。",
+        "en": "The FOR trio is incomplete: a missing `TO`, a missing `NEXT`, or nested loops sharing one NEXT."
+      },
+      "fix": {
+        "zh": "写全 `FOR i = 1 TO n … NEXT i`；嵌套时每个 FOR 配一个自己的 NEXT，循环变量别复用同一个。",
+        "en": "Write the full `FOR i = 1 TO n … NEXT i`; in nested loops give each FOR its own NEXT and never reuse the same counter."
+      },
+      "bad": "FOR i = 1 4\n  BLOCK 0.2, 0.2, 0.6\nNEXT i",
+      "good": "FOR i = 1 TO 4\n  BLOCK 0.2, 0.2, 0.6\nNEXT i",
+      "chapter": { "zh": "/guide/part1-basics/05-control-flow", "en": "/en/guide/part1-basics/05-control-flow" }
+    },
+    {
+      "id": "while-block",
+      "category": "syntax",
+      "message": { "zh": "WHILE 循环未用 ENDWHILE 闭合 / 多余的 ENDWHILE", "en": "WHILE loop not closed with ENDWHILE / Unexpected ENDWHILE" },
+      "cause": {
+        "zh": "WHILE 与 ENDWHILE 不成对。另一种隐蔽情况：循环体里忘了推进循环变量，语法没错但会一直转到上限。",
+        "en": "WHILE and ENDWHILE do not pair up. A subtler case: the loop body never advances the counter, so it runs until the limit."
+      },
+      "fix": {
+        "zh": "补 ENDWHILE；并检查循环体里有没有 `i = i + 1` 这类推进语句。",
+        "en": "Add ENDWHILE, then check the body actually advances the counter."
+      },
+      "bad": "i = 1\nWHILE i <= 4\n  BLOCK 0.2, 0.2, 0.6\n  i = i + 1",
+      "good": "i = 1\nWHILE i <= 4\n  BLOCK 0.2, 0.2, 0.6\n  i = i + 1\nENDWHILE",
+      "chapter": { "zh": "/guide/part1-basics/05-control-flow", "en": "/en/guide/part1-basics/05-control-flow" }
+    },
+    {
+      "id": "gosub",
+      "category": "syntax",
+      "message": { "zh": "GOSUB 找不到标签 / RETURN 没有对应的 GOSUB", "en": "GOSUB cannot find label / RETURN without matching GOSUB" },
+      "cause": {
+        "zh": "标签名拼错、标签少了结尾冒号，或者子程序里忘了 RETURN 就滑进了下一段代码。",
+        "en": "A misspelled label, a label missing its trailing colon, or a subroutine that falls through without RETURN."
+      },
+      "fix": {
+        "zh": "标签写成 `100:` 独占一行；每个 GOSUB 的子程序末尾配 RETURN，并在最后加 END 挡住顺序执行。",
+        "en": "Write the label as `100:` on its own line; end each subroutine with RETURN and add END so execution does not fall through."
+      },
+      "bad": "GOSUB 100\nBLOCK 1, 1, 1\n100\nCYLIND 1, 0.1\nRETURN",
+      "good": "GOSUB 100\nEND\n\n100:\nCYLIND 1, 0.1\nRETURN",
+      "chapter": { "zh": "/guide/part1-basics/05-control-flow", "en": "/en/guide/part1-basics/05-control-flow" }
+    },
+    {
+      "id": "arg-count",
+      "category": "command",
+      "message": { "zh": "命令 {cmd} 需要 {n} 个参数，实际 {m} 个", "en": "Command {cmd} expects {n} argument(s), got {m}" },
+      "cause": {
+        "zh": "参数个数不对。GDL 命令的参数用逗号分隔，全部写在同一语句里，换行不算结束。多写或少写一个都会被拦下。",
+        "en": "Wrong argument count. GDL separates arguments with commas and a line break does not end the statement, so one extra or missing value is caught."
+      },
+      "fix": {
+        "zh": "查速查表对准签名；长参数列表用行尾逗号续行，不要靠换行断句。",
+        "en": "Check the signature in the command index; continue long lists with a trailing comma instead of relying on line breaks."
+      },
+      "bad": "CYLIND 1.2",
+      "good": "CYLIND 1.2, 0.3",
+      "chapter": { "zh": "/guide/part1-basics/01-first-3d-object", "en": "/en/guide/part1-basics/01-first-3d-object" }
+    },
+    {
+      "id": "undefined-cmd",
+      "category": "command",
+      "message": { "zh": "未知命令 {cmd}", "en": "Unknown command {cmd}" },
+      "cause": {
+        "zh": "命令名拼错、用了别的语言的关键字，或者写了沙盒尚未实现的命令（如 `UI_DIALOG`、`REQUEST`）。",
+        "en": "A misspelled command, a keyword from another language, or a command the sandbox does not implement (`UI_DIALOG`, `REQUEST`)."
+      },
+      "fix": {
+        "zh": "对照速查表确认拼写；沙盒不支持的 UI、文件、REQUEST 类命令，请在 Archicad 里验证。",
+        "en": "Confirm the spelling in the index. UI, file and REQUEST commands are unsupported in the sandbox — verify those in Archicad."
+      },
+      "bad": "CYLINDER 1.2, 0.3",
+      "good": "CYLIND 1.2, 0.3",
+      "chapter": { "zh": "/reference/commands/", "en": "/en/reference/commands/" }
+    },
+    {
+      "id": "prism-args",
+      "category": "command",
+      "message": { "zh": "命令 {cmd} 参数序列非法：顶点数应为 3 的倍数", "en": "Command {cmd} invalid argument list: vertex count must be a multiple of 3" },
+      "cause": {
+        "zh": "PRISM / REVOLVE 的顶点按「x, y, 状态码」三个一组，少写状态码或漏一个坐标，总数就不是 3 的倍数。",
+        "en": "PRISM / REVOLVE vertices come in triples (x, y, status); a missing status or coordinate breaks the multiple of three."
+      },
+      "fix": {
+        "zh": "每个顶点补齐 `x, y, s`：起点写 1，中间点写 0，最后一个点写 -1。",
+        "en": "Give every vertex `x, y, s`: 1 for the first, 0 for intermediate points, -1 for the last."
+      },
+      "bad": "PRISM 4, 0.9,\n  0, 0, 1,\n  1, 0,\n  1, 0.6, 0,\n  0, 0.6, -1",
+      "good": "PRISM 4, 0.9,\n  0, 0, 1,\n  1, 0, 0,\n  1, 0.6, 0,\n  0, 0.6, -1",
+      "chapter": { "zh": "/guide/part2-intermediate/06-prism-family", "en": "/en/guide/part2-intermediate/06-prism-family" }
+    },
+    {
+      "id": "poly-args",
+      "category": "command",
+      "message": { "zh": "命令 {cmd} 参数序列非法：顶点数应为 2 的倍数", "en": "Command {cmd} invalid argument list: vertex count must be a multiple of 2" },
+      "cause": {
+        "zh": "POLY2_ 这类 2D 多边形命令按「x, y」成对传点，漏了一个坐标。",
+        "en": "2D polygon commands such as POLY2_ take x, y pairs; one coordinate is missing."
+      },
+      "fix": {
+        "zh": "数一遍逗号后的数值个数，成对补齐；末尾别忘了 `-1` 结束标记。",
+        "en": "Count the values after the commas, add the missing half of the pair, and keep the closing `-1`."
+      },
+      "bad": "POLY2_ 4, 7, 0, 0, 1, 1, 0, 1, 1, 1, 1, -1",
+      "good": "POLY2_ 4, 7, 0, 0, 1, 1, 0, 1, 1, 1, 1, 0, 1, -1",
+      "chapter": { "zh": "/guide/part1-basics/04-2d-script", "en": "/en/guide/part1-basics/04-2d-script" }
+    },
+    {
+      "id": "undefined-var",
+      "category": "variable",
+      "message": { "zh": "未定义变量 {name}", "en": "Undefined variable {name}" },
+      "cause": {
+        "zh": "变量用在了赋值之前。常见于把 `w` 写成 `W`（GDL 大小写不敏感，但拼错字母一样会漏），或参数名和脚本里的写法不一致。",
+        "en": "A variable is read before it is assigned — often a typo in the name, or a parameter name that does not match the script."
+      },
+      "fix": {
+        "zh": "把赋值挪到使用之前；参数名直接从参数表复制，避免手敲。",
+        "en": "Move the assignment above first use, and copy parameter names from the parameter table instead of retyping."
+      },
+      "bad": "BLOCK w, d, 0.5\nw = 1.0",
+      "good": "w = 1.0\nd = 0.6\nBLOCK w, d, 0.5",
+      "chapter": { "zh": "/guide/part1-basics/03-parameters", "en": "/en/guide/part1-basics/03-parameters" }
+    },
+    {
+      "id": "undefined-fn",
+      "category": "variable",
+      "message": { "zh": "未知函数 {name}", "en": "Unknown function {name}" },
+      "cause": {
+        "zh": "函数名拼错，或者把命令当函数用了（命令不能出现在表达式里）。",
+        "en": "A misspelled function, or a command used where an expression is expected — commands cannot appear inside expressions."
+      },
+      "fix": {
+        "zh": "确认函数名与括号；`STR`、`ABS`、`ROUND` 这类才返回值，`BLOCK`、`ADD` 这类只执行。",
+        "en": "Check the name and parentheses; only functions like `STR`, `ABS`, `ROUND` return a value, while `BLOCK`, `ADD` just execute."
+      },
+      "bad": "h = HEIGHT (w)",
+      "good": "h = ABS (w) * 2",
+      "chapter": { "zh": "/guide/part2-intermediate/11-text-and-strings", "en": "/en/guide/part2-intermediate/11-text-and-strings" }
+    },
+    {
+      "id": "not-a-number",
+      "category": "variable",
+      "message": { "zh": "表达式结果不是数值", "en": "Expression did not evaluate to a number" },
+      "cause": {
+        "zh": "把字符串塞进了需要数值的位置。典型是字符串参数直接当尺寸用，没做 `STR` / 数值转换。",
+        "en": "A string ends up where a number is required — typically a text parameter used as a size without conversion."
+      },
+      "fix": {
+        "zh": "确认该参数在参数表里是长度/数值型；文本要参与计算，先转成数值或改用数值型参数。",
+        "en": "Check the parameter type in the parameter table; to compute with text, convert it or use a numeric parameter."
+      },
+      "bad": "BLOCK code, 0.6, 0.04",
+      "good": "BLOCK w, 0.6, 0.04",
+      "chapter": { "zh": "/guide/part2-intermediate/11-text-and-strings", "en": "/en/guide/part2-intermediate/11-text-and-strings" }
+    },
+    {
+      "id": "div-zero",
+      "category": "variable",
+      "message": { "zh": "除数为零", "en": "Division by zero" },
+      "cause": {
+        "zh": "分母来自参数或用户输入，可能是 0。例如按「根数 - 1」算间距，用户把根数设成 1。",
+        "en": "A denominator comes from a parameter or user input and can be 0 — e.g. spacing from `n - 1` when the user sets n to 1."
+      },
+      "fix": {
+        "zh": "算之前先兜底：`IF n < 2 THEN n = 2`，或用 `MAX (n - 1, 1)` 保证分母不为 0。",
+        "en": "Guard before dividing: `IF n < 2 THEN n = 2`, or use `MAX (n - 1, 1)` so the denominator stays positive."
+      },
+      "bad": "gap = len / (n - 1)",
+      "good": "gap = len / MAX (n - 1, 1)",
+      "chapter": { "zh": "/reference/snippets", "en": "/en/reference/snippets" }
+    },
+    {
+      "id": "neg-radius",
+      "category": "geometry",
+      "message": { "zh": "几何参数不能为负数", "en": "Geometric parameter cannot be negative" },
+      "cause": {
+        "zh": "尺寸参数相减后变负，例如「总宽 - 两侧板厚」在两块板已经比总宽还厚时。",
+        "en": "A size goes negative after subtraction, e.g. overall width minus two board thicknesses when the boards are thicker than the width."
+      },
+      "fix": {
+        "zh": "用 `MAX (expr, 0.001)` 保底，或在参数脚本里限制最小值。",
+        "en": "Use `MAX (expr, 0.001)` as a floor, or clamp the minimum in the parameter script."
+      },
+      "bad": "BLOCK w - 2 * th, d, h",
+      "good": "BLOCK MAX (w - 2 * th, 0.001), d, h",
+      "chapter": { "zh": "/guide/part1-basics/03-parameters", "en": "/en/guide/part1-basics/03-parameters" }
+    },
+    {
+      "id": "bad-del",
+      "category": "geometry",
+      "message": { "zh": "DEL 回退层数超过当前变换栈深度", "en": "DEL exceeds current transformation stack depth" },
+      "cause": {
+        "zh": "DEL 的层数比已经压入的变换还多。常见于循环里 DEL 2，但这一轮只 ADD 了一次。",
+        "en": "DEL pops more levels than were pushed — typically `DEL 2` in a loop where only one ADD happened that pass."
+      },
+      "fix": {
+        "zh": "数清每轮的 ADD / ROT 次数，DEL 与之一致；不确定时用 `DEL TOP` 回到脚本开头。",
+        "en": "Match DEL to the ADD/ROT count of that pass; when unsure, `DEL TOP` returns to the script start."
+      },
+      "bad": "ADD 1, 0, 0\nBLOCK 0.2, 0.2, 0.6\nDEL 2",
+      "good": "ADD 1, 0, 0\nBLOCK 0.2, 0.2, 0.6\nDEL 1",
+      "chapter": { "zh": "/guide/part1-basics/02-transform-stack", "en": "/en/guide/part1-basics/02-transform-stack" }
+    },
+    {
+      "id": "loop-limit",
+      "category": "geometry",
+      "message": { "zh": "循环次数超过安全上限（10000 次）", "en": "Loop iteration limit exceeded (10000)" },
+      "cause": {
+        "zh": "死循环：WHILE 的条件永远成立，或者循环变量在体内被改回去了。",
+        "en": "An infinite loop: the WHILE condition never fails, or the counter is reset inside the body."
+      },
+      "fix": {
+        "zh": "确认循环体每轮都让条件趋近结束；实在需要长循环，就改成 FOR 并明确次数。",
+        "en": "Make sure each pass moves the condition towards the end; for genuinely long loops use FOR with an explicit count."
+      },
+      "bad": "i = 1\nWHILE i <= 10\n  BLOCK 0.2, 0.2, 0.6\nENDWHILE",
+      "good": "FOR i = 1 TO 10\n  BLOCK 0.2, 0.2, 0.6\nNEXT i",
+      "chapter": { "zh": "/guide/part1-basics/05-control-flow", "en": "/en/guide/part1-basics/05-control-flow" }
+    },
+    {
+      "id": "zero-extrude",
+      "category": "geometry",
+      "message": { "zh": "EXTRUDE 的挤出向量不能为零", "en": "EXTRUDE vector must not be zero" },
+      "cause": {
+        "zh": "挤出向量三个分量全为 0，等于没有方向，无法生成体。",
+        "en": "All three vector components are zero, so there is no direction to extrude along."
+      },
+      "fix": {
+        "zh": "至少给一个非零分量；只沿 +Z 挤出时直接用 `PRISM` 更省事。",
+        "en": "Give at least one non-zero component; for pure +Z extrusion use `PRISM` instead."
+      },
+      "bad": "EXTRUDE 4, 0, 0, 0, 0,\n  0, 0, 1,\n  1, 0, 0,\n  1, 0.6, 0,\n  0, 0.6, -1",
+      "good": "EXTRUDE 4, 0, 0, 1, 0,\n  0, 0, 1,\n  1, 0, 0,\n  1, 0.6, 0,\n  0, 0.6, -1",
+      "chapter": { "zh": "/guide/part2-intermediate/07-sweeps-and-revolves", "en": "/en/guide/part2-intermediate/07-sweeps-and-revolves" }
+    },
+    {
+      "id": "revolve-profile",
+      "category": "geometry",
+      "message": { "zh": "REVOLVE 截面点的 y 坐标不能为负数 / 旋转角度不能为 0", "en": "REVOLVE profile points must have non-negative y / angle must not be zero" },
+      "cause": {
+        "zh": "旋转体的 y 就是回转半径，负数会翻到轴的另一侧；角度 0 则扫不出体。",
+        "en": "For a revolved solid y is the radius, so a negative value flips across the axis; an angle of 0 sweeps nothing."
+      },
+      "fix": {
+        "zh": "截面整体平移到 y ≥ 0；需要另一侧的形状，改变旋转角或镜像，不要写负半径。",
+        "en": "Shift the profile so y ≥ 0; for the other side change the sweep angle or mirror, never use a negative radius."
+      },
+      "bad": "REVOLVE 3, 360, 0,\n  0, -0.1, 1,\n  0.2, -0.1, 0,\n  0, 0, -1",
+      "good": "REVOLVE 3, 360, 0,\n  0, 0.1, 1,\n  0.2, 0.1, 0,\n  0, 0, -1",
+      "chapter": { "zh": "/guide/part2-intermediate/07-sweeps-and-revolves", "en": "/en/guide/part2-intermediate/07-sweeps-and-revolves" }
+    },
+    {
+      "id": "file-not-found",
+      "category": "archicad",
+      "message": { "zh": "OPEN 返回 -1，读不到文件", "en": "OPEN returns -1, the file cannot be read" },
+      "cause": {
+        "zh": "路径不对。默认相对当前工作目录，写在库部件里通常要加 `LIBRARY`，让路径相对库部件所在目录。",
+        "en": "Wrong path. By default it is relative to the working directory; inside a library part add `LIBRARY` so the path is relative to the part."
+      },
+      "fix": {
+        "zh": "把文件与部件放在同一目录，`OPEN` 参数串加 `LIBRARY`；先用 `IF ch > 0` 做兜底，避免后续命令报错。",
+        "en": "Keep the file next to the part and add `LIBRARY`; guard with `IF ch > 0` so later commands never run on a bad channel."
+      },
+      "bad": "ch = OPEN (\"TEXT\", \"D:/data/sizes.csv\", \"mode = ro\")",
+      "good": "ch = OPEN (\"TEXT\", \"sizes.csv\", \"SEPARATOR = ',', mode = ro, LIBRARY\")",
+      "chapter": { "zh": "/guide/part3-advanced/16-data-and-files", "en": "/en/guide/part3-advanced/16-data-and-files" }
+    },
+    {
+      "id": "ui-not-supported",
+      "category": "archicad",
+      "message": { "zh": "UI 脚本报错或面板不显示", "en": "UI script errors or the panel stays empty" },
+      "cause": {
+        "zh": "把 UI 命令写进了 2D / 3D 脚本，或者控件名与参数名不一致，又或者用了不存在的 `UI_CHECKBOX`。",
+        "en": "UI commands placed in the 2D/3D script, a control name that does not match a parameter, or the non-existent `UI_CHECKBOX`."
+      },
+      "fix": {
+        "zh": "UI 命令只放 UI 脚本页；`UI_INFIELD` 的名字必须与参数表完全一致；复选框改用 `UI_INFIELD{3}` 或两个单选按钮。",
+        "en": "Keep UI commands in the UI Script page; `UI_INFIELD` names must match the parameter table exactly; use `UI_INFIELD{3}` or radio buttons instead of a checkbox."
+      },
+      "bad": "! 写在 3D 脚本里\nUI_DIALOG \"Settings\"",
+      "good": "! 只写在 UI 脚本页\nUI_DIALOG \"Settings\"\nUI_INFIELD \"w\", 15, 40, 105, 20",
+      "chapter": { "zh": "/guide/part3-advanced/13-ui-script", "en": "/en/guide/part3-advanced/13-ui-script" }
+    },
+    {
+      "id": "hotspot-invisible",
+      "category": "archicad",
+      "message": { "zh": "平面图上看不到对象 / 抓不到热点", "en": "The object is missing in plan or has no grab points" },
+      "cause": {
+        "zh": "2D 脚本没写任何图形，或者 `HOTSPOT2` 的可见标志没开；也可能对象被 `DEL TOP` 提前清掉了。",
+        "en": "The 2D script draws nothing, `HOTSPOT2` visibility is not set, or the geometry was cleared by an early `DEL TOP`."
+      },
+      "fix": {
+        "zh": "2D 脚本至少画一个轮廓；热点至少有一个基准点（`1 + 128`）；检查 DEL 是否把内容一起删了。",
+        "en": "Draw at least one outline in the 2D script, include a base hotspot (`1 + 128`), and check that DEL did not remove the geometry."
+      },
+      "bad": "! 2D 脚本为空\nHOTSPOT2 0, 0, 1, 0, 2",
+      "good": "RECT2 0, 0, 1.2, 0.6\nHOTSPOT2 0, 0, 1, 0, 1 + 128\nHOTSPOT2 1.2, 0, 2, 0, 3",
+      "chapter": { "zh": "/guide/part3-advanced/14-boolean-and-hotspots", "en": "/en/guide/part3-advanced/14-boolean-and-hotspots" }
+    },
+    {
+      "id": "material-index",
+      "category": "archicad",
+      "message": { "zh": "材质显示不对 / 换了模板后全变白", "en": "Wrong material, or everything turns white after switching templates" },
+      "cause": {
+        "zh": "材质索引是模板相关的编号，硬编码 8 在别的模板里可能不存在；用 0 则是不继承材质。",
+        "en": "Material indices are template-specific; a hard-coded 8 may not exist in another template, and 0 means no inherited material."
+      },
+      "fix": {
+        "zh": "把材质做成整数参数由用户选，脚本里用 `MATERIAL matFrame`；或在 INDEX 里运行时查材质号。",
+        "en": "Expose the material as an integer parameter and use `MATERIAL matFrame`; or look the index up at runtime."
+      },
+      "bad": "MATERIAL 8\nBLOCK 1, 1, 1",
+      "good": "MATERIAL matFrame\nBLOCK 1, 1, 1",
+      "chapter": { "zh": "/guide/part2-intermediate/08-materials", "en": "/en/guide/part2-intermediate/08-materials" }
+    }
+  ]
+}

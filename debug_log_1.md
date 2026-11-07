@@ -178,3 +178,17 @@
 | 11:00 | scripts/check-search.mjs | 新增 2 条片段查询用例；「圆形阵列」改为页面实有文案「沙盒可运行」 | 20 → 22 条，22/22 命中 |
 
 **验证**：check:data 59 条命令 + 28 个变量 + 12 个片段、check:i18n 85 对、check:search 22/22、单测 41 例、build 成功。
+
+## 2026-11-07 常见错误手册（P4c 第三模块，资料库收口）
+
+| 时间 | 模块 | 变更简述 | 备注 |
+|---|---|---|---|
+| 11:02 | reference/data/errors.json | 新建 24 条 / 5 类：语法结构 7、命令与参数 4、变量与表达式 4、几何与变换 5、Archicad 环境 4；每条含报错原文、原因、改法、错误/正确写法、章节回链 | 前 20 条消息取自 `gdl-engine/errors.ts` 原文 |
+| 11:02 | theme/components/ErrorList.vue | 新建手册组件：搜索（消息/原因/改法/代码）+ 分类筛选 + 错误-正确双栏对照 | 注册为 `ErrorList` |
+| 11:03 | theme/i18n.ts | 新增 11 组文案：搜索、全部、计数、空态、原因、改法、错误/正确写法、章节、来源 | 中英成对 |
+| 11:03 | reference/errors.md（中英） | 新建页面：先看三件事 + 手册列表 + 未收录反馈指引 | 中英镜像 |
+| 11:03 | config.mts / reference/index.md / README.md | 侧边栏、资料库入口、README 模块表补「常见错误手册 ✅」 | 资料库四模块齐备 |
+| 11:04 | scripts/check-data.mjs | 扩展校验 errors.json；`checkChapter` 支持目录型链接（`/reference/commands/` → index.md） | 一份脚本校验四份数据 |
+| 11:04 | scripts/check-search.mjs | 新增 2 条用例（常见错误、报错信息） | 22 → 24 条，24/24 命中 |
+
+**验证**：check:data 59 命令 + 28 变量 + 12 片段 + 24 错误、check:i18n 86 对、check:search 24/24、单测 41 例、build 成功。

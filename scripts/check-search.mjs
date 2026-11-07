@@ -69,7 +69,9 @@ const cases = [
   ['楼层标高', ['reference/globals']],
   ['全局变量', ['reference/globals', 'guide/part3-advanced/15-request-and-glob']],
   ['代码片段', ['reference/snippets']],
-  ['沙盒可运行', ['reference/snippets']]
+  ['沙盒可运行', ['reference/snippets']],
+  ['常见错误', ['reference/errors', 'reference/index']],
+  ['报错信息', ['reference/errors']]
 ]
 
 let pass = 0

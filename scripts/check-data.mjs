@@ -31,9 +31,10 @@ function checkChapter(at, chapter) {
   if (!chapter) return
   for (const lang of ['zh', 'en']) {
     const link = chapter[lang]
-    if (link && !existsSync(resolve(docsDir, link.replace(/^\//, '') + '.md'))) {
-      errors.push(`${at}: 章节文件不存在 ${link}`)
-    }
+    if (!link) continue
+    const rel = link.replace(/^\//, '')
+    const file = rel.endsWith('/') ? rel + 'index.md' : rel + '.md'
+    if (!existsSync(resolve(docsDir, file))) errors.push(`${at}: 章节文件不存在 ${link}`)
   }
 }
 
@@ -98,6 +99,25 @@ for (const s of snip.snippets ?? []) {
   checkChapter(at, s.chapter)
 }
 
+/* ---------- 错误手册 ---------- */
+const err = load('errors.json')
+const errCats = new Set((err.categories ?? []).map(c => c.id))
+const errIds = new Set()
+if (!err.meta?.version) errors.push('errors: 缺少 meta.version')
+
+for (const e of err.errors ?? []) {
+  const at = `错误 ${e.id ?? '(无 id)'}`
+  if (!e.id) errors.push(`${at}: 缺少 id`)
+  if (errIds.has(e.id)) errors.push(`${at}: id 重复`)
+  errIds.add(e.id)
+  if (!errCats.has(e.category)) errors.push(`${at}: 未知分类 ${e.category}`)
+  if (!e.bad?.trim() || !e.good?.trim()) errors.push(`${at}: 缺少 bad/good 对照代码`)
+  checkPair(at, 'message', e.message)
+  checkPair(at, 'cause', e.cause)
+  checkPair(at, 'fix', e.fix)
+  checkChapter(at, e.chapter)
+}
+
 if (errors.length) {
   console.error(`速查数据校验失败（${errors.length} 项）：`)
   errors.forEach(e => console.error('  - ' + e))
@@ -106,5 +126,6 @@ if (errors.length) {
 console.log(
   `速查数据校验通过：${cmd.commands.length} 条命令 / ${cmd.categories.length} 类，` +
   `${glob.globals.length} 个 GLOB 变量 / ${glob.categories.length} 类，` +
-  `${snip.snippets.length} 个片段 / ${snip.categories.length} 类`
+  `${snip.snippets.length} 个片段 / ${snip.categories.length} 类，` +
+  `${err.errors.length} 条错误 / ${err.categories.length} 类`
 )

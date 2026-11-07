@@ -41,7 +41,7 @@
 | 命令速查 | 59 条 / 11 类，支持关键词与分类筛选，每条有独立详情页 | ✅ |
 | GLOB 变量速查 | 28 个常用全局变量 / 7 类，附最小示例与「常见误传」 | ✅ |
 | 代码片段库 | 12 段常用写法，一键复制，标注沙盒可运行与对应章节 | ✅ |
-| 常见错误手册 | 报错信息 → 原因 → 改法 | 规划 |
+| 常见错误手册 | 24 条报错与现象，按「原因 → 改法 → 错误/正确写法」对照 | ✅ |
 
 所有速查数据存放在 `docs/reference/data/*.json`，中英字段同文件保存，`npm run check:data` 校验结构、分类与章节链接。
 
@@ -148,7 +148,7 @@ Every chapter can embed our own GDL sandbox: code on the left, live 3D or 2D pla
 | Command index | 59 commands in 11 categories, searchable and filterable, one detail page each | ✅ |
 | GLOB variables | 28 common globals in 7 groups, with minimal examples and a "common myths" table | ✅ |
 | Snippet library | 12 common patterns with one-click copy, sandbox support and chapter links | ✅ |
-| Error handbook | Error message → cause → fix | planned |
+| Error handbook | 24 errors and symptoms with cause, fix and a wrong/right pair | ✅ |
 
 All reference data lives in `docs/reference/data/*.json` with both languages in one record; `npm run check:data` validates structure, categories and chapter links.
 

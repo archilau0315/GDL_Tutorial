@@ -43,7 +43,17 @@ export const dict = {
     snipCopied: '已复制',
     snipRunnable: '沙盒可运行',
     snipChapter: '对应章节',
-    snipSource: '片段为本站原创，按需取用；标「沙盒可运行」的可直接粘进在线沙盒验证'
+    snipSource: '片段为本站原创，按需取用；标「沙盒可运行」的可直接粘进在线沙盒验证',
+    errSearch: '搜索报错信息、现象或代码…',
+    errAll: '全部',
+    errFound: '{n} 条问题',
+    errEmpty: '没有匹配的问题，换个关键词试试',
+    errCause: '原因',
+    errFix: '改法',
+    errBad: '✗ 错误写法',
+    errGood: '✓ 正确写法',
+    errChapter: '相关章节',
+    errSource: '报错文字与本站沙盒引擎的实际输出一致；Archicad 环境类问题按实践整理'
   },
   en: {
     run: 'Run',
@@ -87,7 +97,17 @@ export const dict = {
     snipCopied: 'Copied',
     snipRunnable: 'runs in sandbox',
     snipChapter: 'Related chapter',
-    snipSource: 'Snippets are original; those marked "runs in sandbox" can be pasted into the playground as-is'
+    snipSource: 'Snippets are original; those marked "runs in sandbox" can be pasted into the playground as-is',
+    errSearch: 'Search an error, a symptom or code…',
+    errAll: 'All',
+    errFound: '{n} issue(s)',
+    errEmpty: 'No issue matches — try another keyword',
+    errCause: 'Cause',
+    errFix: 'Fix',
+    errBad: '✗ Wrong',
+    errGood: '✓ Right',
+    errChapter: 'Related chapter',
+    errSource: 'Messages match the site sandbox engine verbatim; Archicad items are compiled from practice'
   }
 } as const
 

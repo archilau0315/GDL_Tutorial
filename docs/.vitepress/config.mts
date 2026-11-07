@@ -65,7 +65,8 @@ const zhSidebar = [
       { text: '资料库总览', link: '/reference/' },
       { text: '命令速查表', link: '/reference/commands/' },
       { text: 'GLOB 变量速查', link: '/reference/globals' },
-      { text: '代码片段库', link: '/reference/snippets' }
+      { text: '代码片段库', link: '/reference/snippets' },
+      { text: '常见错误手册', link: '/reference/errors' }
     ]
   },
   {
@@ -123,7 +124,8 @@ const enSidebar = [
       { text: 'Reference Overview', link: '/en/reference/' },
       { text: 'Command Index', link: '/en/reference/commands/' },
       { text: 'GLOB Variables', link: '/en/reference/globals' },
-      { text: 'Snippet Library', link: '/en/reference/snippets' }
+      { text: 'Snippet Library', link: '/en/reference/snippets' },
+      { text: 'Error Handbook', link: '/en/reference/errors' }
     ]
   },
   {
