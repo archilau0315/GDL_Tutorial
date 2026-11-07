@@ -113,6 +113,15 @@ div[class*='language-gdl'] {
 .VPNavBarMenuLink.active { color: var(--bp-600); }
 .dark .VPNavBarMenuLink.active { color: var(--bp-200); }
 
+/* ---- 导航搜索框：宽屏给足宽度，读起来更舒展 ---- */
+/* 组件内 scoped 样式带 [data-v] 属性，选择器需更高权重才能覆盖 */
+@media (min-width: 768px) {
+  #app .VPNavBarSearch .DocSearch-Button { width: 100%; }
+}
+@media (min-width: 1280px) {
+  #app .VPNavBarSearch { flex: 0 0 320px; }
+}
+
 /* ---- 沙盒页宽版布局：给代码栏与 3D 视口留足空间 ---- */
 .wide-playground .VPDoc .content-container { max-width: 1180px; }
 @media (max-width: 1280px) {
