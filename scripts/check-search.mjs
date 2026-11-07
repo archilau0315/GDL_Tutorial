@@ -64,7 +64,10 @@ const cases = [
   ['挤出', ['guide/part2-intermediate/07-sweeps-and-revolves', 'reference/commands/extrude']],
   ['圆弧', ['guide/part1-basics/04-2d-script', 'reference/commands/arc2']],
   ['热点', ['reference/commands/hotspot2', 'guide/part1-basics/04-2d-script']],
-  ['立方体', ['reference/commands/block']]
+  ['立方体', ['reference/commands/block']],
+  ['GLOB_SCALE', ['reference/globals']],
+  ['楼层标高', ['reference/globals']],
+  ['全局变量', ['reference/globals', 'guide/part3-advanced/15-request-and-glob']]
 ]
 
 let pass = 0

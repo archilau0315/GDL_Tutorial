@@ -5,7 +5,7 @@ The reference library is built for lookup: find how a command works within 10 se
 ## Entries
 
 - [Command Index](/en/reference/commands/) — every 3D / 2D / attribute / control command supported by the sandbox, searchable and grouped by category
-- GLOB variable tables (planned)
+- [GLOB Variables](/en/reference/globals) — 28 commonly used globals grouped by purpose, with minimal examples and the myths to avoid
 - Snippet library (planned)
 - Error handbook (planned)
 

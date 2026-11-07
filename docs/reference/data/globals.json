@@ -1,0 +1,341 @@
+{
+  "meta": {
+    "version": "AC29",
+    "source": "Graphisoft GDL Reference Guide (AC29), Global Variables",
+    "updated": "2026-11-07",
+    "note": {
+      "zh": "变量名、类型与含义按官方 Global Variables 章节整理，示例为本站原创。GDL 没有独立布尔类型，0/1 开关按整数处理。",
+      "en": "Names, types and meanings follow the official Global Variables chapter; examples are original. GDL has no separate boolean type — 0/1 switches are integers."
+    }
+  },
+  "categories": [
+    { "id": "storey", "zh": "楼层与标高", "en": "Storey & Elevation" },
+    { "id": "project", "zh": "项目与比例", "en": "Project & Scale" },
+    { "id": "element", "zh": "元素信息", "en": "Element Info" },
+    { "id": "sun", "zh": "时间与太阳", "en": "Time & Sun" },
+    { "id": "output", "zh": "打印与输出", "en": "Print & Output" },
+    { "id": "script", "zh": "脚本与视图", "en": "Script & View" },
+    { "id": "misc", "zh": "填充与自由全局", "en": "Fills & User Globals" }
+  ],
+  "globals": [
+    {
+      "name": "GLOB_HSTORY_ELEV",
+      "category": "storey",
+      "type": "number",
+      "desc": {
+        "zh": "对象所在主页（Home Story）的楼面标高，以项目零点为基准。窗台高要另外叠加元素自身的相对高度。",
+        "en": "Elevation of the object's home storey, measured from project zero. Add the element's own relative height to get a sill level."
+      },
+      "example": "TEXT2 0, 0, STR (GLOB_HSTORY_ELEV, 9, 3)",
+      "chapter": { "zh": "/guide/part3-advanced/15-request-and-glob", "en": "/en/guide/part3-advanced/15-request-and-glob" },
+      "aliases": { "zh": ["楼层标高", "所在层标高"], "en": ["home storey elevation", "storey level"] }
+    },
+    {
+      "name": "GLOB_HSTORY_HEIGHT",
+      "category": "storey",
+      "type": "number",
+      "desc": {
+        "zh": "对象所在主页的层高。做通高柜、整层幕墙时用它算纵向分格。",
+        "en": "Height of the home storey. Use it for full-height cabinets or storey-long curtain walls."
+      },
+      "example": "h = GLOB_HSTORY_HEIGHT\nDIV = ROUND (h / 0.6)",
+      "chapter": { "zh": "/guide/part3-advanced/15-request-and-glob", "en": "/en/guide/part3-advanced/15-request-and-glob" },
+      "aliases": { "zh": ["层高", "楼层高度"], "en": ["storey height", "floor height"] }
+    },
+    {
+      "name": "GLOB_CSTORY_ELEV",
+      "category": "storey",
+      "type": "number",
+      "desc": {
+        "zh": "当前平面图所显示楼层的标高。和主页标高不同：对象可能画在别层，但归属本层。",
+        "en": "Elevation of the storey currently shown in the plan, which may differ from the element's home storey."
+      },
+      "example": "d = GLOB_CSTORY_ELEV - GLOB_HSTORY_ELEV",
+      "chapter": { "zh": "/guide/part3-advanced/15-request-and-glob", "en": "/en/guide/part3-advanced/15-request-and-glob" }
+    },
+    {
+      "name": "GLOB_CSTORY_HEIGHT",
+      "category": "storey",
+      "type": "number",
+      "desc": {
+        "zh": "当前平面图所显示楼层的层高。越层对象按视口层判断时要配 `GLOB_CH_STORY_DIST` 一起用。",
+        "en": "Height of the storey currently shown in the plan. Pair it with `GLOB_CH_STORY_DIST` when an object spans storeys."
+      },
+      "example": "IF GLOB_CH_STORY_DIST = 0 THEN\n  h = GLOB_CSTORY_HEIGHT\nENDIF",
+      "chapter": { "zh": "/guide/part3-advanced/15-request-and-glob", "en": "/en/guide/part3-advanced/15-request-and-glob" }
+    },
+    {
+      "name": "GLOB_CH_STORY_DIST",
+      "category": "storey",
+      "type": "number",
+      "desc": {
+        "zh": "当前层相对主页的层差，本层为 0，往上为负、往下为正。判断「这个对象该不该在本层显示」的常用开关。",
+        "en": "Storey offset between the current plan and the home storey: 0 on the home storey, negative above, positive below. The usual test for whether an object should draw on this storey."
+      },
+      "example": "IF GLOB_CH_STORY_DIST = 0 THEN\n  ! 只在本层绘制\nENDIF",
+      "chapter": { "zh": "/guide/part3-advanced/15-request-and-glob", "en": "/en/guide/part3-advanced/15-request-and-glob" }
+    },
+    {
+      "name": "GLOB_ELEVATION",
+      "category": "storey",
+      "type": "number",
+      "desc": {
+        "zh": "元素基准标高：门窗是窗台高，墙是墙底，对象通常是插入点标高。写「离地 1 米」这类逻辑时先减它。",
+        "en": "The element's reference elevation: sill height for doors and windows, base for walls, insertion point for objects."
+      },
+      "example": "z = 1.0 - GLOB_ELEVATION",
+      "chapter": { "zh": "/guide/part3-advanced/15-request-and-glob", "en": "/en/guide/part3-advanced/15-request-and-glob" }
+    },
+    {
+      "name": "GLOB_SCALE",
+      "category": "project",
+      "type": "number",
+      "desc": {
+        "zh": "当前视图比例的分母，1:50 得到 50。2D 符号里想让文字、箭头在图纸上大小恒定，就得按它反算。",
+        "en": "Denominator of the current view scale — 1:50 gives 50. Divide by it to keep text and arrows a constant size on paper."
+      },
+      "example": "s = GLOB_SCALE / 100\nTEXT2 0, -0.1 * s, \"DETAIL\"",
+      "chapter": { "zh": "/guide/part1-basics/04-2d-script", "en": "/en/guide/part1-basics/04-2d-script" },
+      "aliases": { "zh": ["比例", "出图比例", "图纸比例"], "en": ["scale", "drawing scale"] }
+    },
+    {
+      "name": "GLOB_NORTH_DIR",
+      "category": "project",
+      "type": "number",
+      "desc": {
+        "zh": "项目北向角，默认 90 度。做指北针、场地类对象时用它旋转。",
+        "en": "Project north angle, 90 degrees by default. Rotate north arrows and site objects with it."
+      },
+      "example": "ROT2 GLOB_NORTH_DIR",
+      "chapter": { "zh": "/guide/part1-basics/04-2d-script", "en": "/en/guide/part1-basics/04-2d-script" }
+    },
+    {
+      "name": "GLOB_CUTPLANES_INFO",
+      "category": "project",
+      "type": "array",
+      "desc": {
+        "zh": "剖切面信息数组，4 个值：剖切高度、顶部限高、底部限高、显示限高。判断构件在平面上是否被切开。",
+        "en": "Cut plane info array of four values: cut height, top limit, bottom limit, display limit."
+      },
+      "example": "ch = GLOB_CUTPLANES_INFO[1]",
+      "chapter": { "zh": "/guide/part3-advanced/15-request-and-glob", "en": "/en/guide/part3-advanced/15-request-and-glob" }
+    },
+    {
+      "name": "GLOB_PROJECT_LONGITUDE",
+      "category": "project",
+      "type": "number",
+      "desc": {
+        "zh": "项目位置设置里的经度。日照、阴影类对象读取它做定位。",
+        "en": "Longitude from the project location settings, read by sun and shadow objects."
+      },
+      "example": "TEXT2 0, 0, STR (GLOB_PROJECT_LONGITUDE, 9, 4)",
+      "chapter": { "zh": "/guide/part3-advanced/15-request-and-glob", "en": "/en/guide/part3-advanced/15-request-and-glob" }
+    },
+    {
+      "name": "GLOB_PROJECT_LATITUDE",
+      "category": "project",
+      "type": "number",
+      "desc": {
+        "zh": "项目位置设置里的纬度。和经度成对出现，做日照分析时一起读。",
+        "en": "Latitude from the project location settings, usually read together with longitude."
+      },
+      "example": "TEXT2 0, 0, STR (GLOB_PROJECT_LATITUDE, 9, 4)",
+      "chapter": { "zh": "/guide/part3-advanced/15-request-and-glob", "en": "/en/guide/part3-advanced/15-request-and-glob" }
+    },
+    {
+      "name": "GLOB_PROJECT_ALTITUDE",
+      "category": "project",
+      "type": "number",
+      "desc": {
+        "zh": "项目海拔高度，来自项目位置设置。场地与气象类对象会用到。",
+        "en": "Project altitude above sea level from the location settings."
+      },
+      "example": "z = GLOB_PROJECT_ALTITUDE",
+      "chapter": { "zh": "/guide/part3-advanced/15-request-and-glob", "en": "/en/guide/part3-advanced/15-request-and-glob" }
+    },
+    {
+      "name": "GLOB_ID",
+      "category": "element",
+      "type": "string",
+      "desc": {
+        "zh": "元素的用户 ID，就是「设置」里那个可编辑的编号。写进 2D 文字后，复制对象会自动更新。",
+        "en": "The element's user ID — the editable code in element settings. Put it in 2D text and copies renumber themselves."
+      },
+      "example": "TEXT2 0, 0, GLOB_ID",
+      "chapter": { "zh": "/guide/part3-advanced/14-boolean-and-hotspots", "en": "/en/guide/part3-advanced/14-boolean-and-hotspots" },
+      "aliases": { "zh": ["元素编号", "ID", "编号"], "en": ["element id", "id"] }
+    },
+    {
+      "name": "GLOB_LAYER",
+      "category": "element",
+      "type": "string",
+      "desc": {
+        "zh": "元素所在图层的名称（字符串），不是图层号。按图层写条件显示时用它。",
+        "en": "Name of the element's layer as a string, not the layer number."
+      },
+      "example": "IF GLOB_LAYER = \"A-WALL\" THEN\n  ! 只在该图层生效\nENDIF",
+      "chapter": { "zh": "/guide/part3-advanced/15-request-and-glob", "en": "/en/guide/part3-advanced/15-request-and-glob" },
+      "aliases": { "zh": ["图层", "图层名"], "en": ["layer", "layer name"] }
+    },
+    {
+      "name": "GLOB_INTGUID",
+      "category": "element",
+      "type": "string",
+      "desc": {
+        "zh": "程序生成的内部 GUID，用户改不了。做唯一标识、外部数据对表时比 `GLOB_ID` 可靠。",
+        "en": "Internal GUID generated by Archicad and not user-editable — more reliable than `GLOB_ID` as a unique key."
+      },
+      "example": "TEXT2 0, 0, GLOB_INTGUID",
+      "chapter": { "zh": "/guide/part3-advanced/15-request-and-glob", "en": "/en/guide/part3-advanced/15-request-and-glob" }
+    },
+    {
+      "name": "GLOB_ELEM_TYPE",
+      "category": "element",
+      "type": "number",
+      "desc": {
+        "zh": "宿主元素类型码，常用值：3 窗、4 门、5 墙、7 板。同一个库部件挂在门和窗上时靠它分支。",
+        "en": "Host element type code: 3 window, 4 door, 5 wall, 7 slab. Branch on it when one part serves both doors and windows."
+      },
+      "example": "IF GLOB_ELEM_TYPE = 4 THEN\n  ! 门\nENDIF",
+      "chapter": { "zh": "/guide/part2-intermediate/10-doors-and-windows", "en": "/en/guide/part2-intermediate/10-doors-and-windows" },
+      "aliases": { "zh": ["元素类型", "宿主类型"], "en": ["element type", "host type"] }
+    },
+    {
+      "name": "GLOB_MODPAR_NAME",
+      "category": "element",
+      "type": "string",
+      "desc": {
+        "zh": "最近被修改的参数名。参数脚本里判断「用户刚动了哪个参数」，做定向联动。",
+        "en": "Name of the parameter most recently changed — useful in the parameter script for targeted linking."
+      },
+      "example": "IF GLOB_MODPAR_NAME = \"b\" THEN\n  h = b * 0.75\nENDIF",
+      "chapter": { "zh": "/guide/part3-advanced/13-ui-script", "en": "/en/guide/part3-advanced/13-ui-script" },
+      "aliases": { "zh": ["修改的参数", "参数联动"], "en": ["modified parameter", "parameter name"] }
+    },
+    {
+      "name": "GLOB_PROJECT_DATE",
+      "category": "sun",
+      "type": "array",
+      "desc": {
+        "zh": "项目日期时间数组，6 个值：年、月、日、时、分、秒。由 EcoDesigner 写入，普通项目里未必有值。",
+        "en": "Project date/time array of six values: year, month, day, hour, minute, second. Written by EcoDesigner, so plain projects may not have it."
+      },
+      "example": "y = GLOB_PROJECT_DATE[1]",
+      "chapter": { "zh": "/guide/part3-advanced/15-request-and-glob", "en": "/en/guide/part3-advanced/15-request-and-glob" }
+    },
+    {
+      "name": "GLOB_SUN_AZIMUTH",
+      "category": "sun",
+      "type": "number",
+      "desc": {
+        "zh": "太阳方位角，取自项目的太阳设置。做日照示意、遮阳构件定位时用。",
+        "en": "Sun azimuth from the project sun settings, used for shading studies and sun symbols."
+      },
+      "example": "ROT2 GLOB_SUN_AZIMUTH\nLINE2 0, 0, 1, 0",
+      "chapter": { "zh": "/guide/part3-advanced/15-request-and-glob", "en": "/en/guide/part3-advanced/15-request-and-glob" }
+    },
+    {
+      "name": "GLOB_SUN_ALTITUDE",
+      "category": "sun",
+      "type": "number",
+      "desc": {
+        "zh": "太阳高度角，取自项目的太阳设置。和方位角一起决定太阳方向。",
+        "en": "Sun altitude from the project sun settings; together with azimuth it defines the sun direction."
+      },
+      "example": "a = GLOB_SUN_ALTITUDE",
+      "chapter": { "zh": "/guide/part3-advanced/15-request-and-glob", "en": "/en/guide/part3-advanced/15-request-and-glob" }
+    },
+    {
+      "name": "GLOB_DRAWING_BGD_PEN",
+      "category": "output",
+      "type": "number",
+      "desc": {
+        "zh": "与背景色最接近的可用笔号。想让某根线「看不见」时用它，比硬写笔号更安全。",
+        "en": "Pen number closest to the drawing background colour — safer than a hard-coded pen when you need something invisible."
+      },
+      "example": "PEN GLOB_DRAWING_BGD_PEN\nLINE2 0, 0, 1, 0",
+      "chapter": { "zh": "/guide/part2-intermediate/08-materials", "en": "/en/guide/part2-intermediate/08-materials" },
+      "aliases": { "zh": ["背景笔", "隐藏线"], "en": ["background pen", "invisible pen"] }
+    },
+    {
+      "name": "GLOB_PREVIEW_MODE",
+      "category": "output",
+      "type": "number",
+      "desc": {
+        "zh": "预览场景码：0 不在预览、1 设置对话框、2 列表预览、3 收藏夹。预览里可以省掉重负载的细节。",
+        "en": "Preview context: 0 not in preview, 1 settings dialog, 2 list preview, 3 favourites. Skip heavy detail when previewing."
+      },
+      "example": "IF GLOB_PREVIEW_MODE = 2 THEN\n  ! 列表预览走简化模型\nENDIF",
+      "chapter": { "zh": "/guide/part3-advanced/15-request-and-glob", "en": "/en/guide/part3-advanced/15-request-and-glob" }
+    },
+    {
+      "name": "GLOB_FRAME_NR",
+      "category": "output",
+      "type": "number",
+      "desc": {
+        "zh": "动画渲染的当前帧号，静态图为 -1。做逐帧动画对象时靠它推进状态。",
+        "en": "Current animation frame number; -1 for still images."
+      },
+      "example": "IF GLOB_FRAME_NR > 0 THEN\n  ! 动画分支\nENDIF",
+      "chapter": { "zh": "/guide/part3-advanced/15-request-and-glob", "en": "/en/guide/part3-advanced/15-request-and-glob" }
+    },
+    {
+      "name": "GLOB_SCRIPT_TYPE",
+      "category": "script",
+      "type": "number",
+      "desc": {
+        "zh": "当前脚本类型码：2 二维、3 三维、5 参数脚本。写共享宏时可据此走不同分支。",
+        "en": "Current script type: 2 for 2D, 3 for 3D, 5 for the parameter script."
+      },
+      "example": "IF GLOB_SCRIPT_TYPE = 2 THEN\n  ! 2D 脚本\nENDIF",
+      "chapter": { "zh": "/guide/part1-basics/00-getting-started", "en": "/en/guide/part1-basics/00-getting-started" },
+      "aliases": { "zh": ["脚本类型", "当前脚本"], "en": ["script type", "current script"] }
+    },
+    {
+      "name": "GLOB_VIEW_TYPE",
+      "category": "script",
+      "type": "number",
+      "desc": {
+        "zh": "当前视图类型码：2 平面、3 三维、4 剖面、8 布图。同一对象在不同视图里表现不同时用它判断。",
+        "en": "Current view type: 2 plan, 3 3D, 4 section, 8 layout."
+      },
+      "example": "IF GLOB_VIEW_TYPE = 8 THEN\n  ! 布图视图\nENDIF",
+      "chapter": { "zh": "/guide/part3-advanced/15-request-and-glob", "en": "/en/guide/part3-advanced/15-request-and-glob" },
+      "aliases": { "zh": ["视图类型", "平面/三维"], "en": ["view type", "plan or 3d"] }
+    },
+    {
+      "name": "GLOB_FILL_INDEX_SOLID",
+      "category": "misc",
+      "type": "number",
+      "desc": {
+        "zh": "当前模板里「实心」填充的索引。换模板后填充号会漂，用它就不怕。",
+        "en": "Index of the solid fill in the current template — immune to fill numbering drift across templates."
+      },
+      "example": "FILL GLOB_FILL_INDEX_SOLID\nPOLY2_ 4, 7, 0, 0, 1, 1, 0, 1, 1, 1, 1, 0, 1, -1",
+      "chapter": { "zh": "/guide/part2-intermediate/08-materials", "en": "/en/guide/part2-intermediate/08-materials" },
+      "aliases": { "zh": ["实心填充", "填充索引"], "en": ["solid fill", "fill index"] }
+    },
+    {
+      "name": "GLOB_USER_1",
+      "category": "misc",
+      "type": "number",
+      "desc": {
+        "zh": "10 个数值型自由全局之一（`GLOB_USER_1` ~ `GLOB_USER_10`），可在多次调用之间存值。",
+        "en": "One of ten numeric user globals (`GLOB_USER_1` … `GLOB_USER_10`) that persist between calls."
+      },
+      "example": "GLOB_USER_1 = GLOB_USER_1 + 1",
+      "chapter": { "zh": "/guide/part3-advanced/15-request-and-glob", "en": "/en/guide/part3-advanced/15-request-and-glob" }
+    },
+    {
+      "name": "GLOB_USER_11",
+      "category": "misc",
+      "type": "string",
+      "desc": {
+        "zh": "10 个字符串型自由全局之一（`GLOB_USER_11` ~ `GLOB_USER_20`），适合在宏之间传文本。",
+        "en": "One of ten string user globals (`GLOB_USER_11` … `GLOB_USER_20`), handy for passing text between macros."
+      },
+      "example": "GLOB_USER_11 = \"note\"",
+      "chapter": { "zh": "/guide/part3-advanced/15-request-and-glob", "en": "/en/guide/part3-advanced/15-request-and-glob" }
+    }
+  ]
+}

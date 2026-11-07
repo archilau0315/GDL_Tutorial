@@ -25,7 +25,16 @@ export const dict = {
     cmdChapter: '对应章节',
     cmdFound: '{n} 条命令',
     cmdEmpty: '没有匹配的命令，换个关键词试试',
-    cmdSource: '签名整理自官方手册 AC29，示例为本站原创'
+    cmdSource: '签名整理自官方手册 AC29，示例为本站原创',
+    globSearch: '搜索变量名、用途…',
+    globAll: '全部',
+    globFound: '{n} 个变量',
+    globEmpty: '没有匹配的变量，换个关键词试试',
+    globTypeNumber: '数值',
+    globTypeString: '字符串',
+    globTypeArray: '数组',
+    globChapter: '对应章节',
+    globSource: '变量名与类型按官方 Global Variables 章节整理，示例为本站原创'
   },
   en: {
     run: 'Run',
@@ -51,7 +60,16 @@ export const dict = {
     cmdChapter: 'Related chapter',
     cmdFound: '{n} command(s)',
     cmdEmpty: 'No command matches — try another keyword',
-    cmdSource: 'Signatures follow the official AC29 reference; examples are original'
+    cmdSource: 'Signatures follow the official AC29 reference; examples are original',
+    globSearch: 'Search a variable or its purpose…',
+    globAll: 'All',
+    globFound: '{n} variable(s)',
+    globEmpty: 'No variable matches — try another keyword',
+    globTypeNumber: 'number',
+    globTypeString: 'string',
+    globTypeArray: 'array',
+    globChapter: 'Related chapter',
+    globSource: 'Names and types follow the official Global Variables chapter; examples are original'
   }
 } as const
 

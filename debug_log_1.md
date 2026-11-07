@@ -148,3 +148,18 @@
 | 10:43 | README.md | 命令数 58 → 59（badge 与中英正文） | — |
 
 **验证**：check:data 59 条 11 分类、check:i18n 82 对、check:search 17/17、单测 41 例、build 成功。
+
+## 2026-11-07 GLOB 变量速查（P4c 第一模块）
+
+| 时间 | 模块 | 变更简述 | 备注 |
+|---|---|---|---|
+| 10:50 | reference/data/globals.json | 新建单源双语数据：28 个 GLOB 变量 / 7 类（楼层、项目、元素、太阳、输出、脚本、填充与自由全局），字段含类型、说明、最小示例、章节回链、中文别名 | 变量名与类型按官方 Global Variables 章节核对 |
+| 10:51 | theme/components/GlobTable.vue | 新建速查组件：关键词搜索（含中文别名）+ 分类筛选 + 类型徽标 + 章节回链，样式沿用命令表 | 注册为全局组件 `GlobTable` |
+| 10:51 | theme/i18n.ts | 新增 8 组界面文案（搜索、全部、计数、空态、三种类型、章节、数据来源） | 中英成对 |
+| 10:52 | reference/globals.md（中英） | 新建页面：用法要点、变量表、非 GLOB 的内置变量对照、常见误传表、沙盒限制说明 | 中英镜像 |
+| 10:52 | config.mts | 导航与侧边栏加入「GLOB 变量 / GLOB Variables」 | 两语 |
+| 10:53 | scripts/check-data.mjs | 扩展校验 globals.json：命名前缀、类型枚举、中英字段、分类、章节文件存在性 | 一份脚本校验两份数据 |
+| 10:53 | scripts/check-search.mjs | 新增 3 条 GLOB 查询用例（GLOB_SCALE、楼层标高、全局变量） | 17 → 20 条 |
+| 10:54 | README.md / reference/index.md | 补「资料库」模块表、GLOB 徽章与入口链接；命令页与目录说明同步 | 中英双语 |
+
+**验证**：check:data 59 条命令 + 28 个变量、check:i18n 84 对、check:search 20/20、单测 41 例、build 成功。

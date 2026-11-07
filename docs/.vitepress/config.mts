@@ -7,14 +7,16 @@ const zhNav = [
   { text: '学习路径', link: '/guide/', activeMatch: '/guide/' },
   { text: '在线沙盒', link: '/playground/', activeMatch: '/playground/' },
   { text: '资料库', link: '/reference/', activeMatch: '/reference/' },
-  { text: '命令速查', link: '/reference/commands/', activeMatch: '/reference/commands/' }
+  { text: '命令速查', link: '/reference/commands/', activeMatch: '/reference/commands/' },
+  { text: 'GLOB 变量', link: '/reference/globals', activeMatch: '/reference/globals' }
 ]
 
 const enNav = [
   { text: 'Learning Path', link: '/en/guide/', activeMatch: '/en/guide/' },
   { text: 'Playground', link: '/en/playground/', activeMatch: '/en/playground/' },
   { text: 'Reference', link: '/en/reference/', activeMatch: '/en/reference/' },
-  { text: 'Command Index', link: '/en/reference/commands/', activeMatch: '/en/reference/commands/' }
+  { text: 'Command Index', link: '/en/reference/commands/', activeMatch: '/en/reference/commands/' },
+  { text: 'GLOB Variables', link: '/en/reference/globals', activeMatch: '/en/reference/globals' }
 ]
 
 const zhSidebar = [
@@ -61,7 +63,8 @@ const zhSidebar = [
     collapsed: false,
     items: [
       { text: '资料库总览', link: '/reference/' },
-      { text: '命令速查表', link: '/reference/commands/' }
+      { text: '命令速查表', link: '/reference/commands/' },
+      { text: 'GLOB 变量速查', link: '/reference/globals' }
     ]
   },
   {
@@ -117,7 +120,8 @@ const enSidebar = [
     collapsed: false,
     items: [
       { text: 'Reference Overview', link: '/en/reference/' },
-      { text: 'Command Index', link: '/en/reference/commands/' }
+      { text: 'Command Index', link: '/en/reference/commands/' },
+      { text: 'GLOB Variables', link: '/en/reference/globals' }
     ]
   },
   {
