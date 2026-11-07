@@ -11,7 +11,7 @@
 [![Globals](https://img.shields.io/badge/GLOB-28-5f3dc4)](docs/reference/data/globals.json)
 [![License](https://img.shields.io/badge/license-open%20source-2ea44f)](#授权--license)
 
-天津匡形无界智能科技 · 开源项目 / *Tianjin Kuangxing Wujie Intelligent Technology · open source project*
+匡形无界 · 开源项目 / *Kuanform Boundless Intelligent Technology · open source project*
 
 ---
 
@@ -42,6 +42,7 @@
 | GLOB 变量速查 | 28 个常用全局变量 / 7 类，附最小示例与「常见误传」 | ✅ |
 | 代码片段库 | 12 段常用写法，一键复制，标注沙盒可运行与对应章节 | ✅ |
 | 常见错误手册 | 24 条报错与现象，按「原因 → 改法 → 错误/正确写法」对照 | ✅ |
+| 学习进度 | 19 章清单，勾选记录只存本机浏览器，按分部显示完成度 | ✅ |
 
 所有速查数据存放在 `docs/reference/data/*.json`，中英字段同文件保存，`npm run check:data` 校验结构、分类与章节链接。
 
@@ -59,8 +60,8 @@ npm run build          # 构建静态站点到 docs/.vitepress/dist
 npm run preview        # 预览构建产物
 npm run test           # 沙盒引擎单测（vitest，41 例）
 npm run check:i18n     # 中英页面一一对应检查
-npm run check:data     # 命令速查 JSON 校验
-npm run check:search   # 搜索命中率实测（17 条固定查询）
+npm run check:data     # 速查数据 JSON 校验（命令 / GLOB / 片段 / 错误 / 章节）
+npm run check:search   # 搜索命中率实测（26 条固定查询）
 npm run gen:commands   # 重新生成命令详情页（dev/build 前自动执行）
 ```
 
@@ -75,7 +76,7 @@ docs/
 │   └── theme/                # 数字蓝图视觉、沙盒组件、命令表组件
 ├── guide/                    # 中文教程，part1 ~ part3
 ├── en/                       # 英文镜像，结构与中文完全一致
-└── reference/                # 资料库：命令速查 + GLOB 变量 + 单源双语 JSON
+└── reference/                # 资料库：命令、GLOB、片段、错误、章节清单，单源双语 JSON
 scripts/                      # 生成与校验脚本（命令页、i18n、数据、搜索）
 tests/                        # 引擎单测
 开发计划.md                    # 总体计划（v2.1：查询优先）
@@ -90,6 +91,7 @@ debug_log_1.md                # 变更记录
 | 沙盒界面 | `theme/components/GdlPlayground.vue` | 左代码右 3D、行号报错、双语错误提示、示例切换 |
 | 命令速查 | `reference/data/commands.json` | 单文件双语字段，命令的唯一样板 |
 | GLOB 速查 | `reference/data/globals.json` + `theme/components/GlobTable.vue` | 全局变量按用途分组，搜索与分类共用一套数据 |
+| 学习进度 | `reference/data/chapters.json` + `theme/components/ProgressPanel.vue` | 章节清单单源，勾选状态存 localStorage，不采集数据 |
 | 命令详情页 | `scripts/gen-command-pages.mjs` | 由 JSON 生成每条命令的中英页面，构建前自动运行 |
 | 2D 渲染 | `gdl-engine/renderer-2d.ts` | 形状 → SVG，自适应取景与主题色 |
 
@@ -97,7 +99,7 @@ debug_log_1.md                # 变更记录
 
 1. 在 `docs/guide/partX-*/` 建中文页，**同时在 `docs/en/guide/` 建同路径英文页**（CI 会拦截缺页）
 2. 在 `config.mts` 的中英侧边栏登记
-3. 更新 `docs/guide/index.md` 与 `docs/en/guide/index.md` 的进度清单
+3. 在 `docs/reference/data/chapters.json` 增加章节条目（进度面板自动出现）
 4. 需要新命令就补进 `commands.json`（`chapter` 必须指向已存在的页面）
 5. 本地跑完 `check:i18n`、`check:data`、`check:search`、`test`、`build`
 6. 在 `debug_log_1.md` 追加一行变更记录
@@ -113,7 +115,7 @@ GDL_BASE=/resources/GDL_Tutorial/ npm run build
 
 ### 授权 / License
 
-本项目由天津匡形无界智能科技开发并开源发布，欢迎转载、教学使用与二次开发：
+本项目由匡形无界开发并开源发布，欢迎转载、教学使用与二次开发：
 
 - **内容**（章节、图示、示例代码）：CC BY 4.0，署名即可使用
 - **代码**（沙盒引擎、组件、脚本）：MIT
@@ -149,6 +151,7 @@ Every chapter can embed our own GDL sandbox: code on the left, live 3D or 2D pla
 | GLOB variables | 28 common globals in 7 groups, with minimal examples and a "common myths" table | ✅ |
 | Snippet library | 12 common patterns with one-click copy, sandbox support and chapter links | ✅ |
 | Error handbook | 24 errors and symptoms with cause, fix and a wrong/right pair | ✅ |
+| Learning progress | 19-chapter checklist; ticks stay in your browser, per-part completion bars | ✅ |
 
 All reference data lives in `docs/reference/data/*.json` with both languages in one record; `npm run check:data` validates structure, categories and chapter links.
 
@@ -164,8 +167,8 @@ npm run build          # static output in docs/.vitepress/dist
 npm run preview        # preview the build
 npm run test           # engine unit tests (vitest, 41 cases)
 npm run check:i18n     # every Chinese page has an English twin
-npm run check:data     # validate the command JSON
-npm run check:search   # 17 fixed queries against the real index
+npm run check:data     # validate the reference JSON (commands, GLOB, snippets, errors, chapters)
+npm run check:search   # 26 fixed queries against the real index
 npm run gen:commands   # regenerate command pages (runs before dev/build)
 ```
 
@@ -180,7 +183,7 @@ docs/
 │   └── theme/                # visual system, sandbox and command table
 ├── guide/                    # Chinese chapters, part1 ~ part3
 ├── en/                       # exact English mirror
-└── reference/                # command index, GLOB variables, single-source bilingual JSON
+└── reference/                # commands, GLOB, snippets, errors, chapter list — one bilingual JSON per set
 scripts/                      # generators and checks
 tests/                        # engine tests
 ```
@@ -189,7 +192,7 @@ tests/                        # engine tests
 
 1. Create the Chinese page under `docs/guide/partX-*/` **and the English twin at the same path** (CI blocks missing twins)
 2. Register both in the sidebars in `config.mts`
-3. Update the progress lists in `docs/guide/index.md` and `docs/en/guide/index.md`
+3. Add the chapter entry to `docs/reference/data/chapters.json` (the progress panel picks it up)
 4. New commands go into `commands.json` (`chapter` must point to an existing page)
 5. Run `check:i18n`, `check:data`, `check:search`, `test`, `build`
 6. Append a line to `debug_log_1.md`
@@ -205,7 +208,7 @@ GDL_BASE=/resources/GDL_Tutorial/ npm run build
 
 ### License
 
-Developed and open-sourced by Tianjin Kuangxing Wujie Intelligent Technology. Reuse, teaching and derivative work are welcome:
+Developed and open-sourced by Kuanform Boundless Intelligent Technology. Reuse, teaching and derivative work are welcome:
 
 - **Content** (chapters, diagrams, example code): CC BY 4.0 — reuse with attribution
 - **Code** (sandbox engine, components, scripts): MIT

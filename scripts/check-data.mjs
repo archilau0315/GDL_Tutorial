@@ -1,6 +1,6 @@
 /**
  * 速查数据校验：结构完整、中英字段成对、分类与章节链接合法。
- * 覆盖 commands.json 与 globals.json 两份单源数据。
+ * 覆盖 commands / globals / snippets / errors / chapters 五份单源数据。
  * 用法：npm run check:data
  */
 import { readFileSync, existsSync } from 'node:fs'
@@ -118,6 +118,38 @@ for (const e of err.errors ?? []) {
   checkChapter(at, e.chapter)
 }
 
+/* ---------- 章节清单 ---------- */
+const book = load('chapters.json')
+const partIds = new Set((book.parts ?? []).map(p => p.id))
+const chapterIds = new Set()
+const chapterNums = new Set()
+if (!book.meta?.version) errors.push('chapters: 缺少 meta.version')
+
+for (const p of book.parts ?? []) {
+  checkPair(`分部 ${p.id ?? '(无 id)'}`, 'title', p.title)
+  if (!p.sheet?.trim()) errors.push(`分部 ${p.id}: 缺少 sheet`)
+}
+
+for (const c of book.chapters ?? []) {
+  const at = `章节 ${c.id ?? '(无 id)'}`
+  if (!c.id) errors.push(`${at}: 缺少 id`)
+  if (chapterIds.has(c.id)) errors.push(`${at}: id 重复`)
+  chapterIds.add(c.id)
+  if (typeof c.num !== 'number' || c.num < 0) errors.push(`${at}: num 必须是非负数字`)
+  else if (chapterNums.has(c.num)) errors.push(`${at}: 章号重复 ${c.num}`)
+  else chapterNums.add(c.num)
+  if (!partIds.has(c.part)) errors.push(`${at}: 未知分部 ${c.part}`)
+  checkPair(at, 'title', c.title)
+  checkPair(at, 'href', c.href)
+  checkChapter(at, c.href)
+  if (c.href) {
+    for (const lang of ['zh', 'en']) {
+      const prefix = lang === 'en' ? '/en/guide/' : '/guide/'
+      if (!c.href[lang]?.startsWith(prefix)) errors.push(`${at}: href.${lang} 应以 ${prefix} 开头`)
+    }
+  }
+}
+
 if (errors.length) {
   console.error(`速查数据校验失败（${errors.length} 项）：`)
   errors.forEach(e => console.error('  - ' + e))
@@ -127,5 +159,6 @@ console.log(
   `速查数据校验通过：${cmd.commands.length} 条命令 / ${cmd.categories.length} 类，` +
   `${glob.globals.length} 个 GLOB 变量 / ${glob.categories.length} 类，` +
   `${snip.snippets.length} 个片段 / ${snip.categories.length} 类，` +
-  `${err.errors.length} 条错误 / ${err.categories.length} 类`
+  `${err.errors.length} 条错误 / ${err.categories.length} 类，` +
+  `${book.chapters.length} 章 / ${book.parts.length} 个分部`
 )

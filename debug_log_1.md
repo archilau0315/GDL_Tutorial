@@ -192,3 +192,17 @@
 | 11:04 | scripts/check-search.mjs | 新增 2 条用例（常见错误、报错信息） | 22 → 24 条，24/24 命中 |
 
 **验证**：check:data 59 命令 + 28 变量 + 12 片段 + 24 错误、check:i18n 86 对、check:search 24/24、单测 41 例、build 成功。
+
+## 2026-11-07 P4d 学习闭环：进度面板 + README 公司名
+
+| 时间 | 模块 | 变更简述 | 备注 |
+|---|---|---|---|
+| 11:05 | reference/data/chapters.json（新增） | 19 章清单单源：3 个分部 + 每章 num/part/中英标题/中英链接 | 章页新增只需改这一份 |
+| 11:06 | theme/components/ProgressPanel.vue（新增） | 学习进度面板：总进度 + 分部进度条、逐章勾选、重置；localStorage `gdl-progress-v1` 持久化 | 只在 onMounted 读写，SSR 安全；隐私模式静默降级 |
+| 11:07 | theme/index.ts、i18n.ts | 注册 `ProgressPanel`；新增 progSummary/progReset/progMark/progOpen/progHint 五组中英文案 | — |
+| 11:08 | guide/index.md（中英） | 「当前进度」静态清单 → `## 我的进度` + `<ProgressPanel>`，静态勾选与真实学习状态解耦 | 原 19 条全 `[x]` 会误导新读者 |
+| 11:08 | scripts/check-data.mjs | 扩展校验 chapters.json：id/章号不重复、分部存在、中英成对、href 前缀与页面存在 | 一份脚本校验五份数据 |
+| 11:09 | scripts/check-search.mjs | 新增 2 条用例（我的进度、学习路径） | 24 → 26 条，26/26 命中 |
+| 11:09 | README.md | 公司名统一为「匡形无界 / Kuanform Boundless Intelligent Technology」；模块表补「学习进度 ✅」；check:search 17 → 26；写章流程第 3 步改为维护 chapters.json | 中英双语同步 |
+
+**验证**：check:data 59 命令 + 28 变量 + 12 片段 + 24 错误 + 19 章、check:i18n 86 对、check:search 26/26、单测 41 例、build 成功。

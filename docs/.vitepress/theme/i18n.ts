@@ -53,7 +53,12 @@ export const dict = {
     errBad: '✗ 错误写法',
     errGood: '✓ 正确写法',
     errChapter: '相关章节',
-    errSource: '报错文字与本站沙盒引擎的实际输出一致；Archicad 环境类问题按实践整理'
+    errSource: '报错文字与本站沙盒引擎的实际输出一致；Archicad 环境类问题按实践整理',
+    progSummary: '章已完成 · {pct}%',
+    progReset: '重置进度',
+    progMark: '标记完成：',
+    progOpen: '阅读',
+    progHint: '进度只保存在本机浏览器，换设备不同步；本站不收集任何学习数据。'
   },
   en: {
     run: 'Run',
@@ -107,7 +112,12 @@ export const dict = {
     errBad: '✗ Wrong',
     errGood: '✓ Right',
     errChapter: 'Related chapter',
-    errSource: 'Messages match the site sandbox engine verbatim; Archicad items are compiled from practice'
+    errSource: 'Messages match the site sandbox engine verbatim; Archicad items are compiled from practice',
+    progSummary: 'chapters completed · {pct}%',
+    progReset: 'Reset progress',
+    progMark: 'Mark as done:',
+    progOpen: 'Read',
+    progHint: 'Progress lives in this browser only — no sync, no tracking.'
   }
 } as const
 

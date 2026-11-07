@@ -1,0 +1,143 @@
+{
+  "meta": { "version": "1.0.0", "updated": "2026-11-07" },
+  "parts": [
+    { "id": "part1", "sheet": "GDL-00 ~ 05", "title": { "zh": "第一部分 · 入门篇", "en": "Part 1 · Basics" } },
+    { "id": "part2", "sheet": "GDL-06 ~ 12", "title": { "zh": "第二部分 · 进阶篇", "en": "Part 2 · Intermediate" } },
+    { "id": "part3", "sheet": "GDL-13 ~ 18", "title": { "zh": "第三部分 · 精通篇", "en": "Part 3 · Advanced" } }
+  ],
+  "chapters": [
+    {
+      "id": "00-getting-started",
+      "num": 0,
+      "part": "part1",
+      "title": { "zh": "认识 GDL", "en": "Getting to Know GDL" },
+      "href": { "zh": "/guide/part1-basics/00-getting-started", "en": "/en/guide/part1-basics/00-getting-started" }
+    },
+    {
+      "id": "01-first-3d-object",
+      "num": 1,
+      "part": "part1",
+      "title": { "zh": "第一个 3D 对象", "en": "Your First 3D Object" },
+      "href": { "zh": "/guide/part1-basics/01-first-3d-object", "en": "/en/guide/part1-basics/01-first-3d-object" }
+    },
+    {
+      "id": "02-transform-stack",
+      "num": 2,
+      "part": "part1",
+      "title": { "zh": "变换堆栈", "en": "The Transformation Stack" },
+      "href": { "zh": "/guide/part1-basics/02-transform-stack", "en": "/en/guide/part1-basics/02-transform-stack" }
+    },
+    {
+      "id": "03-parameters",
+      "num": 3,
+      "part": "part1",
+      "title": { "zh": "参数化入门", "en": "Introduction to Parametrics" },
+      "href": { "zh": "/guide/part1-basics/03-parameters", "en": "/en/guide/part1-basics/03-parameters" }
+    },
+    {
+      "id": "04-2d-script",
+      "num": 4,
+      "part": "part1",
+      "title": { "zh": "2D 脚本", "en": "The 2D Script" },
+      "href": { "zh": "/guide/part1-basics/04-2d-script", "en": "/en/guide/part1-basics/04-2d-script" }
+    },
+    {
+      "id": "05-control-flow",
+      "num": 5,
+      "part": "part1",
+      "title": { "zh": "控制流", "en": "Control Flow" },
+      "href": { "zh": "/guide/part1-basics/05-control-flow", "en": "/en/guide/part1-basics/05-control-flow" }
+    },
+    {
+      "id": "06-prism-family",
+      "num": 6,
+      "part": "part2",
+      "title": { "zh": "PRISM 全家族", "en": "The PRISM Family" },
+      "href": { "zh": "/guide/part2-intermediate/06-prism-family", "en": "/en/guide/part2-intermediate/06-prism-family" }
+    },
+    {
+      "id": "07-sweeps-and-revolves",
+      "num": 7,
+      "part": "part2",
+      "title": { "zh": "旋转与放样", "en": "Sweeps and Revolutions" },
+      "href": { "zh": "/guide/part2-intermediate/07-sweeps-and-revolves", "en": "/en/guide/part2-intermediate/07-sweeps-and-revolves" }
+    },
+    {
+      "id": "08-materials",
+      "num": 8,
+      "part": "part2",
+      "title": { "zh": "材质与属性", "en": "Materials and Attributes" },
+      "href": { "zh": "/guide/part2-intermediate/08-materials", "en": "/en/guide/part2-intermediate/08-materials" }
+    },
+    {
+      "id": "09-macros",
+      "num": 9,
+      "part": "part2",
+      "title": { "zh": "宏与对象组织", "en": "Macros and Object Structure" },
+      "href": { "zh": "/guide/part2-intermediate/09-macros", "en": "/en/guide/part2-intermediate/09-macros" }
+    },
+    {
+      "id": "10-doors-and-windows",
+      "num": 10,
+      "part": "part2",
+      "title": { "zh": "门窗对象", "en": "Doors and Windows" },
+      "href": { "zh": "/guide/part2-intermediate/10-doors-and-windows", "en": "/en/guide/part2-intermediate/10-doors-and-windows" }
+    },
+    {
+      "id": "11-text-and-strings",
+      "num": 11,
+      "part": "part2",
+      "title": { "zh": "文本与字符串", "en": "Text and Strings" },
+      "href": { "zh": "/guide/part2-intermediate/11-text-and-strings", "en": "/en/guide/part2-intermediate/11-text-and-strings" }
+    },
+    {
+      "id": "12-practice-furniture",
+      "num": 12,
+      "part": "part2",
+      "title": { "zh": "实战：参数化柜体", "en": "Practice: A Parametric Cabinet" },
+      "href": { "zh": "/guide/part2-intermediate/12-practice-furniture", "en": "/en/guide/part2-intermediate/12-practice-furniture" }
+    },
+    {
+      "id": "13-ui-script",
+      "num": 13,
+      "part": "part3",
+      "title": { "zh": "UI 脚本与参数界面", "en": "UI Script and the Parameter Interface" },
+      "href": { "zh": "/guide/part3-advanced/13-ui-script", "en": "/en/guide/part3-advanced/13-ui-script" }
+    },
+    {
+      "id": "14-boolean-and-hotspots",
+      "num": 14,
+      "part": "part3",
+      "title": { "zh": "布尔、GROUP 与热区", "en": "Booleans, GROUP and Hotspots" },
+      "href": { "zh": "/guide/part3-advanced/14-boolean-and-hotspots", "en": "/en/guide/part3-advanced/14-boolean-and-hotspots" }
+    },
+    {
+      "id": "15-request-and-glob",
+      "num": 15,
+      "part": "part3",
+      "title": { "zh": "REQUEST 与 GLOB", "en": "REQUEST and GLOB" },
+      "href": { "zh": "/guide/part3-advanced/15-request-and-glob", "en": "/en/guide/part3-advanced/15-request-and-glob" }
+    },
+    {
+      "id": "16-data-and-files",
+      "num": 16,
+      "part": "part3",
+      "title": { "zh": "数据与文件", "en": "Data and Files" },
+      "href": { "zh": "/guide/part3-advanced/16-data-and-files", "en": "/en/guide/part3-advanced/16-data-and-files" }
+    },
+    {
+      "id": "17-toolchain-and-migration",
+      "num": 17,
+      "part": "part3",
+      "title": { "zh": "工具链与版本迁移", "en": "Toolchain and Version Migration" },
+      "href": { "zh": "/guide/part3-advanced/17-toolchain-and-migration", "en": "/en/guide/part3-advanced/17-toolchain-and-migration" }
+    },
+    {
+      "id": "18-final-project",
+      "num": 18,
+      "part": "part3",
+      "title": { "zh": "毕业实战：门窗交付", "en": "Final Project: Delivering a Door" },
+      "href": { "zh": "/guide/part3-advanced/18-final-project", "en": "/en/guide/part3-advanced/18-final-project" }
+    }
+  ]
+}

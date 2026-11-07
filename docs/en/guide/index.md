@@ -16,24 +16,8 @@ The full learning path of GDL_Tutorial has three parts, 19 chapters in total (GD
 2. Tweak every example in the sandbox and watch what changes
 3. Rebuild one real object in Archicad after each chapter to make it stick
 
-## Current Progress
+## My Progress
 
-- [x] Chapter 0 Getting to Know GDL → [Start](/en/guide/part1-basics/00-getting-started)
-- [x] Chapter 1 Your First 3D Object → [Read](/en/guide/part1-basics/01-first-3d-object)
-- [x] Chapter 2 The Transformation Stack → [Read](/en/guide/part1-basics/02-transform-stack)
-- [x] Chapter 3 Introduction to Parametrics → [Read](/en/guide/part1-basics/03-parameters)
-- [x] Chapter 4 The 2D Script → [Read](/en/guide/part1-basics/04-2d-script)
-- [x] Chapter 5 Control Flow → [Read](/en/guide/part1-basics/05-control-flow)
-- [x] Chapter 6 The PRISM Family → [Read](/en/guide/part2-intermediate/06-prism-family)
-- [x] Chapter 7 Sweeps and Revolutions → [Read](/en/guide/part2-intermediate/07-sweeps-and-revolves)
-- [x] Chapter 8 Materials and Attributes → [Read](/en/guide/part2-intermediate/08-materials)
-- [x] Chapter 9 Macros and Object Structure → [Read](/en/guide/part2-intermediate/09-macros)
-- [x] Chapter 10 Doors and Windows → [Read](/en/guide/part2-intermediate/10-doors-and-windows)
-- [x] Chapter 11 Text and Strings → [Read](/en/guide/part2-intermediate/11-text-and-strings)
-- [x] Chapter 12 Practice: A Parametric Cabinet → [Read](/en/guide/part2-intermediate/12-practice-furniture)
-- [x] Chapter 13 UI Script and the Parameter Interface → [Read](/en/guide/part3-advanced/13-ui-script)
-- [x] Chapter 14 Booleans, GROUP and Hotspots → [Read](/en/guide/part3-advanced/14-boolean-and-hotspots)
-- [x] Chapter 15 REQUEST and GLOB → [Read](/en/guide/part3-advanced/15-request-and-glob)
-- [x] Chapter 16 Data and Files → [Read](/en/guide/part3-advanced/16-data-and-files)
-- [x] Chapter 17 Toolchain and Version Migration → [Read](/en/guide/part3-advanced/17-toolchain-and-migration)
-- [x] Chapter 18 Final Project: Delivering a Door → [Read](/en/guide/part3-advanced/18-final-project)
+Tick the chapters you have finished — progress is stored in your browser and survives a reload:
+
+<ProgressPanel locale="en" />

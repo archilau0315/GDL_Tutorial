@@ -16,24 +16,8 @@ GDL_Tutorial 的完整学习路径分三个部分、共 19 章（GDL-00 ~ GDL-18
 2. 每个示例在沙盒里亲手改一遍参数，看变化
 3. 学完一章回 Archicad 里照着做一次真实对象，才算过关
 
-## 当前进度
+## 我的进度
 
-- [x] 第 0 章 认识 GDL → [开始](/guide/part1-basics/00-getting-started)
-- [x] 第 1 章 第一个 3D 对象 → [阅读](/guide/part1-basics/01-first-3d-object)
-- [x] 第 2 章 变换堆栈 → [阅读](/guide/part1-basics/02-transform-stack)
-- [x] 第 3 章 参数化入门 → [阅读](/guide/part1-basics/03-parameters)
-- [x] 第 4 章 2D 脚本 → [阅读](/guide/part1-basics/04-2d-script)
-- [x] 第 5 章 控制流 → [阅读](/guide/part1-basics/05-control-flow)
-- [x] 第 6 章 PRISM 全家族 → [阅读](/guide/part2-intermediate/06-prism-family)
-- [x] 第 7 章 旋转与放样 → [阅读](/guide/part2-intermediate/07-sweeps-and-revolves)
-- [x] 第 8 章 材质与属性 → [阅读](/guide/part2-intermediate/08-materials)
-- [x] 第 9 章 宏与对象组织 → [阅读](/guide/part2-intermediate/09-macros)
-- [x] 第 10 章 门窗对象 → [阅读](/guide/part2-intermediate/10-doors-and-windows)
-- [x] 第 11 章 文本与字符串 → [阅读](/guide/part2-intermediate/11-text-and-strings)
-- [x] 第 12 章 实战：参数化柜体 → [阅读](/guide/part2-intermediate/12-practice-furniture)
-- [x] 第 13 章 UI 脚本与参数界面 → [阅读](/guide/part3-advanced/13-ui-script)
-- [x] 第 14 章 布尔、GROUP 与热区 → [阅读](/guide/part3-advanced/14-boolean-and-hotspots)
-- [x] 第 15 章 REQUEST 与 GLOB → [阅读](/guide/part3-advanced/15-request-and-glob)
-- [x] 第 16 章 数据与文件 → [阅读](/guide/part3-advanced/16-data-and-files)
-- [x] 第 17 章 工具链与版本迁移 → [阅读](/guide/part3-advanced/17-toolchain-and-migration)
-- [x] 第 18 章 毕业实战：门窗交付 → [阅读](/guide/part3-advanced/18-final-project)
+勾掉学完的章节，进度保存在本机浏览器，下次打开还在：
+
+<ProgressPanel locale="zh" />
