@@ -12,6 +12,8 @@ import { buildSvg2d } from '../../gdl-engine/renderer-2d'
 import type { GdlError, Shape, Shape2 } from '../../gdl-engine/types'
 import { t, tf, type Locale } from '../i18n'
 import CommandFinder from './CommandFinder.vue'
+import EditorSuggest from './EditorSuggest.vue'
+import { useEditorSuggest } from '../useEditorSuggest'
 
 const props = withDefaults(defineProps<{
   /** 初始代码（默认参数化桌凳） */
@@ -383,6 +385,17 @@ const lineCount = computed(() => src.value.split('\n').length)
 const gutter = ref<HTMLElement>()
 const editor = ref<HTMLTextAreaElement>()
 const finder = ref<InstanceType<typeof CommandFinder>>()
+const {
+  items: suggestItems,
+  active: suggestActive,
+  index: suggestIndex,
+  left: suggestLeft,
+  top: suggestTop,
+  refresh: suggestRefresh,
+  move: suggestMove,
+  take: suggestTake,
+  dismiss: suggestDismiss
+} = useEditorSuggest(editor)
 const viewport = ref<HTMLElement>()
 const emit = defineEmits<{ (e: 'errors', n: number): void }>()
 
@@ -522,6 +535,30 @@ function onKey(e: KeyboardEvent): void {
     finder.value?.focus()
     return
   }
+  // 内联补全气泡打开时，方向键与 Tab / Enter 归它使用
+  if (suggestActive.value) {
+    if (e.key === 'ArrowDown') {
+      e.preventDefault()
+      suggestMove(1)
+      return
+    }
+    if (e.key === 'ArrowUp') {
+      e.preventDefault()
+      suggestMove(-1)
+      return
+    }
+    if (e.key === 'Tab' || e.key === 'Enter') {
+      e.preventDefault()
+      const item = suggestTake()
+      if (item) insertCommand(item)
+      return
+    }
+    if (e.key === 'Escape') {
+      e.preventDefault()
+      suggestDismiss()
+      return
+    }
+  }
   if (e.key === 'Tab' && editor.value) {
     e.preventDefault()
     const ta = editor.value
@@ -554,6 +591,20 @@ function insertCommand({ name, syntax }: { name: string; syntax: string }): void
     else ta.setSelectionRange(tail, tail)
     execute()
   })
+}
+function onEditorScroll(): void {
+  syncScroll()
+  if (suggestActive.value) suggestRefresh()
+}
+/** 输入法组合期间不弹候选，免得中文注释把气泡顶出来 */
+function onEditorInput(e: InputEvent): void {
+  if (e.isComposing) return
+  suggestRefresh()
+}
+/** 点选内联候选：按下时不让 textarea 失焦 */
+function pickSuggest(i: number): void {
+  const item = suggestTake(i)
+  if (item) insertCommand(item)
 }
 function syncScroll(): void {
   if (gutter.value && editor.value) gutter.value.scrollTop = editor.value.scrollTop
@@ -642,7 +693,18 @@ const errLine = (i: number): boolean => errorLines.value.has(i)
             class="pg-ta"
             spellcheck="false"
             @keydown="onKey"
-            @scroll="syncScroll"
+            @input="onEditorInput"
+            @click="suggestRefresh"
+            @blur="suggestDismiss"
+            @scroll="onEditorScroll"
+          />
+          <EditorSuggest
+            :items="suggestItems"
+            :active="suggestActive"
+            :index="suggestIndex"
+            :left="suggestLeft"
+            :top="suggestTop"
+            @pick="pickSuggest"
           />
         </div>
       </div>
@@ -672,156 +734,4 @@ const errLine = (i: number): boolean => errorLines.value.has(i)
   </div>
 </template>
 
-<style scoped>
-.gdl-pg {
-  border: 1px solid var(--vp-c-border);
-  border-radius: 8px;
-  overflow: hidden;
-  margin: 16px 0;
-  background: var(--vp-c-bg);
-}
-.pg-bar {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 10px;
-  border-bottom: 1px solid var(--vp-c-border);
-  flex-wrap: wrap;
-}
-.pg-spacer { flex: 1 }
-.pg-select, .pg-btn {
-  font-size: 13px;
-  border: 1px solid var(--vp-c-border);
-  border-radius: 6px;
-  padding: 4px 10px;
-  background: var(--vp-c-bg);
-  color: var(--vp-c-text-1);
-  cursor: pointer;
-}
-.pg-btn:hover { border-color: var(--vp-c-brand) }
-.pg-btn.accent {
-  background: var(--vp-c-brand);
-  border-color: var(--vp-c-brand);
-  color: #fff;
-}
-.pg-btn.ghost { background: transparent }
-.pg-chip {
-  font-size: 12px;
-  font-family: var(--vp-font-family-mono);
-  color: #1a7f37;
-  background: rgba(26, 127, 55, 0.1);
-  border-radius: 10px;
-  padding: 2px 10px;
-}
-.pg-chip.bad { color: #c0392b; background: rgba(192, 57, 43, 0.12) }
-/* 暗色模式：状态标签与错误面板提亮，保证对比度 */
-.dark .pg-chip { color: #4ade80; background: rgba(74, 222, 128, 0.14) }
-.dark .pg-chip.bad { color: #f87171; background: rgba(248, 113, 113, 0.16) }
-.dark .pg-errors.bad { background: rgba(248, 113, 113, 0.08) }
-.dark .pg-err-loc { color: #f87171 }
-.pg-main {
-  display: grid;
-  grid-template-columns: minmax(260px, 44%) 1fr;
-  min-height: var(--pg-h);
-}
-@media (max-width: 720px) { .pg-main { grid-template-columns: 1fr } }
-.pg-pane-head {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-  height: 24px;
-  padding: 0 8px 0 10px;
-}
-.pg-pane-head .pg-pane-label { padding: 0; }
-.pg-pane-label {
-  font-size: 11px;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  color: var(--vp-c-text-3);
-  padding: 6px 10px 2px;
-  font-family: var(--vp-font-family-mono);
-}
-.pg-code-wrap {
-  display: flex;
-  height: calc(var(--pg-h) - 24px);
-  min-height: 240px;
-}
-.pg-gutter {
-  width: 40px;
-  overflow: hidden;
-  text-align: right;
-  padding: 8px 6px 8px 0;
-  font-family: var(--vp-font-family-mono);
-  font-size: 13px;
-  line-height: 1.55;
-  color: var(--vp-c-text-3);
-  background: var(--vp-c-bg-alt);
-  border-right: 1px solid var(--vp-c-border);
-  box-sizing: border-box;
-}
-.pg-ln { display: block }
-.pg-ln.err {
-  color: #e67300;
-  font-weight: 700;
-  position: relative;
-}
-.pg-ln.err::before {
-  content: '▸';
-  position: absolute;
-  left: 2px;
-  color: #e67300;
-}
-.pg-ta {
-  flex: 1;
-  border: 0;
-  resize: none;
-  padding: 8px 12px;
-  font-family: var(--vp-font-family-mono);
-  font-size: 13px;
-  line-height: 1.55;
-  color: var(--vp-c-text-1);
-  background: var(--vp-c-bg-alt);
-  outline: none;
-  white-space: pre;
-  overflow: auto;
-  tab-size: 2;
-}
-.pg-canvas {
-  height: calc(var(--pg-h) - 24px);
-  min-height: 240px;
-  position: relative;
-}
-.pg-view.dual { display: grid; grid-template-columns: 1fr 1fr; gap: 0 8px }
-.pg-view.dual .pg-pane { min-width: 0; overflow: hidden }
-.pg-view.dual .pg-canvas { border-right: 1px solid var(--vp-c-border) }
-@media (max-width: 720px) { .pg-view.dual { grid-template-columns: 1fr } }
-.pg-canvas { min-width: 0 }
-.pg-canvas :deep(canvas) { display: block; max-width: 100% }
-.pg-svg {
-  height: calc(var(--pg-h) - 24px);
-  min-height: 240px;
-  padding: 6px;
-  box-sizing: border-box;
-}
-.pg-svg :deep(svg) { width: 100%; height: 100%; display: block }
-.pg-errors {
-  border-top: 1px solid var(--vp-c-border);
-  padding: 8px 12px;
-  font-size: 12.5px;
-}
-.pg-errors.bad { background: rgba(192, 57, 43, 0.06) }
-.pg-err-title {
-  font-weight: 600;
-  color: var(--vp-c-text-2);
-  margin-bottom: 4px;
-}
-.pg-err-list { max-height: 140px; overflow: auto }
-.pg-err-item { padding: 2px 0; display: flex; gap: 10px; flex-wrap: wrap }
-.pg-err-loc {
-  font-family: var(--vp-font-family-mono);
-  color: #c0392b;
-  flex-shrink: 0;
-}
-.pg-err-msg { color: var(--vp-c-text-1) }
-.pg-hint { margin-top: 4px; color: var(--vp-c-text-3); font-size: 11.5px }
-</style>
+<style scoped src="../styles/gdl-playground.css"></style>

@@ -309,3 +309,17 @@
 **踩坑**：分类名一开始取 `c.label[loc]`（实际数据结构是 `{id, zh, en}` 直挂），且模板里用 ref 当动态键取值为空，改为 `catName()` 函数；失焦延时关闭会把重新聚焦后的下拉关掉，改为记录 timer、聚焦/输入时取消。
 
 **验证**：`add` → ADD / ADD2 / ADDGROUP / ADDX / ADDY / ADDZ；`mater` → MATERIAL；`圆柱` → CYLIND；回车后编辑器出现 `MATERIAL index` 且 `index` 处于选中态；Ctrl+Space 焦点落到搜索框；桌面 1280 与手机 390 均无横向溢出。
+
+## 2026-11-07 编辑器内联补全
+
+| 时间 | 模块 | 变更简述 | 备注 |
+|---|---|---|---|
+| 18:05 | theme/styles/gdl-playground.css（新建） | 把 GdlPlayground 的 152 行 scoped 样式抽成外部文件，SFC 用 `<style scoped src>` 引用 | 组件从 827 行降到 737 行，回到 800 行以内 |
+| 18:10 | theme/useEditorSuggest.ts（新建） | 光标前命令名做前缀匹配；用等宽字宽 + 行列号估算气泡坐标；底部空间不够时翻到光标上方 | 纯计算，不做 textarea 镜像层 |
+| 18:12 | theme/components/EditorSuggest.vue（新建） | 候选气泡：命令名 + 语法，选中项高亮，Tab 提示 | 宽 200px，绝对定位于 `.pg-code-wrap` |
+| 18:16 | theme/components/GdlPlayground.vue | 编辑器监听 input / click / scroll / blur；↑↓ 切换、Tab 或 Enter 取用、Esc 忽略当前词；输入法组合期间不弹 | 取用复用既有 `insertCommand()` |
+| 18:18 | styles/gdl-playground.css | `.pg-code-wrap` 加 `position: relative` 作为气泡定位父级 | — |
+
+**踩坑**：翻转到光标上方时写了 `let top = ...`，遮蔽了同名 ref，触发 `Cannot create property 'value' on number`，改名 `topY`；气泡以 `.pg-code-wrap` 为定位父级，坐标需加 `textarea.offsetLeft`（行号槽 40px）。
+
+**验证**：输入 `blo` → BLOCK 气泡出现在光标下方；Tab → 插入 `BLOCK a, b, c` 且 `a, b, c` 选中；继续输入 `add` → 6 个候选；Esc 后同词不再弹；顶部搜索框（Ctrl+Space）不受影响。
