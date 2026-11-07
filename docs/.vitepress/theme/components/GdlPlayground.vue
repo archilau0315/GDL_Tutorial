@@ -11,7 +11,6 @@ import { run as runGdl, generateLibpartXml, getConvertCommand } from '../../gdl-
 import { buildSvg2d } from '../../gdl-engine/renderer-2d'
 import type { GdlError, Shape, Shape2 } from '../../gdl-engine/types'
 import { t, tf, type Locale } from '../i18n'
-import CommandFinder from './CommandFinder.vue'
 import EditorSuggest from './EditorSuggest.vue'
 import { useEditorSuggest } from '../useEditorSuggest'
 
@@ -384,7 +383,6 @@ const errorLines = computed(() => new Set(errors.value.map(e => e.line)))
 const lineCount = computed(() => src.value.split('\n').length)
 const gutter = ref<HTMLElement>()
 const editor = ref<HTMLTextAreaElement>()
-const finder = ref<InstanceType<typeof CommandFinder>>()
 const {
   items: suggestItems,
   active: suggestActive,
@@ -529,12 +527,6 @@ function watchTheme(): void {
 
 /* ---------- 编辑器交互 ---------- */
 function onKey(e: KeyboardEvent): void {
-  // Ctrl / Cmd + Space：聚焦命令搜索框
-  if (e.key === ' ' && (e.ctrlKey || e.metaKey)) {
-    e.preventDefault()
-    finder.value?.focus()
-    return
-  }
   // 内联补全气泡打开时，方向键与 Tab / Enter 归它使用
   if (suggestActive.value) {
     if (e.key === 'ArrowDown') {
@@ -681,7 +673,6 @@ const errLine = (i: number): boolean => errorLines.value.has(i)
       <div class="pg-editor">
         <div class="pg-pane-head">
           <span class="pg-pane-label">{{ t(loc, 'editor') }}</span>
-          <CommandFinder ref="finder" @insert="insertCommand" />
         </div>
         <div class="pg-code-wrap">
           <div ref="gutter" class="pg-gutter">

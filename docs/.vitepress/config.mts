@@ -256,7 +256,9 @@ export default defineConfig({
         nav: enNav,
         sidebar: enSidebar,
         outline: { label: 'On this page', level: [2, 3] },
-        lastUpdated: { text: 'Last updated' }
+        lastUpdated: { text: 'Last updated' },
+        search: { provider: 'local',
+          options: { miniSearch: { options: { tokenize: cjkTokenize } } } }
       }
     }
   },

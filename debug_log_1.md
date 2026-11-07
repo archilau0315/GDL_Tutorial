@@ -339,3 +339,17 @@
 **验证**：README 中英两段结构一一对应（这是什么/现在有什么/资料库/快速开始/代码托管/目录结构/核心模块/写一章/部署/授权），无缺段。
 
 **同步**：本地加 `gitee` remote（`https://gitee.com/archilau/GDL_Tutorial.git`），`git push --all gitee` 成功，Gitee main 与本地 `6b6f6cb` 一致，仓库页 200；至此 GitHub 主仓与 Gitee 镜像内容相同。
+
+## 2026-11-07 搜索入口收敛为一个
+
+| 时间 | 模块 | 变更简述 | 备注 |
+|---|---|---|---|
+| 15:05 | config.mts | 英文 locale 补 `search: { provider: 'local' }`（含 CJK 分词），与中文一致 | 之前英文站顶部没有搜索按钮 |
+| 15:08 | theme/components/GdlPlayground.vue | 移除标题行的 CommandFinder 与 `Ctrl+Space` 聚焦逻辑；编辑器只保留打字自动补全 | 全站搜索统一走顶部导航 |
+| 15:09 | theme/components/CommandFinder.vue（删除）、theme/i18n.ts | 删组件与 `findPlaceholder` / `findEmpty` 两条中英文案 | 无引用残留，i18n 仍 87 对 |
+| 15:12 | docs/playground/index.md、docs/en/playground/index.md | 用法第 1 条改为「打字弹候选 + 右上角搜索 Ctrl+K」 | 中英同步 |
+| 15:14 | README.md | 核心模块「命令搜索」改为「全站搜索」，中英两表同步 | — |
+
+**决策依据**：站内教程、命令详情、GLOB、错误、片段、术语都是页面，一份本地索引即可全覆盖，不必维护第二套命令搜索。
+
+**验证**：`check:i18n` 87 对、`check:data` 全通过、`test` 41 例全绿、`build` 生成 175 页；构建产物 `/` 与 `/en/` 均含搜索按钮，`/playground/` 已无搜索框残留。

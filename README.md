@@ -106,7 +106,7 @@ debug_log_1.md                # 变更记录
 |---|---|---|
 | 沙盒引擎 | `docs/.vitepress/gdl-engine/` | tokenizer → parser → 字节码 → 执行，输出形状列表供渲染 |
 | 沙盒界面 | `theme/components/GdlPlayground.vue` | 左代码右 3D、行号报错、双语错误提示、示例切换 |
-| 命令搜索 | `theme/components/CommandFinder.vue`、`EditorSuggest.vue` | 搜索栏输入即搜（命令名 / 别名 / 中文说明），回车补全语法并选中参数；编辑器内打字自动弹前缀候选，Tab / Enter 取用 |
+| 全站搜索 | `config.mts` 本地索引 + `theme/components/EditorSuggest.vue` | 顶部导航一个入口搜全站（教程 / 命令 / GLOB / 错误 / 片段），`Ctrl+K` 打开；沙盒内打字自动弹命令候选，Tab / Enter 取用 |
 | 命令速查 | `reference/data/commands.json` | 单文件双语字段，命令的唯一样板 |
 | GLOB 速查 | `reference/data/globals.json` + `theme/components/GlobTable.vue` | 全局变量按用途分组，搜索与分类共用一套数据 |
 | 学习进度 | `reference/data/chapters.json` + `theme/useProgress.ts` | 章节清单单源；路径页与章节页脚共享状态，多标签页同步 |
@@ -230,7 +230,7 @@ tests/                        # engine tests
 |---|---|---|
 | Sandbox engine | `docs/.vitepress/gdl-engine/` | tokenizer → parser → bytecode → execution, emits shapes for rendering |
 | Sandbox UI | `theme/components/GdlPlayground.vue` | code left, 3D right, line-level errors, bilingual messages, example switcher |
-| Command search | `theme/components/CommandFinder.vue`, `EditorSuggest.vue` | instant search by name / alias / Chinese description, Enter inserts syntax with parameters selected; prefix suggestions while typing, Tab or Enter to accept |
+| Site search | local index in `config.mts` + `theme/components/EditorSuggest.vue` | one entry in the top nav covers chapters, commands, GLOB, errors and snippets (`Ctrl+K`); command candidates pop up while typing in the sandbox, accept with Tab or Enter |
 | Command index | `reference/data/commands.json` | one bilingual record per command, the single source of truth |
 | GLOB index | `reference/data/globals.json` + `theme/components/GlobTable.vue` | globals grouped by purpose, one dataset for search and filters |
 | Learning progress | `reference/data/chapters.json` + `theme/useProgress.ts` | single chapter list; path page and chapter footer share state, synced across tabs |
