@@ -295,3 +295,17 @@
 **验证方法**：Chrome DevTools 协议做 390×844 / DPR3 / 触摸模拟，逐页读取 `scrollWidth` 与溢出元素，并按区段截图。
 
 **结果**：首页、学习路径、章节页、沙盒、命令速查、命令详情、错误手册、代码片段、术语表、英文章节页共 10 页，`scrollWidth` 均为 390，无横向溢出；命令速查页修复前 466px、修复后 390px。章末自测在中文页显示「本章自测 / 提交答案 / 答对 3/3 / 重做」，英文页显示「Chapter quiz / Submit」，答完 3 题提交后出现 3 个「正确答案」标记与 3 段解析；章节页脚在手机上堆叠居中（标记学完 → 上一章 → 下一章）；汉堡菜单内含「简体中文 / English」切换与 Appearance；沙盒页编辑器与 3D 视口上下堆叠，canvas 按 DPR 渲染且无报错。
+
+## 2026-11-07 沙盒命令搜索与自动补全
+
+| 时间 | 模块 | 变更简述 | 备注 |
+|---|---|---|---|
+| 17:20 | theme/components/CommandFinder.vue（新建） | 输入即搜：命令名 > 别名 > 语法 > 说明四级打分；↑↓ 选择、回车插入、Esc 关闭；插入时替换光标前半截命令名并选中参数占位 | 数据直接复用 commands.json，无新增数据文件 |
+| 17:22 | theme/components/GdlPlayground.vue | 编辑器标题行嵌入搜索框；`Ctrl/Cmd+Space` 聚焦；新增 `insertCommand()` 处理插入与选区 | 标题行高度保持 24px，不影响代码区高度计算 |
+| 17:24 | theme/i18n.ts | 新增 `findPlaceholder` / `findEmpty` 中英文案 | 两语对齐仍为 87 对 |
+| 17:30 | docs/playground/index.md、docs/en/playground/index.md | 用法第 1 条补充 Ctrl+Space 与中文检索说明 | 中英同步 |
+| 17:35 | README.md | 核心模块表补「命令搜索」一行 | — |
+
+**踩坑**：分类名一开始取 `c.label[loc]`（实际数据结构是 `{id, zh, en}` 直挂），且模板里用 ref 当动态键取值为空，改为 `catName()` 函数；失焦延时关闭会把重新聚焦后的下拉关掉，改为记录 timer、聚焦/输入时取消。
+
+**验证**：`add` → ADD / ADD2 / ADDGROUP / ADDX / ADDY / ADDZ；`mater` → MATERIAL；`圆柱` → CYLIND；回车后编辑器出现 `MATERIAL index` 且 `index` 处于选中态；Ctrl+Space 焦点落到搜索框；桌面 1280 与手机 390 均无横向溢出。

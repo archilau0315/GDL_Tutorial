@@ -15,7 +15,7 @@ Write GDL on the left, watch the 3D model build itself on the right. This is the
 
 ## How to Use
 
-1. **Write code**: the left pane is a GDL 3D script; `!` starts a comment, Tab indents
+1. **Write code**: the left pane is a GDL 3D script; `!` starts a comment, Tab indents. Forgot a command name? Press `Ctrl+Space` to open the command search — `cyl` or `cylinder` both match, and Enter completes the syntax
 2. **Inspect the model**: drag to orbit, scroll to zoom in the right pane; orange line numbers in the gutter mark error lines
 3. **Read errors**: the bottom panel locates errors the Archicad way — **script type + line + column + description**; fix the code and they disappear
 4. **Take your work with you**: "Export object" produces an LP XML file; then use "Copy convert command" on a machine with Archicad installed to produce a `.gsm` you can open in Archicad

@@ -91,6 +91,7 @@ debug_log_1.md                # 变更记录
 |---|---|---|
 | 沙盒引擎 | `docs/.vitepress/gdl-engine/` | tokenizer → parser → 字节码 → 执行，输出形状列表供渲染 |
 | 沙盒界面 | `theme/components/GdlPlayground.vue` | 左代码右 3D、行号报错、双语错误提示、示例切换 |
+| 命令搜索 | `theme/components/CommandFinder.vue` | 沙盒内输入即搜，命令名 / 别名 / 中文说明都命中，回车补全语法并选中参数 |
 | 命令速查 | `reference/data/commands.json` | 单文件双语字段，命令的唯一样板 |
 | GLOB 速查 | `reference/data/globals.json` + `theme/components/GlobTable.vue` | 全局变量按用途分组，搜索与分类共用一套数据 |
 | 学习进度 | `reference/data/chapters.json` + `theme/useProgress.ts` | 章节清单单源；路径页与章节页脚共享状态，多标签页同步 |

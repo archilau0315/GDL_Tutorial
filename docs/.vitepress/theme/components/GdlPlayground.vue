@@ -3,7 +3,7 @@
  * GDL 交互沙盒：左代码右 3D，实时运行、错误定位、导出 LP XML。
  * 引擎：docs/.vitepress/gdl-engine（纯 TS）；渲染：three.js。
  */
-import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useData } from 'vitepress'
 import type { OrbitControls } from 'three/addons/controls/OrbitControls.js'
 import type * as THREE from 'three'
@@ -11,6 +11,7 @@ import { run as runGdl, generateLibpartXml, getConvertCommand } from '../../gdl-
 import { buildSvg2d } from '../../gdl-engine/renderer-2d'
 import type { GdlError, Shape, Shape2 } from '../../gdl-engine/types'
 import { t, tf, type Locale } from '../i18n'
+import CommandFinder from './CommandFinder.vue'
 
 const props = withDefaults(defineProps<{
   /** 初始代码（默认参数化桌凳） */
@@ -381,6 +382,7 @@ const errorLines = computed(() => new Set(errors.value.map(e => e.line)))
 const lineCount = computed(() => src.value.split('\n').length)
 const gutter = ref<HTMLElement>()
 const editor = ref<HTMLTextAreaElement>()
+const finder = ref<InstanceType<typeof CommandFinder>>()
 const viewport = ref<HTMLElement>()
 const emit = defineEmits<{ (e: 'errors', n: number): void }>()
 
@@ -514,6 +516,12 @@ function watchTheme(): void {
 
 /* ---------- 编辑器交互 ---------- */
 function onKey(e: KeyboardEvent): void {
+  // Ctrl / Cmd + Space：聚焦命令搜索框
+  if (e.key === ' ' && (e.ctrlKey || e.metaKey)) {
+    e.preventDefault()
+    finder.value?.focus()
+    return
+  }
   if (e.key === 'Tab' && editor.value) {
     e.preventDefault()
     const ta = editor.value
@@ -521,6 +529,31 @@ function onKey(e: KeyboardEvent): void {
     src.value = src.value.slice(0, s) + '  ' + src.value.slice(en)
     requestAnimationFrame(() => { ta.selectionStart = ta.selectionEnd = s + 2 })
   }
+}
+/**
+ * 插入命令语法：替换光标前的半截命令名，并选中参数占位部分，
+ * 选中状态下直接输数字就能替换掉 a, b, c。
+ */
+function insertCommand({ name, syntax }: { name: string; syntax: string }): void {
+  const ta = editor.value
+  if (!ta) {
+    src.value += '\n' + syntax
+    execute()
+    return
+  }
+  const from0 = ta.selectionStart
+  const end0 = ta.selectionEnd
+  const word = src.value.slice(0, from0).match(/[A-Za-z_]+$/)?.[0] ?? ''
+  const from = from0 - word.length
+  src.value = src.value.slice(0, from) + syntax + src.value.slice(end0)
+  nextTick(() => {
+    const nameEnd = from + name.length + 1
+    const tail = from + syntax.length
+    ta.focus()
+    if (tail > nameEnd) ta.setSelectionRange(nameEnd, tail)
+    else ta.setSelectionRange(tail, tail)
+    execute()
+  })
 }
 function syncScroll(): void {
   if (gutter.value && editor.value) gutter.value.scrollTop = editor.value.scrollTop
@@ -595,7 +628,10 @@ const errLine = (i: number): boolean => errorLines.value.has(i)
     <!-- 主区：左代码右 3D -->
     <div class="pg-main">
       <div class="pg-editor">
-        <div class="pg-pane-label">{{ t(loc, 'editor') }}</div>
+        <div class="pg-pane-head">
+          <span class="pg-pane-label">{{ t(loc, 'editor') }}</span>
+          <CommandFinder ref="finder" @insert="insertCommand" />
+        </div>
         <div class="pg-code-wrap">
           <div ref="gutter" class="pg-gutter">
             <span v-for="i in lineCount" :key="i" class="pg-ln" :class="{ err: errLine(i) }">{{ i }}</span>
@@ -689,6 +725,14 @@ const errLine = (i: number): boolean => errorLines.value.has(i)
   min-height: var(--pg-h);
 }
 @media (max-width: 720px) { .pg-main { grid-template-columns: 1fr } }
+.pg-pane-head {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  height: 24px;
+  padding: 0 8px 0 10px;
+}
+.pg-pane-head .pg-pane-label { padding: 0; }
 .pg-pane-label {
   font-size: 11px;
   letter-spacing: 0.05em;
