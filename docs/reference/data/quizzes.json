@@ -1,0 +1,323 @@
+{
+  "meta": { "version": "1.0.0", "updated": "2026-11-07" },
+  "quizzes": [
+    {
+      "chapter": "00-getting-started",
+      "questions": [
+        {
+          "id": "q1",
+          "q": {
+            "zh": "GDL 对象最终由什么生成？",
+            "en": "What ultimately produces a GDL object?"
+          },
+          "options": {
+            "zh": ["手工搭建的网格模型", "脚本里的命令描述", "导入的位图贴图"],
+            "en": ["A mesh modelled by hand", "Commands described in scripts", "An imported bitmap texture"]
+          },
+          "answer": 1,
+          "explain": {
+            "zh": "GDL 是描述式的：脚本写清楚形体、符号和参数，Archicad 负责生成。改脚本即改对象，不需要重新建模。",
+            "en": "GDL is descriptive: scripts state the geometry, symbol and parameters, and Archicad generates the result. Change the script and the object changes — no remodelling."
+          }
+        },
+        {
+          "id": "q2",
+          "q": {
+            "zh": "对象在平面图上显示成什么样，由哪个脚本决定？",
+            "en": "Which script decides how the object looks in plan?"
+          },
+          "options": {
+            "zh": ["2D 脚本", "3D 脚本", "界面脚本"],
+            "en": ["The 2D script", "The 3D script", "The UI script"]
+          },
+          "answer": 0,
+          "explain": {
+            "zh": "2D 脚本画平面符号，3D 脚本画三维形体，界面脚本只负责设置对话框。三者互相独立。",
+            "en": "The 2D script draws the plan symbol, the 3D script builds the solid, and the UI script only lays out the settings dialog. They are independent."
+          }
+        },
+        {
+          "id": "q3",
+          "q": {
+            "zh": "想让一个图库部件能被放进项目，前提是什么？",
+            "en": "What must be true before a library part can be placed in a project?"
+          },
+          "options": {
+            "zh": ["它有正确的子类型并且所在图库已加载", "它被编译成独立的可执行程序", "它已上传到云端"],
+            "en": ["It has the right subtype and its library is loaded", "It has been compiled into a standalone program", "It has been uploaded to the cloud"]
+          },
+          "answer": 0,
+          "explain": {
+            "zh": "子类型决定它能不能放在墙上、地上；图库没加载，项目里就找不到这个部件。",
+            "en": "The subtype decides whether it can go on a wall or the floor; if the library is not loaded, the project cannot find the part at all."
+          }
+        }
+      ]
+    },
+    {
+      "chapter": "01-first-3d-object",
+      "questions": [
+        {
+          "id": "q1",
+          "q": {
+            "zh": "`BLOCK 2, 0.6, 0.05` 这三个数分别表示什么？",
+            "en": "What do the three numbers in `BLOCK 2, 0.6, 0.05` mean?"
+          },
+          "options": {
+            "zh": ["X、Y、Z 三个方向的尺寸", "插入点的坐标", "旋转角度"],
+            "en": ["Sizes along X, Y and Z", "The coordinates of the insertion point", "Rotation angles"]
+          },
+          "answer": 0,
+          "explain": {
+            "zh": "BLOCK 的参数是长宽高，不是一个点。位置靠变换命令（ADD）决定，尺寸和位置是两件事。",
+            "en": "BLOCK takes width, depth and height — not a point. Position comes from transformation commands such as ADD; size and placement are separate concerns."
+          }
+        },
+        {
+          "id": "q2",
+          "q": {
+            "zh": "GDL 的局部坐标系里，Z 轴指向哪里？",
+            "en": "In the GDL local coordinate system, where does the Z axis point?"
+          },
+          "options": {
+            "zh": ["水平向前", "竖直向上", "竖直向下"],
+            "en": ["Horizontally forward", "Straight up", "Straight down"]
+          },
+          "answer": 1,
+          "explain": {
+            "zh": "GDL 用 Z 轴向上的右手坐标系，画楼板、墙体时高度就是 Z。Three.js 里会映射成 Y 向上，那只是渲染层的换算。",
+            "en": "GDL uses a right-handed system with Z up, so heights go along Z. Three.js maps that to Y up — a renderer-level conversion only."
+          }
+        },
+        {
+          "id": "q3",
+          "q": {
+            "zh": "画完一个物体后再执行 `ADD 1, 0, 0`，下一个物体的位置会怎样？",
+            "en": "After drawing one body you run `ADD 1, 0, 0`. Where does the next body go?"
+          },
+          "options": {
+            "zh": ["沿 X 轴偏移 1 米", "仍在原处", "沿 Z 轴抬高 1 米"],
+            "en": ["1 metre along X from the previous position", "In exactly the same place", "1 metre up along Z"]
+          },
+          "answer": 0,
+          "explain": {
+            "zh": "ADD 平移的是当前坐标系，之后画的物体都按新原点定位，直到 DEL 退回。",
+            "en": "ADD shifts the current coordinate frame; everything drawn afterwards uses the new origin until DEL pops it."
+          }
+        }
+      ]
+    },
+    {
+      "chapter": "02-transform-stack",
+      "questions": [
+        {
+          "id": "q1",
+          "q": {
+            "zh": "`DEL 1` 的作用是什么？",
+            "en": "What does `DEL 1` do?"
+          },
+          "options": {
+            "zh": ["删除最后画的一个物体", "退回上一层坐标系", "清空整个模型"],
+            "en": ["Deletes the last body drawn", "Pops one transformation level", "Clears the whole model"]
+          },
+          "answer": 1,
+          "explain": {
+            "zh": "DEL 是退栈，不是删除几何。常见误解之一：以为 DEL 会删掉物体，其实它只恢复上一层坐标系。",
+            "en": "DEL pops the stack — it does not delete geometry. A common misconception is that it removes bodies; it only restores the previous frame."
+          }
+        },
+        {
+          "id": "q2",
+          "q": {
+            "zh": "变换堆栈的出入顺序是？",
+            "en": "In what order does the transformation stack work?"
+          },
+          "options": {
+            "zh": ["先进先出", "后进先出", "随机"],
+            "en": ["First in, first out", "Last in, first out", "Random"]
+          },
+          "answer": 1,
+          "explain": {
+            "zh": "和函数调用栈一样是后进先出：最后压入的变换最先被 DEL 弹出。压了几层就要退几层。",
+            "en": "It is last-in-first-out like a call stack: the most recently pushed frame is popped first. Push N levels, pop N levels."
+          }
+        },
+        {
+          "id": "q3",
+          "q": {
+            "zh": "循环里每轮都 ADD 却从不 DEL，最可能的后果是？",
+            "en": "A loop calls ADD every iteration but never DEL. What is the likely result?"
+          },
+          "options": {
+            "zh": ["物体整齐排成一行", "偏移量逐轮累加，物体越跑越远", "脚本报语法错误"],
+            "en": ["Bodies line up neatly", "Offsets accumulate and bodies drift away", "A syntax error is raised"]
+          },
+          "answer": 1,
+          "explain": {
+            "zh": "没有 DEL，上一轮的偏移会留给下一轮，位置层层叠加。要么循环内 DEL 退回，要么用绝对坐标。",
+            "en": "Without DEL the previous offset carries into the next iteration and stacks up. Either pop inside the loop or use absolute coordinates."
+          }
+        }
+      ]
+    },
+    {
+      "chapter": "03-parameters",
+      "questions": [
+        {
+          "id": "q1",
+          "q": {
+            "zh": "参数在哪里定义？",
+            "en": "Where are parameters defined?"
+          },
+          "options": {
+            "zh": ["参数列表", "3D 脚本开头", "界面脚本末尾"],
+            "en": ["In the parameter list", "At the top of the 3D script", "At the end of the UI script"]
+          },
+          "answer": 0,
+          "explain": {
+            "zh": "参数列表定义名称、类型、默认值与取值范围；脚本里只是使用它们，不能顺手新建参数。",
+            "en": "The parameter list defines name, type, default and range. Scripts only consume parameters — they cannot create new ones on the fly."
+          }
+        },
+        {
+          "id": "q2",
+          "q": {
+            "zh": "下面哪个是合法的参数类型？",
+            "en": "Which of these is a valid parameter type?"
+          },
+          "options": {
+            "zh": ["长度（Length）", "颜色（Colour）", "图层（Layer）"],
+            "en": ["Length", "Colour", "Layer"]
+          },
+          "answer": 0,
+          "explain": {
+            "zh": "GDL 参数类型包括长度、角度、整数、实数、字符串、布尔、材质等，没有「图层」这种类型；材质用索引号引用。",
+            "en": "GDL types include length, angle, integer, real, string, boolean and material — there is no layer type; materials are referenced by index."
+          }
+        },
+        {
+          "id": "q3",
+          "q": {
+            "zh": "改了参数值但模型没变化，最可能的原因是？",
+            "en": "You change a parameter but the model does not move. Most likely cause?"
+          },
+          "options": {
+            "zh": ["脚本里根本没用到这个参数", "参数类型选错了", "图库没有重新加载"],
+            "en": ["The script never uses that parameter", "The parameter type is wrong", "The library was not reloaded"]
+          },
+          "answer": 0,
+          "explain": {
+            "zh": "先搜脚本里有没有出现这个参数名。参数只是输入，不写进命令就不会有任何效果。",
+            "en": "Search the scripts for the parameter name first. A parameter is only an input — if no command uses it, nothing happens."
+          }
+        }
+      ]
+    },
+    {
+      "chapter": "04-2d-script",
+      "questions": [
+        {
+          "id": "q1",
+          "q": {
+            "zh": "在平面图上画一条线段用哪个命令？",
+            "en": "Which command draws a line segment in plan?"
+          },
+          "options": {
+            "zh": ["LINE2", "LINE3", "BLOCK"],
+            "en": ["LINE2", "LINE3", "BLOCK"]
+          },
+          "answer": 0,
+          "explain": {
+            "zh": "二维命令都带 2 后缀：LINE2、ARC2、POLY2。LINE3 是三维线，BLOCK 是实体。",
+            "en": "2D commands carry a 2 suffix: LINE2, ARC2, POLY2. LINE3 draws in 3D and BLOCK creates a solid."
+          }
+        },
+        {
+          "id": "q2",
+          "q": {
+            "zh": "2D 脚本会影响什么？",
+            "en": "What does the 2D script affect?"
+          },
+          "options": {
+            "zh": ["平面图与剖面里的符号", "三维形体", "参数对话框"],
+            "en": ["The symbol in plan and section views", "The 3D geometry", "The parameter dialog"]
+          },
+          "answer": 0,
+          "explain": {
+            "zh": "2D 脚本只负责二维符号；三维形体由 3D 脚本负责，两者不要混着改。",
+            "en": "The 2D script only draws the 2D symbol; the 3D script owns the solid. Do not mix the two."
+          }
+        },
+        {
+          "id": "q3",
+          "q": {
+            "zh": "对象在平面图上完全看不到，最先该检查什么？",
+            "en": "An object is invisible in plan. What should you check first?"
+          },
+          "options": {
+            "zh": ["2D 脚本是不是空的", "材质索引是否为 0", "模型有没有导出"],
+            "en": ["Whether the 2D script is empty", "Whether the material index is 0", "Whether the model was exported"]
+          },
+          "answer": 0,
+          "explain": {
+            "zh": "没有 2D 脚本就没有平面符号，这是最常见的原因；其次是图层与画笔颜色。",
+            "en": "No 2D script means no plan symbol — the usual culprit. Layer and pen colour come next."
+          }
+        }
+      ]
+    },
+    {
+      "chapter": "05-control-flow",
+      "questions": [
+        {
+          "id": "q1",
+          "q": {
+            "zh": "GDL 的 FOR 循环以什么结束？",
+            "en": "How does a GDL FOR loop end?"
+          },
+          "options": {
+            "zh": ["NEXT", "END", "RETURN"],
+            "en": ["NEXT", "END", "RETURN"]
+          },
+          "answer": 0,
+          "explain": {
+            "zh": "FOR ... TO ... STEP ... NEXT；END 用于 IF / 宏等结构，RETURN 用于子程序返回。",
+            "en": "FOR ... TO ... STEP ... NEXT. END closes IF and similar blocks; RETURN leaves a subroutine."
+          }
+        },
+        {
+          "id": "q2",
+          "q": {
+            "zh": "用 GOSUB 调用子程序后，靠什么返回？",
+            "en": "After calling a subroutine with GOSUB, what returns control?"
+          },
+          "options": {
+            "zh": ["RETURN", "NEXT", "END"],
+            "en": ["RETURN", "NEXT", "END"]
+          },
+          "answer": 0,
+          "explain": {
+            "zh": "GOSUB 跳到标签，执行到 RETURN 回到调用处；忘记 RETURN 会一路执行到脚本末尾并报错。",
+            "en": "GOSUB jumps to a label and RETURN comes back; forgetting RETURN runs to the end of the script and errors out."
+          }
+        },
+        {
+          "id": "q3",
+          "q": {
+            "zh": "`IF cond THEN` 后面只写了一条语句，条件不成立时会怎样？",
+            "en": "`IF cond THEN` is followed by a single statement. What happens when the condition is false?"
+          },
+          "options": {
+            "zh": ["跳过这一条，继续往下执行", "整个脚本停止", "编译报错"],
+            "en": ["That statement is skipped and execution continues", "The whole script stops", "A compile error is raised"]
+          },
+          "answer": 0,
+          "explain": {
+            "zh": "单行 IF 只控制紧随其后的一条语句。要多条语句受控，用 IF ... THEN ... ENDIF 块。",
+            "en": "A single-line IF controls only the next statement. Wrap several statements in IF ... THEN ... ENDIF."
+          }
+        }
+      ]
+    }
+  ]
+}

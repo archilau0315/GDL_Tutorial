@@ -1,6 +1,6 @@
 /**
  * 速查数据校验：结构完整、中英字段成对、分类与章节链接合法。
- * 覆盖 commands / globals / snippets / errors / glossary / chapters 六份单源数据。
+ * 覆盖 commands / globals / snippets / errors / glossary / chapters / quizzes 七份单源数据。
  * 用法：npm run check:data
  */
 import { readFileSync, existsSync } from 'node:fs'
@@ -168,6 +168,37 @@ for (const c of book.chapters ?? []) {
   }
 }
 
+/* ---------- 章末自测 ---------- */
+const quiz = load('quizzes.json')
+if (!quiz.meta?.version) errors.push('quizzes: 缺少 meta.version')
+const quizChapters = new Set()
+
+for (const item of quiz.quizzes ?? []) {
+  const at = `自测 ${item.chapter ?? '(无章节)'}`
+  if (!chapterIds.has(item.chapter)) errors.push(`${at}: 章节不存在于 chapters.json`)
+  if (quizChapters.has(item.chapter)) errors.push(`${at}: 同一章重复出现`)
+  quizChapters.add(item.chapter)
+
+  const questions = item.questions ?? []
+  if (questions.length < 3) errors.push(`${at}: 至少需要 3 道题，现有 ${questions.length}`)
+
+  for (const q of questions) {
+    const qat = `${at} / ${q.id ?? '(无 id)'}`
+    if (!q.id) errors.push(`${qat}: 缺少 id`)
+    checkPair(qat, 'q', q.q)
+    checkPair(qat, 'explain', q.explain)
+    checkPair(qat, 'options', q.options, true)
+
+    const zh = q.options?.zh ?? []
+    const en = q.options?.en ?? []
+    if (zh.length < 2) errors.push(`${qat}: 至少需要 2 个选项`)
+    if (zh.length !== en.length) errors.push(`${qat}: 中英选项数量不一致（${zh.length} / ${en.length}）`)
+    if (typeof q.answer !== 'number' || q.answer < 0 || q.answer >= zh.length) {
+      errors.push(`${qat}: answer 越界或不是数字`)
+    }
+  }
+}
+
 if (errors.length) {
   console.error(`速查数据校验失败（${errors.length} 项）：`)
   errors.forEach(e => console.error('  - ' + e))
@@ -179,5 +210,6 @@ console.log(
   `${snip.snippets.length} 个片段 / ${snip.categories.length} 类，` +
   `${err.errors.length} 条错误 / ${err.categories.length} 类，` +
   `${gloss.terms.length} 个术语 / ${gloss.categories.length} 类，` +
-  `${book.chapters.length} 章 / ${book.parts.length} 个分部`
+  `${book.chapters.length} 章 / ${book.parts.length} 个分部，` +
+  `${quiz.quizzes.length} 章自测（${(quiz.quizzes ?? []).reduce((n, q) => n + q.questions.length, 0)} 题）`
 )
