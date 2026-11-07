@@ -352,4 +352,13 @@
 
 **决策依据**：站内教程、命令详情、GLOB、错误、片段、术语都是页面，一份本地索引即可全覆盖，不必维护第二套命令搜索。
 
-**验证**：`check:i18n` 87 对、`check:data` 全通过、`test` 41 例全绿、`build` 生成 175 页；构建产物 `/` 与 `/en/` 均含搜索按钮，`/playground/` 已无搜索框残留。
+**验证**：`check:i18n` 87 对、`check:data` 全通过、`test` 41 例全绿、`build` 生成 175 页。
+
+**返工（同日 15:40）**：用户反馈顶部没有搜索框、右侧没有 Gitee 标，两个原因都查清并修掉：
+
+| 时间 | 模块 | 变更简述 | 备注 |
+|---|---|---|---|
+| 15:38 | config.mts | `search` 从各 locale 的 `themeConfig` 提到**顶层** `themeConfig`，语言差异放 `options.locales`（`root` / `en` 两套按钮文案） | 踩坑：`__VP_LOCAL_SEARCH__` 取值是 `site.themeConfig.search.provider`，只读顶层；写在 locale 里构建时判定为 false，按钮整块被 `v-if` 掉。改配置时的临时语法错误还让 dev server 崩过一次，报 `Expected "}"` |
+| 15:39 | config.mts | `socialLinks` 增加 Gitee：默认主题没有内置图标，用 `icon: { svg }` 传 simple-icons 的官方路径 | 链接 `https://gitee.com/archilau/GDL_Tutorial`，与 README 一致 |
+
+**复验**：`build` 后 `/` 与 `/en/` 产物均含 `DocSearch-Button` 与 gitee 链接；dev 实测导航右侧按钮文案分别为「搜索」「Search」，Gitee 图标 href 指向 gitee.com/archilau。

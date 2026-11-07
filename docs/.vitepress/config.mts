@@ -5,6 +5,11 @@ import { join } from 'node:path'
 import { gdlGrammar } from './shiki-gdl/gdl.mts'
 import { blueprintLight, blueprintDark } from './shiki-gdl/theme.mts'
 
+/** Gitee 图标（默认主题没有内置，用 simple-icons 官方路径） */
+const giteeIcon = {
+  svg: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M11.984 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.016 0zm6.09 5.333c.328 0 .593.266.592.593v1.482a.594.594 0 0 1-.593.592H9.777c-.982 0-1.778.796-1.778 1.778v5.63c0 .327.266.592.593.592h5.63c.982 0 1.778-.796 1.778-1.778v-.296a.593.593 0 0 0-.592-.593h-4.15a.592.592 0 0 1-.592-.592v-1.482a.593.593 0 0 1 .593-.593h6.815c.327 0 .593.265.593.593v3.408a4 4 0 0 1-4 4H5.926a.593.593 0 0 1-.593-.593V9.778a4.444 4.444 0 0 1 4.445-4.445h8.222Z"/></svg>'
+}
+
 const zhNav = [
   { text: '学习路径', link: '/guide/', activeMatch: '/guide/' },
   { text: '在线沙盒', link: '/playground/', activeMatch: '/playground/' },
@@ -239,12 +244,7 @@ export default defineConfig({
         sidebar: zhSidebar,
         outline: { label: '本页内容', level: [2, 3] },
         docFooter: { prev: '上一页', next: '下一页' },
-        lastUpdated: { text: '最后更新' },
-        search: { provider: 'local',
-          options: {
-            miniSearch: { options: { tokenize: cjkTokenize } },
-            locales: { root: { translations: { button: { buttonText: '搜索', buttonAriaLabel: '搜索' } } } }
-          } }
+        lastUpdated: { text: '最后更新' }
       }
     },
     en: {
@@ -256,15 +256,27 @@ export default defineConfig({
         nav: enNav,
         sidebar: enSidebar,
         outline: { label: 'On this page', level: [2, 3] },
-        lastUpdated: { text: 'Last updated' },
-        search: { provider: 'local',
-          options: { miniSearch: { options: { tokenize: cjkTokenize } } } }
+        lastUpdated: { text: 'Last updated' }
       }
     }
   },
   themeConfig: {
     logo: '/favicon.svg',
-    socialLinks: [{ icon: 'github', link: 'https://github.com/archilau0315/GDL_Tutorial' }],
+    // 本地搜索只认顶层 themeConfig，语言差异放在 options.locales
+    search: {
+      provider: 'local',
+      options: {
+        miniSearch: { options: { tokenize: cjkTokenize } },
+        locales: {
+          root: { translations: { button: { buttonText: '搜索', buttonAriaLabel: '搜索' } } },
+          en: { translations: { button: { buttonText: 'Search', buttonAriaLabel: 'Search' } } }
+        }
+      }
+    },
+    socialLinks: [
+      { icon: 'github', link: 'https://github.com/archilau0315/GDL_Tutorial', ariaLabel: 'GitHub' },
+      { icon: giteeIcon, link: 'https://gitee.com/archilau/GDL_Tutorial', ariaLabel: 'Gitee' }
+    ],
     footer: {
       message: '内容原创 · 示例自写 · 命令数据整理自 Graphisoft 官方手册并注明出处'
     }
