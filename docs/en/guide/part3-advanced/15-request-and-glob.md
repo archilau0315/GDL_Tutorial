@@ -139,4 +139,4 @@ The value already carries length units (metres) — do not multiply by 1000. `ST
 
 ---
 
-Next: Chapter 16 Data and Files — arrays, string assembly, external files and property export (in progress).
+Next: [Chapter 16 Data and Files](/en/guide/part3-advanced/16-data-and-files) — arrays, string assembly, external files and property export.

@@ -224,6 +224,42 @@ BLOCK 2 * holeR, th, h - holeZ - holeR
 DEL 2`
   },
   {
+    key: 'door',
+    label: { zh: '🚪 单开门', en: '🚪 Single door' },
+    code: `! 单开门 3D / single door
+A = 1.00
+B = 2.10
+wallT = 0.20
+ft = 0.05
+lt = 0.04
+matFrame = 3
+matLeaf = 1
+
+! 门框：两根立梃 + 上槛 / frame
+MATERIAL matFrame
+BLOCK ft, wallT, B
+ADD A - ft, 0, 0
+BLOCK ft, wallT, B
+DEL 1
+ADD 0, 0, B - ft
+BLOCK A, wallT, ft
+DEL 1
+
+! 门扇：内侧留 3 mm 缝 / leaf
+MATERIAL matLeaf
+ADD ft + 0.003, (wallT - lt) / 2, 0.003
+BLOCK A - 2 * ft - 0.006, lt, B - ft - 0.006
+DEL 1
+
+! 内外把手 / handles
+MATERIAL 6
+ADD A - ft - 0.12, -0.03, 1.00
+BLOCK 0.025, 0.05, 0.025
+ADD 0, wallT + 0.06, 0
+BLOCK 0.025, 0.05, 0.025
+DEL 2`
+  },
+  {
     key: 'chair2d',
     label: { zh: '🪑 椅子平面符号', en: '🪑 Chair plan symbol' },
     code: `! 椅子平面符号（2D 脚本）

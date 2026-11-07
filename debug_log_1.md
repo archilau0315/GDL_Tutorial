@@ -121,3 +121,17 @@
 | 11:12 | config.mts、guide/index.md（中英） | 侧边栏第三部分展开并登记 13-15 章；进度清单同步 | 第三部分改为默认展开 |
 
 **验证**：check:i18n 62 对、check:data 52 条、check:search 17/17、单测 41 例、build 成功。
+
+## 2026-11-07 P4b 精通篇收尾 16-18 章 + README 双语化
+
+| 时间 | 模块 | 变更简述 | 备注 |
+|---|---|---|---|
+| 10:52 | README.md | 全文中英双语重写：badge、定位、章节进度表、快速开始、目录结构、模块清单、写章流程、部署 | 一个文件同时显示中英双语 |
+| 11:02 | docs/guide/part3-advanced/16-data-and-files.md + en 版 | 新章：DIM 数组（1 起始、动态数组）、STR 宽度陷阱、OPEN/INPUT/OUTPUT/CLOSE、FILE_DEPENDENCE、VARTYPE | 签名依据官方 File Operations 与 Expressions |
+| 11:06 | docs/guide/part3-advanced/17-toolchain-and-migration.md + en 版 | 新章：七个脚本页职责、LP_XMLConverter 往返、升级七步检查表、命名与版本规范、性能预算 | 流程篇，无沙盒 |
+| 11:10 | docs/guide/part3-advanced/18-final-project.md + en 版 | 新章：门对象交付全流程（需求书→参数表→3D→2D→热区→UI→验收→交付物） | 含可运行 3D 片段 |
+| 11:12 | GdlPlayground.vue | 新增 preset `door`：单开门门框 + 门扇 + 内外把手 | 沙盒可跑 |
+| 11:16 | config.mts、guide/index.md（中英）、README 状态 | 登记 16-18 章，第三部分标记全部完成 | 19 章全部完成 |
+| 11:20 | commands.json | 新增「数据与文件」分类及 DIM/OPEN/INPUT/OUTPUT/CLOSE/VARTYPE 6 条 | 52 → 58 条，11 分类 |
+
+**验证**：check:data 58 条、check:i18n 76 对、check:search 17/17、单测 41 例、build 成功。

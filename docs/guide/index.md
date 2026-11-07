@@ -8,7 +8,7 @@ GDL_Tutorial 的完整学习路径分三个部分、共 19 章（GDL-00 ~ GDL-18
 |---|---|---|---|
 | 第一部分 · 入门篇 | GDL-00 ~ 05 | 认识 GDL、基本体、变换堆栈、参数化、2D 脚本、控制流 | ✅ 已完成（双语） |
 | 第二部分 · 进阶篇 | GDL-06 ~ 12 | PRISM 族、旋转放样、材质、宏、门窗对象、字符串、实战 | ✅ 已完成（双语） |
-| 第三部分 · 精通篇 | GDL-13 ~ 18 | UI 脚本、布尔与热区、REQUEST 与 GLOB、数据与文件、工具链、毕业实战 | 进行中（13–15 已完成） |
+| 第三部分 · 精通篇 | GDL-13 ~ 18 | UI 脚本、布尔与热区、REQUEST 与 GLOB、数据与文件、工具链、毕业实战 | ✅ 已完成（双语） |
 
 ## 怎么学
 
@@ -34,3 +34,6 @@ GDL_Tutorial 的完整学习路径分三个部分、共 19 章（GDL-00 ~ GDL-18
 - [x] 第 13 章 UI 脚本与参数界面 → [阅读](/guide/part3-advanced/13-ui-script)
 - [x] 第 14 章 布尔、GROUP 与热区 → [阅读](/guide/part3-advanced/14-boolean-and-hotspots)
 - [x] 第 15 章 REQUEST 与 GLOB → [阅读](/guide/part3-advanced/15-request-and-glob)
+- [x] 第 16 章 数据与文件 → [阅读](/guide/part3-advanced/16-data-and-files)
+- [x] 第 17 章 工具链与版本迁移 → [阅读](/guide/part3-advanced/17-toolchain-and-migration)
+- [x] 第 18 章 毕业实战：门窗交付 → [阅读](/guide/part3-advanced/18-final-project)

@@ -18,7 +18,8 @@
     { "id": "attribute", "zh": "属性与材质", "en": "Attributes" },
     { "id": "flow", "zh": "控制流", "en": "Control Flow" },
     { "id": "solid", "zh": "实体与布尔", "en": "Solids & Booleans" },
-    { "id": "ui", "zh": "参数与界面", "en": "Parameters & UI" }
+    { "id": "ui", "zh": "参数与界面", "en": "Parameters & UI" },
+    { "id": "data", "zh": "数据与文件", "en": "Data & Files" }
   ],
   "commands": [
     {
@@ -768,6 +769,130 @@
       "example": "HIDEPARAMETER \"n\"",
       "chapter": { "zh": "/guide/part3-advanced/13-ui-script", "en": "/en/guide/part3-advanced/13-ui-script" },
       "aliases": { "zh": ["隐藏参数", "内部参数", "不显示"], "en": ["hide parameter", "internal parameter", "invisible"] }
+    },
+    {
+      "name": "DIM",
+      "category": "data",
+      "syntax": "DIM array[d1][, d2]",
+      "params": {
+        "zh": ["array — 数组名，可一次声明多个，用逗号分隔", "d1, d2 — 维度长度（数值常量）；留空即动态数组"],
+        "en": ["array — array name; several may be declared at once", "d1, d2 — dimension sizes (numeric constants); leave empty for a dynamic array"]
+      },
+      "desc": {
+        "zh": "声明数组。下标从 1 开始，最多两维；`DIM a[]` 为动态数组，赋值时自动扩展。固定长度数组越界不会报错，会读到垃圾值，这是最隐蔽的 bug 来源。",
+        "en": "Declares an array. Indices start at 1, two dimensions maximum; `DIM a[]` is dynamic and grows on assignment. Fixed-length arrays do not raise errors on out-of-range access — they return garbage, which makes this a hidden bug factory."
+      },
+      "example": "DIM shelfH[8]\nDIM rows[]\nshelfH[1] = 0.30",
+      "chapter": { "zh": "/guide/part3-advanced/16-data-and-files", "en": "/en/guide/part3-advanced/16-data-and-files" },
+      "aliases": { "zh": ["数组", "声明数组", "动态数组"], "en": ["array", "declare array", "dynamic array"] }
+    },
+    {
+      "name": "OPEN",
+      "category": "data",
+      "syntax": "channel = OPEN (filter, filename, parameterString)",
+      "params": {
+        "zh": [
+          "filter — Add-On 名称，文本文件填 \"TEXT\"",
+          "filename — 文件名，可带路径",
+          "parameterString — 传给 Add-On 的参数，如 \"SEPARATOR = ',', mode = ro\"",
+          "返回值 — 正数通道号；-1 文件不存在；-2 缺 Add-On"
+        ],
+        "en": [
+          "filter — Add-On name, \"TEXT\" for text files",
+          "filename — file name, optionally with a path",
+          "parameterString — options for the Add-On, e.g. \"SEPARATOR = ',', mode = ro\"",
+          "returns — positive channel; -1 missing file; -2 missing Add-On"
+        ]
+      },
+      "desc": {
+        "zh": "打开外部文件并返回通道号，后续 INPUT / OUTPUT / CLOSE 都用它。必须判返回值是否大于 0，否则文件缺失时后面所有操作都在对不存在的通道说话，而且不会报错。",
+        "en": "Opens an external file and returns a channel number used by INPUT / OUTPUT / CLOSE. Always test that the value is greater than 0 — otherwise every later call talks to a channel that does not exist, silently."
+      },
+      "example": "ch = OPEN (\"TEXT\", \"cabinet.csv\", \"SEPARATOR = ',', mode = ro\")\nIF ch > 0 THEN\n  ! INPUT ...\n  CLOSE ch\nENDIF",
+      "chapter": { "zh": "/guide/part3-advanced/16-data-and-files", "en": "/en/guide/part3-advanced/16-data-and-files" },
+      "aliases": { "zh": ["打开文件", "读文件", "文件通道"], "en": ["open file", "read file", "file channel"] }
+    },
+    {
+      "name": "INPUT",
+      "category": "data",
+      "syntax": "n = INPUT (channel, recordID, fieldID, var1 [, var2, ...])",
+      "params": {
+        "zh": [
+          "channel — OPEN 返回的通道号",
+          "recordID, fieldID — 起始记录与字段，含义由 Add-On 解释",
+          "var1... — 接收值的变量，类型由文件内容决定",
+          "返回值 — 成功读到的个数；-1 表示文件结束"
+        ],
+        "en": [
+          "channel — channel returned by OPEN",
+          "recordID, fieldID — starting record and field, interpreted by the Add-On",
+          "var1... — variables receiving the values; types follow the file content",
+          "returns — number of values read; -1 at end of file"
+        ]
+      },
+      "desc": {
+        "zh": "从文件按位置读取若干值，是函数不是命令，必须接返回值判断是否到文件尾。读进来的变量可能是数字也可能是字符串，用 VARTYPE 判断后再参与计算。",
+        "en": "Reads values from the file at a given position. It is a function, not a statement: capture the return value to detect end of file. Values may arrive as numbers or strings — check with VARTYPE before doing arithmetic."
+      },
+      "example": "WHILE INPUT (ch, n + 1, 1, code, cw, chh) > 0\n  n = n + 1\nENDWHILE",
+      "chapter": { "zh": "/guide/part3-advanced/16-data-and-files", "en": "/en/guide/part3-advanced/16-data-and-files" },
+      "aliases": { "zh": ["读取", "读一行", "读数据"], "en": ["read", "read line", "input file"] }
+    },
+    {
+      "name": "OUTPUT",
+      "category": "data",
+      "syntax": "OUTPUT channel, recordID, fieldID, expr1 [, expr2, ...]",
+      "params": {
+        "zh": [
+          "channel — OPEN 返回的通道号",
+          "recordID, fieldID — 写入位置",
+          "expr1... — 要写的值，至少一个"
+        ],
+        "en": [
+          "channel — channel returned by OPEN",
+          "recordID, fieldID — write position",
+          "expr1... — values to write, at least one"
+        ]
+      },
+      "desc": {
+        "zh": "把值写进文件，是命令语句，不返回值。写表格先写表头再写数据；数字用 STR 转成文本，宽度给足，太窄会输出一串星号。",
+        "en": "Writes values to the file. This is a statement, it returns nothing. Write the header before the rows; convert numbers with STR and give them enough width, or you get a row of asterisks."
+      },
+      "example": "OUTPUT ch, 1, 1, \"CODE\", \"WIDTH\"\nOUTPUT ch, 2, 1, \"A01\", STR (w, 8, 3)",
+      "chapter": { "zh": "/guide/part3-advanced/16-data-and-files", "en": "/en/guide/part3-advanced/16-data-and-files" },
+      "aliases": { "zh": ["写出", "写文件", "导出数据"], "en": ["write", "write file", "export data"] }
+    },
+    {
+      "name": "CLOSE",
+      "category": "data",
+      "syntax": "CLOSE channel",
+      "params": {
+        "zh": ["channel — 要关闭的通道号"],
+        "en": ["channel — channel to close"]
+      },
+      "desc": {
+        "zh": "关闭文件。不关会一直占着句柄，多次执行后可能写不进新文件；脚本结束时的自动关闭不保证内容已经落盘。",
+        "en": "Closes the file. Leaving it open holds the handle and can block later writes; the automatic cleanup at script end does not guarantee the content was flushed."
+      },
+      "example": "CLOSE ch",
+      "chapter": { "zh": "/guide/part3-advanced/16-data-and-files", "en": "/en/guide/part3-advanced/16-data-and-files" },
+      "aliases": { "zh": ["关闭文件", "释放句柄"], "en": ["close file", "release handle"] }
+    },
+    {
+      "name": "VARTYPE",
+      "category": "data",
+      "syntax": "VARTYPE (expression)",
+      "params": {
+        "zh": ["expression — 要判断类型的变量或表达式"],
+        "en": ["expression — variable or expression to inspect"]
+      },
+      "desc": {
+        "zh": "返回类型编号：1 数值、2 字符串、3 组、4 字典。读文件后先用它判断再计算，避免把字符串当数字用；GDL 不会在编译期拦住类型错误。",
+        "en": "Returns a type code: 1 number, 2 string, 3 group, 4 dictionary. Use it after reading a file before doing arithmetic — GDL never catches type mismatches at compile time."
+      },
+      "example": "IF VARTYPE (v) = 2 THEN\n  w = STRLEN (v)\nENDIF",
+      "chapter": { "zh": "/guide/part3-advanced/16-data-and-files", "en": "/en/guide/part3-advanced/16-data-and-files" },
+      "aliases": { "zh": ["类型判断", "变量类型"], "en": ["type check", "variable type"] }
     }
   ]
 }

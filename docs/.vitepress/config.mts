@@ -50,7 +50,10 @@ const zhSidebar = [
     items: [
       { text: '第 13 章 UI 脚本与参数界面', link: '/guide/part3-advanced/13-ui-script' },
       { text: '第 14 章 布尔、GROUP 与热区', link: '/guide/part3-advanced/14-boolean-and-hotspots' },
-      { text: '第 15 章 REQUEST 与 GLOB', link: '/guide/part3-advanced/15-request-and-glob' }
+      { text: '第 15 章 REQUEST 与 GLOB', link: '/guide/part3-advanced/15-request-and-glob' },
+      { text: '第 16 章 数据与文件', link: '/guide/part3-advanced/16-data-and-files' },
+      { text: '第 17 章 工具链与版本迁移', link: '/guide/part3-advanced/17-toolchain-and-migration' },
+      { text: '第 18 章 毕业实战：门窗交付', link: '/guide/part3-advanced/18-final-project' }
     ]
   },
   {
@@ -103,7 +106,10 @@ const enSidebar = [
     items: [
       { text: 'Ch 13 UI Script and the Parameter Interface', link: '/en/guide/part3-advanced/13-ui-script' },
       { text: 'Ch 14 Booleans, GROUP and Hotspots', link: '/en/guide/part3-advanced/14-boolean-and-hotspots' },
-      { text: 'Ch 15 REQUEST and GLOB', link: '/en/guide/part3-advanced/15-request-and-glob' }
+      { text: 'Ch 15 REQUEST and GLOB', link: '/en/guide/part3-advanced/15-request-and-glob' },
+      { text: 'Ch 16 Data and Files', link: '/en/guide/part3-advanced/16-data-and-files' },
+      { text: 'Ch 17 Toolchain and Version Migration', link: '/en/guide/part3-advanced/17-toolchain-and-migration' },
+      { text: 'Ch 18 Final Project: Delivering a Door', link: '/en/guide/part3-advanced/18-final-project' }
     ]
   },
   {
