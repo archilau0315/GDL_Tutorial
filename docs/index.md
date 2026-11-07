@@ -19,7 +19,7 @@ hero:
 features:
   - icon: 🏛️
     title: 分步教学
-    details: 21 章从零基础到专业级，每章概念 → 示例 → 常见坑 → 练习闭环
+    details: 19 章从零基础到专业级，每章概念 → 示例 → 常见坑 → 练习闭环
     link: /guide/
     linkText: 查看学习路径
   - icon: 🧊
@@ -33,3 +33,6 @@ features:
     link: /reference/
     linkText: 进入资料库
 ---
+
+<ProgressCard locale="zh" />
+

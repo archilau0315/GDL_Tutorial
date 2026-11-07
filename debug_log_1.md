@@ -219,3 +219,14 @@
 | 11:26 | README.md | 学习进度模块说明补章节页脚与跨标签同步，核心模块表改指 useProgress.ts | 中英同步 |
 
 **验证**：build 成功；实测第 2 章页脚上一章→第 1 章、下一章→第 3 章，英文页自动用 `/en/` 链接；学习路径页「继续学习」按钮渲染正常。
+
+## 2026-11-07 P4d 收尾：首页学习卡片
+
+| 时间 | 模块 | 变更简述 | 备注 |
+|---|---|---|---|
+| 11:40 | theme/components/ProgressCard.vue（新增） | 首页学习卡片：总进度条 +「下一站：章节名」+ 继续/开始学习按钮 + 学习路径入口 | 复用 useProgress，纯前端 |
+| 11:41 | theme/index.ts、i18n.ts | 注册 `ProgressCard`；新增 progStart / progCardTitle / progCardEmpty / progCardNext / progCardDone / progCardAll 六组文案 | 中英成对 |
+| 11:42 | index.md（中英） | 首页 hero 下插入学习卡片；顺带修正特性文案「21 章」→「19 章」 | 与 chapters.json 一致 |
+| 11:43 | README.md | 学习进度模块说明补「首页卡片」 | 中英同步 |
+
+**验证**：build 成功；中文首页命中「我的学习进度 / 还没开始 / 开始学习」，英文首页命中「My learning progress / Not started yet」；未改动后端或存储结构。

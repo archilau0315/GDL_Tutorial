@@ -19,7 +19,7 @@ hero:
 features:
   - icon: 🏛️
     title: Step by Step
-    details: "21 chapters from zero to professional level: concepts, examples, pitfalls, exercises"
+    details: "19 chapters from zero to professional level: concepts, examples, pitfalls, exercises"
     link: /en/guide/
     linkText: View learning path
   - icon: 🧊
@@ -33,3 +33,6 @@ features:
     link: /en/reference/
     linkText: Open reference
 ---
+
+<ProgressCard locale="en" />
+

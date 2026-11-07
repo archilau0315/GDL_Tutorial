@@ -6,6 +6,7 @@ import GlobTable from './components/GlobTable.vue'
 import SnippetList from './components/SnippetList.vue'
 import ErrorList from './components/ErrorList.vue'
 import ProgressPanel from './components/ProgressPanel.vue'
+import ProgressCard from './components/ProgressCard.vue'
 import Layout from './Layout.vue'
 import './style.css'
 
@@ -19,5 +20,6 @@ export default {
     app.component('SnippetList', SnippetList)
     app.component('ErrorList', ErrorList)
     app.component('ProgressPanel', ProgressPanel)
+    app.component('ProgressCard', ProgressCard)
   }
 }

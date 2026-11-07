@@ -64,7 +64,13 @@ export const dict = {
     progNext: '下一章',
     progDoneChapter: '本章已学完',
     progMarkChapter: '标记本章学完',
-    progOverall: '{done}/{total} 章'
+    progOverall: '{done}/{total} 章',
+    progStart: '开始学习',
+    progCardTitle: '我的学习进度',
+    progCardEmpty: '还没开始，从第 0 章起步',
+    progCardNext: '下一站：{title}',
+    progCardDone: '{total} 章全部学完，随时回来复习',
+    progCardAll: '学习路径'
   },
   en: {
     run: 'Run',
@@ -129,7 +135,13 @@ export const dict = {
     progNext: 'Next chapter',
     progDoneChapter: 'Chapter done',
     progMarkChapter: 'Mark chapter done',
-    progOverall: '{done}/{total} chapters'
+    progOverall: '{done}/{total} chapters',
+    progStart: 'Start learning',
+    progCardTitle: 'My learning progress',
+    progCardEmpty: 'Not started yet — begin with chapter 0',
+    progCardNext: 'Next up: {title}',
+    progCardDone: 'All {total} chapters done — revisit anytime',
+    progCardAll: 'Learning path'
   }
 } as const
 
