@@ -1,5 +1,8 @@
 {
-  "meta": { "version": "1.0.0", "updated": "2026-11-07" },
+  "meta": {
+    "version": "1.0.0",
+    "updated": "2026-11-07"
+  },
   "quizzes": [
     {
       "chapter": "00-getting-started",
@@ -11,10 +14,18 @@
             "en": "What ultimately produces a GDL object?"
           },
           "options": {
-            "zh": ["手工搭建的网格模型", "脚本里的命令描述", "导入的位图贴图"],
-            "en": ["A mesh modelled by hand", "Commands described in scripts", "An imported bitmap texture"]
+            "zh": [
+              "脚本里的命令描述",
+              "手工搭建的网格模型",
+              "导入的位图贴图"
+            ],
+            "en": [
+              "Commands described in scripts",
+              "A mesh modelled by hand",
+              "An imported bitmap texture"
+            ]
           },
-          "answer": 1,
+          "answer": 0,
           "explain": {
             "zh": "GDL 是描述式的：脚本写清楚形体、符号和参数，Archicad 负责生成。改脚本即改对象，不需要重新建模。",
             "en": "GDL is descriptive: scripts state the geometry, symbol and parameters, and Archicad generates the result. Change the script and the object changes — no remodelling."
@@ -27,10 +38,18 @@
             "en": "Which script decides how the object looks in plan?"
           },
           "options": {
-            "zh": ["2D 脚本", "3D 脚本", "界面脚本"],
-            "en": ["The 2D script", "The 3D script", "The UI script"]
+            "zh": [
+              "3D 脚本",
+              "2D 脚本",
+              "界面脚本"
+            ],
+            "en": [
+              "The 3D script",
+              "The 2D script",
+              "The UI script"
+            ]
           },
-          "answer": 0,
+          "answer": 1,
           "explain": {
             "zh": "2D 脚本画平面符号，3D 脚本画三维形体，界面脚本只负责设置对话框。三者互相独立。",
             "en": "The 2D script draws the plan symbol, the 3D script builds the solid, and the UI script only lays out the settings dialog. They are independent."
@@ -43,10 +62,18 @@
             "en": "What must be true before a library part can be placed in a project?"
           },
           "options": {
-            "zh": ["它有正确的子类型并且所在图库已加载", "它被编译成独立的可执行程序", "它已上传到云端"],
-            "en": ["It has the right subtype and its library is loaded", "It has been compiled into a standalone program", "It has been uploaded to the cloud"]
+            "zh": [
+              "它已上传到云端",
+              "它被编译成独立的可执行程序",
+              "它有正确的子类型并且所在图库已加载"
+            ],
+            "en": [
+              "It has been uploaded to the cloud",
+              "It has been compiled into a standalone program",
+              "It has the right subtype and its library is loaded"
+            ]
           },
-          "answer": 0,
+          "answer": 2,
           "explain": {
             "zh": "子类型决定它能不能放在墙上、地上；图库没加载，项目里就找不到这个部件。",
             "en": "The subtype decides whether it can go on a wall or the floor; if the library is not loaded, the project cannot find the part at all."
@@ -64,8 +91,16 @@
             "en": "What do the three numbers in `BLOCK 2, 0.6, 0.05` mean?"
           },
           "options": {
-            "zh": ["X、Y、Z 三个方向的尺寸", "插入点的坐标", "旋转角度"],
-            "en": ["Sizes along X, Y and Z", "The coordinates of the insertion point", "Rotation angles"]
+            "zh": [
+              "X、Y、Z 三个方向的尺寸",
+              "插入点的坐标",
+              "旋转角度"
+            ],
+            "en": [
+              "Sizes along X, Y and Z",
+              "The coordinates of the insertion point",
+              "Rotation angles"
+            ]
           },
           "answer": 0,
           "explain": {
@@ -80,8 +115,16 @@
             "en": "In the GDL local coordinate system, where does the Z axis point?"
           },
           "options": {
-            "zh": ["水平向前", "竖直向上", "竖直向下"],
-            "en": ["Horizontally forward", "Straight up", "Straight down"]
+            "zh": [
+              "水平向前",
+              "竖直向上",
+              "竖直向下"
+            ],
+            "en": [
+              "Horizontally forward",
+              "Straight up",
+              "Straight down"
+            ]
           },
           "answer": 1,
           "explain": {
@@ -96,10 +139,18 @@
             "en": "After drawing one body you run `ADD 1, 0, 0`. Where does the next body go?"
           },
           "options": {
-            "zh": ["沿 X 轴偏移 1 米", "仍在原处", "沿 Z 轴抬高 1 米"],
-            "en": ["1 metre along X from the previous position", "In exactly the same place", "1 metre up along Z"]
+            "zh": [
+              "沿 Z 轴抬高 1 米",
+              "仍在原处",
+              "沿 X 轴偏移 1 米"
+            ],
+            "en": [
+              "1 metre up along Z",
+              "In exactly the same place",
+              "1 metre along X from the previous position"
+            ]
           },
-          "answer": 0,
+          "answer": 2,
           "explain": {
             "zh": "ADD 平移的是当前坐标系，之后画的物体都按新原点定位，直到 DEL 退回。",
             "en": "ADD shifts the current coordinate frame; everything drawn afterwards uses the new origin until DEL pops it."
@@ -117,10 +168,18 @@
             "en": "What does `DEL 1` do?"
           },
           "options": {
-            "zh": ["删除最后画的一个物体", "退回上一层坐标系", "清空整个模型"],
-            "en": ["Deletes the last body drawn", "Pops one transformation level", "Clears the whole model"]
+            "zh": [
+              "退回上一层坐标系",
+              "删除最后画的一个物体",
+              "清空整个模型"
+            ],
+            "en": [
+              "Pops one transformation level",
+              "Deletes the last body drawn",
+              "Clears the whole model"
+            ]
           },
-          "answer": 1,
+          "answer": 0,
           "explain": {
             "zh": "DEL 是退栈，不是删除几何。常见误解之一：以为 DEL 会删掉物体，其实它只恢复上一层坐标系。",
             "en": "DEL pops the stack — it does not delete geometry. A common misconception is that it removes bodies; it only restores the previous frame."
@@ -133,8 +192,16 @@
             "en": "In what order does the transformation stack work?"
           },
           "options": {
-            "zh": ["先进先出", "后进先出", "随机"],
-            "en": ["First in, first out", "Last in, first out", "Random"]
+            "zh": [
+              "先进先出",
+              "后进先出",
+              "随机"
+            ],
+            "en": [
+              "First in, first out",
+              "Last in, first out",
+              "Random"
+            ]
           },
           "answer": 1,
           "explain": {
@@ -149,10 +216,18 @@
             "en": "A loop calls ADD every iteration but never DEL. What is the likely result?"
           },
           "options": {
-            "zh": ["物体整齐排成一行", "偏移量逐轮累加，物体越跑越远", "脚本报语法错误"],
-            "en": ["Bodies line up neatly", "Offsets accumulate and bodies drift away", "A syntax error is raised"]
+            "zh": [
+              "物体整齐排成一行",
+              "脚本报语法错误",
+              "偏移量逐轮累加，物体越跑越远"
+            ],
+            "en": [
+              "Bodies line up neatly",
+              "A syntax error is raised",
+              "Offsets accumulate and bodies drift away"
+            ]
           },
-          "answer": 1,
+          "answer": 2,
           "explain": {
             "zh": "没有 DEL，上一轮的偏移会留给下一轮，位置层层叠加。要么循环内 DEL 退回，要么用绝对坐标。",
             "en": "Without DEL the previous offset carries into the next iteration and stacks up. Either pop inside the loop or use absolute coordinates."
@@ -170,8 +245,16 @@
             "en": "Where are parameters defined?"
           },
           "options": {
-            "zh": ["参数列表", "3D 脚本开头", "界面脚本末尾"],
-            "en": ["In the parameter list", "At the top of the 3D script", "At the end of the UI script"]
+            "zh": [
+              "参数列表",
+              "3D 脚本开头",
+              "界面脚本末尾"
+            ],
+            "en": [
+              "In the parameter list",
+              "At the top of the 3D script",
+              "At the end of the UI script"
+            ]
           },
           "answer": 0,
           "explain": {
@@ -186,10 +269,18 @@
             "en": "Which of these is a valid parameter type?"
           },
           "options": {
-            "zh": ["长度（Length）", "颜色（Colour）", "图层（Layer）"],
-            "en": ["Length", "Colour", "Layer"]
+            "zh": [
+              "颜色（Colour）",
+              "长度（Length）",
+              "图层（Layer）"
+            ],
+            "en": [
+              "Colour",
+              "Length",
+              "Layer"
+            ]
           },
-          "answer": 0,
+          "answer": 1,
           "explain": {
             "zh": "GDL 参数类型包括长度、角度、整数、实数、字符串、布尔、材质等，没有「图层」这种类型；材质用索引号引用。",
             "en": "GDL types include length, angle, integer, real, string, boolean and material — there is no layer type; materials are referenced by index."
@@ -202,10 +293,18 @@
             "en": "You change a parameter but the model does not move. Most likely cause?"
           },
           "options": {
-            "zh": ["脚本里根本没用到这个参数", "参数类型选错了", "图库没有重新加载"],
-            "en": ["The script never uses that parameter", "The parameter type is wrong", "The library was not reloaded"]
+            "zh": [
+              "图库没有重新加载",
+              "参数类型选错了",
+              "脚本里根本没用到这个参数"
+            ],
+            "en": [
+              "The library was not reloaded",
+              "The parameter type is wrong",
+              "The script never uses that parameter"
+            ]
           },
-          "answer": 0,
+          "answer": 2,
           "explain": {
             "zh": "先搜脚本里有没有出现这个参数名。参数只是输入，不写进命令就不会有任何效果。",
             "en": "Search the scripts for the parameter name first. A parameter is only an input — if no command uses it, nothing happens."
@@ -223,8 +322,16 @@
             "en": "Which command draws a line segment in plan?"
           },
           "options": {
-            "zh": ["LINE2", "LINE3", "BLOCK"],
-            "en": ["LINE2", "LINE3", "BLOCK"]
+            "zh": [
+              "LINE2",
+              "LINE3",
+              "BLOCK"
+            ],
+            "en": [
+              "LINE2",
+              "LINE3",
+              "BLOCK"
+            ]
           },
           "answer": 0,
           "explain": {
@@ -239,10 +346,18 @@
             "en": "What does the 2D script affect?"
           },
           "options": {
-            "zh": ["平面图与剖面里的符号", "三维形体", "参数对话框"],
-            "en": ["The symbol in plan and section views", "The 3D geometry", "The parameter dialog"]
+            "zh": [
+              "三维形体",
+              "平面图与剖面里的符号",
+              "参数对话框"
+            ],
+            "en": [
+              "The 3D geometry",
+              "The symbol in plan and section views",
+              "The parameter dialog"
+            ]
           },
-          "answer": 0,
+          "answer": 1,
           "explain": {
             "zh": "2D 脚本只负责二维符号；三维形体由 3D 脚本负责，两者不要混着改。",
             "en": "The 2D script only draws the 2D symbol; the 3D script owns the solid. Do not mix the two."
@@ -255,10 +370,18 @@
             "en": "An object is invisible in plan. What should you check first?"
           },
           "options": {
-            "zh": ["2D 脚本是不是空的", "材质索引是否为 0", "模型有没有导出"],
-            "en": ["Whether the 2D script is empty", "Whether the material index is 0", "Whether the model was exported"]
+            "zh": [
+              "模型有没有导出",
+              "材质索引是否为 0",
+              "2D 脚本是不是空的"
+            ],
+            "en": [
+              "Whether the model was exported",
+              "Whether the material index is 0",
+              "Whether the 2D script is empty"
+            ]
           },
-          "answer": 0,
+          "answer": 2,
           "explain": {
             "zh": "没有 2D 脚本就没有平面符号，这是最常见的原因；其次是图层与画笔颜色。",
             "en": "No 2D script means no plan symbol — the usual culprit. Layer and pen colour come next."
@@ -276,8 +399,16 @@
             "en": "How does a GDL FOR loop end?"
           },
           "options": {
-            "zh": ["NEXT", "END", "RETURN"],
-            "en": ["NEXT", "END", "RETURN"]
+            "zh": [
+              "NEXT",
+              "END",
+              "RETURN"
+            ],
+            "en": [
+              "NEXT",
+              "END",
+              "RETURN"
+            ]
           },
           "answer": 0,
           "explain": {
@@ -292,10 +423,18 @@
             "en": "After calling a subroutine with GOSUB, what returns control?"
           },
           "options": {
-            "zh": ["RETURN", "NEXT", "END"],
-            "en": ["RETURN", "NEXT", "END"]
+            "zh": [
+              "NEXT",
+              "RETURN",
+              "END"
+            ],
+            "en": [
+              "NEXT",
+              "RETURN",
+              "END"
+            ]
           },
-          "answer": 0,
+          "answer": 1,
           "explain": {
             "zh": "GOSUB 跳到标签，执行到 RETURN 回到调用处；忘记 RETURN 会一路执行到脚本末尾并报错。",
             "en": "GOSUB jumps to a label and RETURN comes back; forgetting RETURN runs to the end of the script and errors out."
@@ -308,13 +447,1022 @@
             "en": "`IF cond THEN` is followed by a single statement. What happens when the condition is false?"
           },
           "options": {
-            "zh": ["跳过这一条，继续往下执行", "整个脚本停止", "编译报错"],
-            "en": ["That statement is skipped and execution continues", "The whole script stops", "A compile error is raised"]
+            "zh": [
+              "编译报错",
+              "整个脚本停止",
+              "跳过这一条，继续往下执行"
+            ],
+            "en": [
+              "A compile error is raised",
+              "The whole script stops",
+              "That statement is skipped and execution continues"
+            ]
           },
-          "answer": 0,
+          "answer": 2,
           "explain": {
             "zh": "单行 IF 只控制紧随其后的一条语句。要多条语句受控，用 IF ... THEN ... ENDIF 块。",
             "en": "A single-line IF controls only the next statement. Wrap several statements in IF ... THEN ... ENDIF."
+          }
+        }
+      ]
+    },
+    {
+      "chapter": "06-prism-family",
+      "questions": [
+        {
+          "id": "q1",
+          "q": {
+            "zh": "PRISM 与 BLOCK 的核心区别是什么？",
+            "en": "What is the key difference between PRISM and BLOCK?"
+          },
+          "options": {
+            "zh": [
+              "PRISM 按自定义轮廓挤出，BLOCK 只能是长方体",
+              "PRISM 只能画圆形",
+              "两者完全等价"
+            ],
+            "en": [
+              "PRISM extrudes a custom contour; BLOCK is always a box",
+              "PRISM only draws circles",
+              "They are exactly equivalent"
+            ]
+          },
+          "answer": 0,
+          "explain": {
+            "zh": "BLOCK 固定是长方体；PRISM 用一组轮廓点挤出任意形状，墙、柱、台面都靠它。",
+            "en": "BLOCK is always a box; PRISM extrudes any contour, which is how walls, columns and countertops are built."
+          }
+        },
+        {
+          "id": "q2",
+          "q": {
+            "zh": "用 PRISM 画一个盒状物体，需要在轮廓里做什么？",
+            "en": "To build a box-like solid with PRISM, what must the contour do?"
+          },
+          "options": {
+            "zh": [
+              "只给三个点",
+              "首尾点重复，形成闭合轮廓",
+              "必须顺时针"
+            ],
+            "en": [
+              "Give only three points",
+              "Repeat the first point to close the contour",
+              "Always go clockwise"
+            ]
+          },
+          "answer": 1,
+          "explain": {
+            "zh": "轮廓按顺序给出顶点，最后回到起点——首尾重复一次，Archicad 才知道形状闭合。",
+            "en": "List the vertices in order and return to the start — repeating the first point tells Archicad the shape is closed."
+          }
+        },
+        {
+          "id": "q3",
+          "q": {
+            "zh": "想在板中间开一个圆孔，PRISM 能直接做到吗？",
+            "en": "Can PRISM cut a round hole through a slab directly?"
+          },
+          "options": {
+            "zh": [
+              "能，加一个参数即可",
+              "能，轮廓里画个圆就行",
+              "不能，需要组运算或专门的洞口命令"
+            ],
+            "en": [
+              "Yes, by adding one parameter",
+              "Yes, just add a circle to the contour",
+              "No — use a group operation or a dedicated hole command"
+            ]
+          },
+          "answer": 2,
+          "explain": {
+            "zh": "PRISM 只画实心体，不能自带孔洞。开洞要靠 GROUP 组运算做差集。",
+            "en": "PRISM only creates a solid; holes need a boolean subtraction via GROUP operations."
+          }
+        }
+      ]
+    },
+    {
+      "chapter": "07-sweeps-and-revolves",
+      "questions": [
+        {
+          "id": "q1",
+          "q": {
+            "zh": "REVOLVE 让截面绕哪条轴旋转？",
+            "en": "Around which axis does REVOLVE rotate its profile?"
+          },
+          "options": {
+            "zh": [
+              "局部坐标系的 X 轴",
+              "Z 轴",
+              "任意指定的一条线"
+            ],
+            "en": [
+              "The local X axis",
+              "The Z axis",
+              "Any line you specify"
+            ]
+          },
+          "answer": 0,
+          "explain": {
+            "zh": "REVOLVE 固定绕 X 轴；要换旋转轴，先用变换命令把坐标系摆好。",
+            "en": "REVOLVE always turns around the local X axis; move the frame first if you need another axis."
+          }
+        },
+        {
+          "id": "q2",
+          "q": {
+            "zh": "用 REVOLVE 旋转 180° 而不是整周时，会发生什么？",
+            "en": "What happens when REVOLVE turns 180° instead of a full circle?"
+          },
+          "options": {
+            "zh": [
+              "什么都不画",
+              "自动补上端盖，得到半个实体",
+              "自动镜像成整周"
+            ],
+            "en": [
+              "Nothing is drawn",
+              "End caps are added, giving a half solid",
+              "It mirrors into a full turn"
+            ]
+          },
+          "answer": 1,
+          "explain": {
+            "zh": "非整周旋转会自动补两端封口，否则模型是敞口的，渲染时会看穿内部。",
+            "en": "A partial revolution adds caps at both ends; without them the solid is open and you see straight through it."
+          }
+        },
+        {
+          "id": "q3",
+          "q": {
+            "zh": "EXTRUDE 与 PRISM 的主要差别是什么？",
+            "en": "How does EXTRUDE differ from PRISM?"
+          },
+          "options": {
+            "zh": [
+              "EXTRUDE 不需要轮廓",
+              "EXTRUDE 只能向上",
+              "EXTRUDE 可以沿任意方向向量挤出"
+            ],
+            "en": [
+              "EXTRUDE needs no contour",
+              "EXTRUDE only goes up",
+              "EXTRUDE extrudes along an arbitrary vector"
+            ]
+          },
+          "answer": 2,
+          "explain": {
+            "zh": "PRISM 沿竖直方向挤出；EXTRUDE 给一个方向向量，斜向、水平的形体都能做。",
+            "en": "PRISM extrudes vertically; EXTRUDE takes a direction vector, so sloped and horizontal solids are possible."
+          }
+        }
+      ]
+    },
+    {
+      "chapter": "08-materials",
+      "questions": [
+        {
+          "id": "q1",
+          "q": {
+            "zh": "GDL 里指定材质用什么？",
+            "en": "How do you assign a material in GDL?"
+          },
+          "options": {
+            "zh": [
+              "材质索引号",
+              "材质名称字符串",
+              "十六进制颜色值"
+            ],
+            "en": [
+              "A material index",
+              "A material name string",
+              "A hex colour value"
+            ]
+          },
+          "answer": 0,
+          "explain": {
+            "zh": "命令只认索引号。名称是给人看的，脚本里写名字会直接报参数类型错误。",
+            "en": "Commands only accept an index. Names are for humans; passing one raises a type error."
+          }
+        },
+        {
+          "id": "q2",
+          "q": {
+            "zh": "把对象拿到另一个项目里，材质变了，最可能的原因是什么？",
+            "en": "An object's material changes when moved to another project. Most likely reason?"
+          },
+          "options": {
+            "zh": [
+              "对象脚本被改写了",
+              "两个项目的材质索引顺序不同",
+              "Archicad 版本太低"
+            ],
+            "en": [
+              "The object script was rewritten",
+              "The two projects order materials differently",
+              "Archicad is too old"
+            ]
+          },
+          "answer": 1,
+          "explain": {
+            "zh": "索引是项目内的编号，不是全局身份证。跨项目复用要核对索引，或者按名称查号。",
+            "en": "An index is project-local, not a global ID. When reusing across projects, verify the index or look it up by name."
+          }
+        },
+        {
+          "id": "q3",
+          "q": {
+            "zh": "平面图上的填充图案由哪类属性决定？",
+            "en": "Which attribute controls the hatch pattern in plan?"
+          },
+          "options": {
+            "zh": [
+              "线型（Line Type）",
+              "材质（Material）",
+              "填充（Fill）"
+            ],
+            "en": [
+              "Line Type",
+              "Material",
+              "Fill"
+            ]
+          },
+          "answer": 2,
+          "explain": {
+            "zh": "Fill 管 2D 图案，Material 管 3D 表面渲染，Line Type 管虚线样式，三者别混。",
+            "en": "Fill handles 2D patterns, Material handles 3D surface rendering and Line Type handles dashes — keep them apart."
+          }
+        }
+      ]
+    },
+    {
+      "chapter": "09-macros",
+      "questions": [
+        {
+          "id": "q1",
+          "q": {
+            "zh": "主脚本的主要职责是什么？",
+            "en": "What is the master script mainly responsible for?"
+          },
+          "options": {
+            "zh": [
+              "传参与前置计算，供其他脚本使用",
+              "绘制三维形体",
+              "布置设置对话框"
+            ],
+            "en": [
+              "Passing parameters and doing upfront calculation for other scripts",
+              "Drawing 3D geometry",
+              "Laying out the settings dialog"
+            ]
+          },
+          "answer": 0,
+          "explain": {
+            "zh": "主脚本先执行，常放公共变量与派生尺寸；画图交给 2D/3D 脚本，对话框交给界面脚本。",
+            "en": "It runs first and usually holds shared variables and derived sizes. Drawing belongs to the 2D/3D scripts, the dialog to the UI script."
+          }
+        },
+        {
+          "id": "q2",
+          "q": {
+            "zh": "调用宏时参数怎么传？",
+            "en": "How are parameters passed when calling a macro?"
+          },
+          "options": {
+            "zh": [
+              "宏直接读调用者的变量",
+              "在 CALL / MACRO 命令里按顺序列出",
+              "通过文件传递"
+            ],
+            "en": [
+              "The macro reads the caller's variables",
+              "List them in order in the CALL / MACRO command",
+              "Through a file"
+            ]
+          },
+          "answer": 1,
+          "explain": {
+            "zh": "宏只能看到自己收到的参数，看不到调用者的局部变量。要共用数据就显式传进去。",
+            "en": "A macro only sees the parameters it receives — not the caller's local variables. Pass shared data explicitly."
+          }
+        },
+        {
+          "id": "q3",
+          "q": {
+            "zh": "脚本调用宏时报「找不到宏」，最可能是？",
+            "en": "A script calling a macro reports that it cannot find it. Most likely cause?"
+          },
+          "options": {
+            "zh": [
+              "主脚本太长",
+              "宏的参数太多",
+              "宏所在图库没加载，或名称写错"
+            ],
+            "en": [
+              "The master script is too long",
+              "The macro has too many parameters",
+              "Its library is not loaded, or the name is wrong"
+            ]
+          },
+          "answer": 2,
+          "explain": {
+            "zh": "宏是按名称在图库里查找的。图库没加载、改了名、挪了文件夹，都会导致找不到。",
+            "en": "Macros are resolved by name inside loaded libraries. An unloaded library, a rename or a moved folder all break it."
+          }
+        }
+      ]
+    },
+    {
+      "chapter": "10-doors-and-windows",
+      "questions": [
+        {
+          "id": "q1",
+          "q": {
+            "zh": "一个对象想放到墙上并自动开洞，必须满足什么？",
+            "en": "What must an object have to be placed in a wall and cut an opening?"
+          },
+          "options": {
+            "zh": [
+              "子类型为门或窗",
+              "只要三维形体足够薄",
+              "名称里带 Door 或 Window"
+            ],
+            "en": [
+              "A Door or Window subtype",
+              "Simply being thin enough",
+              "The word Door or Window in its name"
+            ]
+          },
+          "answer": 0,
+          "explain": {
+            "zh": "识别宿主墙的能力来自子类型，不是几何形状，也不是名称。",
+            "en": "Host-wall awareness comes from the subtype — not from the shape and not from the name."
+          }
+        },
+        {
+          "id": "q2",
+          "q": {
+            "zh": "门窗在墙上开的洞口由什么定义？",
+            "en": "What defines the opening a door or window cuts?"
+          },
+          "options": {
+            "zh": [
+              "三维形体自动裁剪",
+              "2D 轮廓配 WALLHOLE",
+              "墙的厚度参数"
+            ],
+            "en": [
+              "Automatic clipping of the 3D body",
+              "A 2D contour with WALLHOLE",
+              "The wall thickness parameter"
+            ]
+          },
+          "answer": 1,
+          "explain": {
+            "zh": "洞口是二维轮廓沿墙厚方向切出来的，所以 WALLHOLE 用的还是 2D 坐标。",
+            "en": "The opening is a 2D contour cut through the wall thickness, so WALLHOLE still works in 2D coordinates."
+          }
+        },
+        {
+          "id": "q3",
+          "q": {
+            "zh": "改了门宽参数后，最容易被忽略的同步项是什么？",
+            "en": "After changing the door width parameter, what is most often forgotten?"
+          },
+          "options": {
+            "zh": [
+              "平面图的画笔颜色",
+              "材质的索引号",
+              "洞口与门框、门扇一起更新"
+            ],
+            "en": [
+              "The plan pen colour",
+              "The material index",
+              "Updating the opening together with frame and leaf"
+            ]
+          },
+          "answer": 2,
+          "explain": {
+            "zh": "门宽一变，洞口、门框、门扇、把手位置都要跟着走，否则会出现「门比洞宽」的穿模。",
+            "en": "Width drives the opening, frame, leaf and handle positions together — miss one and the leaf pokes through the wall."
+          }
+        }
+      ]
+    },
+    {
+      "chapter": "11-text-and-strings",
+      "questions": [
+        {
+          "id": "q1",
+          "q": {
+            "zh": "想把数值参数 width 显示成文字，正确做法是？",
+            "en": "You want to show the numeric parameter width as text. What is correct?"
+          },
+          "options": {
+            "zh": [
+              "用 STR(width, …) 转成字符串再画",
+              "直接把 width 传给 TEXT2",
+              "把参数类型改成字符串"
+            ],
+            "en": [
+              "Convert it with STR(width, …) first",
+              "Pass width straight to TEXT2",
+              "Change the parameter type to string"
+            ]
+          },
+          "answer": 0,
+          "explain": {
+            "zh": "TEXT2 只收字符串。数值必须先 STR 转换，否则类型不匹配。",
+            "en": "TEXT2 only accepts strings; numbers must go through STR first."
+          }
+        },
+        {
+          "id": "q2",
+          "q": {
+            "zh": "GDL 里拼接两个字符串用什么？",
+            "en": "How do you concatenate two strings in GDL?"
+          },
+          "options": {
+            "zh": [
+              "逗号 ,",
+              "加号 +",
+              "两个竖线 ||"
+            ],
+            "en": [
+              "A comma ,",
+              "The plus sign +",
+              "Double pipes ||"
+            ]
+          },
+          "answer": 1,
+          "explain": {
+            "zh": "字符串用 + 连接，例如 \"W=\" + STR(width, 5, 2)。",
+            "en": "Use + to join strings, e.g. \"W=\" + STR(width, 5, 2)."
+          }
+        },
+        {
+          "id": "q3",
+          "q": {
+            "zh": "STR 的宽度参数设得太小会怎样？",
+            "en": "What happens if the width argument of STR is too small?"
+          },
+          "options": {
+            "zh": [
+              "报错并停止",
+              "自动换行",
+              "结果被截断或出现星号，需要留足宽度"
+            ],
+            "en": [
+              "It raises an error and stops",
+              "It wraps automatically",
+              "The result is truncated or starred — leave enough width"
+            ]
+          },
+          "answer": 2,
+          "explain": {
+            "zh": "STR 按固定宽度输出，宽度不够就丢字符或用星号占位。宁可给宽一点。",
+            "en": "STR pads to a fixed width; too narrow and characters are dropped or replaced with stars. Give it room."
+          }
+        }
+      ]
+    },
+    {
+      "chapter": "12-practice-furniture",
+      "questions": [
+        {
+          "id": "q1",
+          "q": {
+            "zh": "做参数化柜体，第一步应该确定什么？",
+            "en": "When building a parametric cabinet, what comes first?"
+          },
+          "options": {
+            "zh": [
+              "关键尺寸与参数表",
+              "材质贴图",
+              "渲染视角"
+            ],
+            "en": [
+              "Key dimensions and the parameter list",
+              "Material textures",
+              "The render camera"
+            ]
+          },
+          "answer": 0,
+          "explain": {
+            "zh": "先把宽、高、深、板厚、层数定成参数，脚本才有稳定的输入；否则后面边画边改。",
+            "en": "Define width, height, depth, board thickness and shelf count as parameters first; scripts need stable inputs."
+          }
+        },
+        {
+          "id": "q2",
+          "q": {
+            "zh": "板厚为什么不应该写死在 BLOCK 里？",
+            "en": "Why should board thickness not be hard-coded in BLOCK calls?"
+          },
+          "options": {
+            "zh": [
+              "会让模型变慢",
+              "改参数时所有板件无法同步",
+              "Archicad 不支持固定数值"
+            ],
+            "en": [
+              "It slows the model down",
+              "All boards cannot follow when the value changes",
+              "Archicad does not allow fixed numbers"
+            ]
+          },
+          "answer": 1,
+          "explain": {
+            "zh": "板厚是典型联动尺寸：顶板、底板、侧板、层板都用它。写死一处，改规格就得逐个改。",
+            "en": "Thickness is a shared dimension: top, bottom, sides and shelves all use it. Hard-coding means edits everywhere."
+          }
+        },
+        {
+          "id": "q3",
+          "q": {
+            "zh": "层板数量要能随时增减，脚本该怎么写？",
+            "en": "Shelf count must change freely. How should the script be written?"
+          },
+          "options": {
+            "zh": [
+              "用字符串拼命令",
+              "把每块层板都复制一遍代码",
+              "用 FOR 循环按数量重复画"
+            ],
+            "en": [
+              "Assemble commands as strings",
+              "Copy the code for every shelf",
+              "Repeat with a FOR loop based on the count"
+            ]
+          },
+          "answer": 2,
+          "explain": {
+            "zh": "层板是重复构件：循环 + 参数化间距，数量改成 3 或 8 都不用动结构。",
+            "en": "Shelves repeat: a loop plus parametric spacing handles 3 or 8 without structural changes."
+          }
+        }
+      ]
+    },
+    {
+      "chapter": "13-ui-script",
+      "questions": [
+        {
+          "id": "q1",
+          "q": {
+            "zh": "参数列表、参数脚本、UI 脚本三者各管什么？",
+            "en": "What do the parameter list, parameter script and UI script each handle?"
+          },
+          "options": {
+            "zh": [
+              "数据、规则、排版",
+              "排版、数据、规则",
+              "规则、排版、数据"
+            ],
+            "en": [
+              "Data, rules, layout",
+              "Layout, data, rules",
+              "Rules, layout, data"
+            ]
+          },
+          "answer": 0,
+          "explain": {
+            "zh": "参数列表定义名字、类型、默认值；参数脚本写取值范围与联动；UI 脚本只决定控件怎么摆。",
+            "en": "The list defines name, type and default; the parameter script sets ranges and links; the UI script only arranges controls."
+          }
+        },
+        {
+          "id": "q2",
+          "q": {
+            "zh": "想让某个参数由公式自动算出、用户手改无效，用哪个语句？",
+            "en": "Which statement makes a parameter computed by a formula and not editable by hand?"
+          },
+          "options": {
+            "zh": [
+              "LOCK",
+              "PARAMETERS",
+              "HIDEPARAMETER"
+            ],
+            "en": [
+              "LOCK",
+              "PARAMETERS",
+              "HIDEPARAMETER"
+            ]
+          },
+          "answer": 1,
+          "explain": {
+            "zh": "PARAMETERS 每次运行都重算；LOCK 只是不许用户改，脚本里仍能赋值；HIDEPARAMETER 直接从列表隐藏。",
+            "en": "PARAMETERS recomputes on every run; LOCK merely blocks user edits while scripts can still assign; HIDEPARAMETER hides it from the list."
+          }
+        },
+        {
+          "id": "q3",
+          "q": {
+            "zh": "写 UI 脚本时，下列哪个说法是对的？",
+            "en": "Which statement about the UI script is correct?"
+          },
+          "options": {
+            "zh": [
+              "一个部件里可以开多个对话框",
+              "必须用 UI_ENDDIALOG 收尾",
+              "整个脚本就是一个对话框，没有结束语句"
+            ],
+            "en": [
+              "One part can open several dialogs",
+              "It must end with UI_ENDDIALOG",
+              "The whole script is one dialog with no closing statement"
+            ]
+          },
+          "answer": 2,
+          "explain": {
+            "zh": "UI 脚本没有 UI_ENDDIALOG / UI_ENDPAGE，也没有第二个对话框；别照着别的语言习惯去补结束标签。",
+            "en": "There is no UI_ENDDIALOG or UI_ENDPAGE and no second dialog in a part; do not add closing tags out of habit."
+          }
+        }
+      ]
+    },
+    {
+      "chapter": "14-boolean-and-hotspots",
+      "questions": [
+        {
+          "id": "q1",
+          "q": {
+            "zh": "用 GROUP 定义好体块后，模型里却什么都没有，最可能漏了什么？",
+            "en": "After defining solids with GROUP nothing appears. What is most likely missing?"
+          },
+          "options": {
+            "zh": [
+              "PLACEGROUP 落位",
+              "KILLGROUP 释放",
+              "ENDGROUP 收尾"
+            ],
+            "en": [
+              "PLACEGROUP to place the result",
+              "KILLGROUP to release memory",
+              "ENDGROUP to close the block"
+            ]
+          },
+          "answer": 0,
+          "explain": {
+            "zh": "组定义只是「登记」，必须 PLACEGROUP 才真正生成几何，而且漏了也不会报错。",
+            "en": "GROUP only registers the solids; PLACEGROUP generates the geometry, and forgetting it raises no error."
+          }
+        },
+        {
+          "id": "q2",
+          "q": {
+            "zh": "`SUBGROUP(\"panel\", \"hole\")` 得到的是什么？",
+            "en": "What does `SUBGROUP(\"panel\", \"hole\")` produce?"
+          },
+          "options": {
+            "zh": [
+              "洞减去板",
+              "板减去洞",
+              "两者合并"
+            ],
+            "en": [
+              "The hole minus the panel",
+              "The panel minus the hole",
+              "The two merged"
+            ]
+          },
+          "answer": 1,
+          "explain": {
+            "zh": "差集顺序敏感：第一个参数是被减的对象。写反就是拿一块小洞去减整块板，结果为空。",
+            "en": "Subtraction is order-sensitive: the first argument is the one being cut. Reversed, you cut a panel out of a small hole and get nothing."
+          }
+        },
+        {
+          "id": "q3",
+          "q": {
+            "zh": "做一个可拖拽改长度参数的热区，最少要哪三个点？",
+            "en": "Which three points are needed for a draggable length hotspot?"
+          },
+          "options": {
+            "zh": [
+              "三个移动点",
+              "起点、终点、中心点",
+              "基准点、移动点、参考点"
+            ],
+            "en": [
+              "Three moving points",
+              "Start, end and centre points",
+              "Base, moving and reference points"
+            ]
+          },
+          "answer": 2,
+          "explain": {
+            "zh": "参数值 = 基准点到移动点的距离，正方向由参考点指向基准点决定。只写移动点是拖不动的。",
+            "en": "The value is the distance from base to moving point, and the positive direction goes from reference to base. A moving point alone will not drag."
+          }
+        }
+      ]
+    },
+    {
+      "chapter": "15-request-and-glob",
+      "questions": [
+        {
+          "id": "q1",
+          "q": {
+            "zh": "GLOB 全局变量的读写规则是？",
+            "en": "What is the read/write rule for GLOB variables?"
+          },
+          "options": {
+            "zh": [
+              "只读，赋值会报错",
+              "可读可写",
+              "只能在主脚本里写"
+            ],
+            "en": [
+              "Read-only; assigning raises an error",
+              "Readable and writable",
+              "Writable only in the master script"
+            ]
+          },
+          "answer": 0,
+          "explain": {
+            "zh": "全局变量由 Archicad 注入，只能读。它们在宏调用时也不像变换栈那样保存和恢复。",
+            "en": "Global variables are injected by Archicad and are read-only. Unlike the transformation stack they are not saved and restored across macro calls."
+          }
+        },
+        {
+          "id": "q2",
+          "q": {
+            "zh": "`GLOB_SCALE` 等于 100 表示什么？哪些尺寸才需要乘它？",
+            "en": "`GLOB_SCALE` equals 100. What does that mean, and which sizes should be multiplied by it?"
+          },
+          "options": {
+            "zh": [
+              "100 倍缩放，所有几何都乘",
+              "1:100，只有纸面尺寸才乘",
+              "100 个对象，无需处理"
+            ],
+            "en": [
+              "A 100× zoom; multiply all geometry",
+              "1:100; only paper-space sizes need it",
+              "100 objects; no action needed"
+            ]
+          },
+          "answer": 1,
+          "explain": {
+            "zh": "模型几何一律按真实尺寸写；只有希望「纸上看起来固定大小」的字高、符号、箭头才乘比例。",
+            "en": "Model geometry is always real size. Only text height, symbols and arrows that should look fixed on paper get multiplied."
+          }
+        },
+        {
+          "id": "q3",
+          "q": {
+            "zh": "`REQUEST` 的正确用法是？",
+            "en": "How should `REQUEST` be used?"
+          },
+          "options": {
+            "zh": [
+              "当变量用，赋一次值就固定",
+              "当命令用，直接写 REQUEST ...",
+              "当函数用，n = REQUEST(...) 接收返回值"
+            ],
+            "en": [
+              "As a variable assigned once",
+              "As a command: REQUEST ...",
+              "As a function: n = REQUEST(...)"
+            ]
+          },
+          "answer": 2,
+          "explain": {
+            "zh": "REQUEST 是函数，返回值是成功填入的变量个数（1 成功 / 0 失败），必须用赋值语句接住。",
+            "en": "REQUEST is a function returning how many outputs were filled (1 success, 0 failure); it must be captured with an assignment."
+          }
+        }
+      ]
+    },
+    {
+      "chapter": "16-data-and-files",
+      "questions": [
+        {
+          "id": "q1",
+          "q": {
+            "zh": "GDL 数组的下标从几开始？",
+            "en": "What is the first index of a GDL array?"
+          },
+          "options": {
+            "zh": [
+              "1",
+              "0",
+              "由 DIM 决定"
+            ],
+            "en": [
+              "1",
+              "0",
+              "Whatever DIM says"
+            ]
+          },
+          "answer": 0,
+          "explain": {
+            "zh": "GDL 数组从 1 起。固定长度数组写错下标当场报错，动态数组则可能读到无意义的垃圾值。",
+            "en": "GDL arrays start at 1. Fixed arrays error immediately on a bad index; dynamic arrays may silently return garbage."
+          }
+        },
+        {
+          "id": "q2",
+          "q": {
+            "zh": "`OPEN` 返回 -1 表示什么？",
+            "en": "What does `OPEN` returning -1 mean?"
+          },
+          "options": {
+            "zh": [
+              "打开成功",
+              "文件不存在（或打不开）",
+              "缺少 Add-On"
+            ],
+            "en": [
+              "Opened successfully",
+              "The file does not exist (or cannot be opened)",
+              "An Add-On is missing"
+            ]
+          },
+          "answer": 1,
+          "explain": {
+            "zh": "正数是通道号，-1 文件不存在，-2 缺 Add-On。所以必须先判 `> 0` 再用通道。",
+            "en": "A positive number is the channel, -1 means the file is missing and -2 means the Add-On is absent. Check `> 0` before using the channel."
+          }
+        },
+        {
+          "id": "q3",
+          "q": {
+            "zh": "想把数据覆盖写入一个新 CSV，`mode` 应设成什么？",
+            "en": "Which `mode` overwrites a CSV with new data?"
+          },
+          "options": {
+            "zh": [
+              "wa",
+              "ro",
+              "wo"
+            ],
+            "en": [
+              "wa",
+              "ro",
+              "wo"
+            ]
+          },
+          "answer": 2,
+          "explain": {
+            "zh": "wo 只写并先清空原文件，wa 是追加写，ro 只读。没有 rw，读写要分两次打开。",
+            "en": "wo writes and truncates first, wa appends and ro reads. There is no rw — open twice when you need both."
+          }
+        }
+      ]
+    },
+    {
+      "chapter": "17-toolchain-and-migration",
+      "questions": [
+        {
+          "id": "q1",
+          "q": {
+            "zh": "让 GSM 能进 git 逐行 review，应该怎么做？",
+            "en": "How do you make a GSM reviewable line by line in git?"
+          },
+          "options": {
+            "zh": [
+              "用 LP_XMLConverter 转成 XML 再入库",
+              "直接把 GSM 提交，git 会解析",
+              "把 GSM 改后缀成 .xml"
+            ],
+            "en": [
+              "Convert it to XML with LP_XMLConverter and commit that",
+              "Commit the GSM; git parses it",
+              "Rename the GSM to .xml"
+            ]
+          },
+          "answer": 0,
+          "explain": {
+            "zh": "GSM 是二进制容器，git 只能看出「变了」。团队做法是 XML 进 git，GSM 只作为发布产物放 dist。",
+            "en": "GSM is a binary container, so git only sees that it changed. Teams commit the XML and keep the GSM as a build artefact."
+          }
+        },
+        {
+          "id": "q2",
+          "q": {
+            "zh": "「检查脚本」（Check Script）做什么？",
+            "en": "What does Check Script do?"
+          },
+          "options": {
+            "zh": [
+              "生成预览模型",
+              "只做语法与参数校验，不生成几何",
+              "自动修复所有报错"
+            ],
+            "en": [
+              "Generates a preview model",
+              "Syntax and parameter checks only, no geometry",
+              "Fixes all errors automatically"
+            ]
+          },
+          "answer": 1,
+          "explain": {
+            "zh": "它不画模型，报错信息比在 3D 窗口里瞎找快得多。四个脚本都要各跑一次。",
+            "en": "It draws nothing; its messages are far faster than hunting in the 3D window. Run it on all four scripts."
+          }
+        },
+        {
+          "id": "q3",
+          "q": {
+            "zh": "跨项目或升级版本时，引用材质、填充用什么更稳？",
+            "en": "What is more robust for materials and fills across projects or versions?"
+          },
+          "options": {
+            "zh": [
+              "写死 RGB 颜色",
+              "写死索引编号",
+              "按名称查找"
+            ],
+            "en": [
+              "Hard-code RGB values",
+              "Hard-code the index number",
+              "Look them up by name"
+            ]
+          },
+          "answer": 2,
+          "explain": {
+            "zh": "编号是项目内的顺序，换项目或版本可能重排。用名称查找虽然多一步，但不会悄悄指向别的属性。",
+            "en": "Index numbers follow project order and can be reshuffled by a new project or version. Name lookup costs one step but never silently picks the wrong attribute."
+          }
+        }
+      ]
+    },
+    {
+      "chapter": "18-final-project",
+      "questions": [
+        {
+          "id": "q1",
+          "q": {
+            "zh": "门扇与门框之间为什么要留 3 mm 缝？",
+            "en": "Why leave a 3 mm gap between leaf and frame?"
+          },
+          "options": {
+            "zh": [
+              "避免共面导致 3D 闪烁",
+              "为了省材料",
+              "Archicad 强制要求"
+            ],
+            "en": [
+              "To avoid coplanar flicker in 3D",
+              "To save material",
+              "Archicad requires it"
+            ]
+          },
+          "answer": 0,
+          "explain": {
+            "zh": "两个面完全贴合会出现闪烁（z-fighting）。这条缝还是关门时的正常构造缝。",
+            "en": "Two coincident faces cause z-fighting flicker. The gap is also the normal construction clearance."
+          }
+        },
+        {
+          "id": "q2",
+          "q": {
+            "zh": "门扇在墙厚方向居中，Y 坐标应该怎么写？",
+            "en": "How should the leaf Y coordinate centre it in the wall?"
+          },
+          "options": {
+            "zh": [
+              "wallT / 2",
+              "(wallT - lt) / 2",
+              "写死 0.1"
+            ],
+            "en": [
+              "wallT / 2",
+              "(wallT - lt) / 2",
+              "A hard-coded 0.1"
+            ]
+          },
+          "answer": 1,
+          "explain": {
+            "zh": "要减掉扇厚再取半，扇子才真正居中；墙厚参数一变，位置自动跟着走。",
+            "en": "Subtract the leaf thickness before halving so it is truly centred; the position then follows wallT automatically."
+          }
+        },
+        {
+          "id": "q3",
+          "q": {
+            "zh": "一次完整的对象交付，除了 GSM 还应该包含什么？",
+            "en": "Besides the GSM, what should a complete delivery include?"
+          },
+          "options": {
+            "zh": [
+              "只需要一张效果图",
+              "只要 GSM 就够了",
+              "可 diff 的 XML、参数说明文档、符号截图与发布记录"
+            ],
+            "en": [
+              "Just one render image",
+              "The GSM alone",
+              "Diffable XML, a parameter guide, symbol screenshots and release notes"
+            ]
+          },
+          "answer": 2,
+          "explain": {
+            "zh": "没有说明书的对象等于没交付。参数说明要写清什么时候用、哪些值是禁忌。",
+            "en": "An object without documentation is not delivered. The guide must state when each parameter applies and which values are forbidden."
           }
         }
       ]

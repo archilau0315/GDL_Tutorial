@@ -269,3 +269,19 @@
 | 13:30 | README.md、开发计划.md | 部署说明补 `GDL_SITE_URL` 与按需加载；计划升 v2.3，取消版本标注 | 中英同步 |
 
 **验证**：check:data / check:i18n / check:search 28/28 / 单测 41 例全绿；默认构建与 `GDL_BASE=/resources/GDL_Tutorial/` 构建均成功；子路径构建下 canonical、sitemap、robots 均带 `/resources/GDL_Tutorial/`；英文页 og:description 为英文。
+
+## 2026-11-07 P4d 章末自测（Quiz）
+
+| 时间 | 模块 | 变更简述 | 备注 |
+|---|---|---|---|
+| 14:05 | theme/components/ChapterQuiz.vue（新增） | 从 `page.relativePath` 去掉 `en/` 与 `.md` 取末段作章节 id，匹配题库；无数据不渲染；单选 + 提交/重做 + 得分 + 逐题解析 | 不写进 md，靠插槽挂载 |
+| 14:06 | theme/Layout.vue | `#doc-after` 插槽内 `ChapterQuiz` 置于 `ChapterFooter` 之前 | 38 个章节页零改动 |
+| 14:07 | theme/i18n.ts | 新增 quizTitle / quizCount / quizHint / quizSubmit / quizRedo / quizScore / quizRight / quizExplain 中英文案 | — |
+| 14:20 | reference/data/quizzes.json（新增） | 第 0–5 章 18 题（第一批，已提交） | 只出可验证的事实题 |
+| 14:30 | scripts/check-data.mjs | 增加 quizzes 校验：章节存在且不重复、每章 ≥ 3 题、id / q / explain / options 中英成对、中英选项数量一致、answer 为合法下标；统计输出追加题数 | 七份数据统一门禁 |
+| 15:10 | reference/data/quizzes.json | 第 6–12 章 21 题：PRISM 闭合轮廓、REVOLVE 绕 X 轴、材质索引、宏传参、WALLHOLE 用 2D 轮廓、STR 转换、柜体参数化 | 覆盖进阶篇全部章节 |
+| 15:25 | reference/data/quizzes.json | 第 13–18 章 18 题：三层职责、PARAMETERS vs LOCK、PLACEGROUP、SUBGROUP 顺序、热区三点、GLOB 只读、REQUEST 返回值、数组从 1 起、OPEN 返回 -1、XML 进 git、门扇 3 mm 缝 | 覆盖精通篇全部章节 |
+| 15:30 | reference/data/quizzes.json | 用一次性脚本重排选项，使正确答案分布在 A/B/C 各 19 题 | 规避「全选第一项」的假题 |
+| 15:35 | README.md、开发计划.md | 资料库表补「章末自测」；模块表补 ChapterQuiz.vue；check:data 说明补 quizzes；P4d 标记完成，计划升 v2.4 | 中英同步 |
+
+**验证**：check:data 输出「19 章 / 3 个分部，19 章自测（57 题）」；build 成功；中文第 13 章页含「本章自测」、英文页含「Chapter quiz」，选项文本正常渲染；命令详情页无自测块。

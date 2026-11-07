@@ -44,8 +44,9 @@
 | 常见错误手册 | 24 条报错与现象，按「原因 → 改法 → 错误/正确写法」对照 | ✅ |
 | 术语表 | 39 个易混术语中英对照（hotspot / library part / group operation…） | ✅ |
 | 学习进度 | 首页卡片 + 19 章清单 + 每章页脚「上一章 / 标记学完 / 下一章」，进度只存本机浏览器 | ✅ |
+| 章末自测 | 19 章共 57 道单选题，作答后即时判对错并给出解析，答案位置均匀分布 | ✅ |
 
-所有速查数据存放在 `docs/reference/data/*.json`，中英字段同文件保存，`npm run check:data` 校验结构、分类与章节链接。
+所有速查数据存放在 `docs/reference/data/*.json`，中英字段同文件保存，`npm run check:data` 校验结构、分类、中英成对与章节链接。
 
 ### 快速开始
 
@@ -61,7 +62,7 @@ npm run build          # 构建静态站点到 docs/.vitepress/dist
 npm run preview        # 预览构建产物
 npm run test           # 沙盒引擎单测（vitest，41 例）
 npm run check:i18n     # 中英页面一一对应检查
-npm run check:data     # 速查数据 JSON 校验（命令 / GLOB / 片段 / 错误 / 术语 / 章节）
+npm run check:data     # 速查数据 JSON 校验（命令 / GLOB / 片段 / 错误 / 术语 / 章节 / 自测）
 npm run check:search   # 搜索命中率实测（28 条固定查询）
 npm run gen:commands   # 重新生成命令详情页（dev/build 前自动执行）
 ```
@@ -93,6 +94,7 @@ debug_log_1.md                # 变更记录
 | 命令速查 | `reference/data/commands.json` | 单文件双语字段，命令的唯一样板 |
 | GLOB 速查 | `reference/data/globals.json` + `theme/components/GlobTable.vue` | 全局变量按用途分组，搜索与分类共用一套数据 |
 | 学习进度 | `reference/data/chapters.json` + `theme/useProgress.ts` | 章节清单单源；路径页与章节页脚共享状态，多标签页同步 |
+| 章末自测 | `reference/data/quizzes.json` + `theme/components/ChapterQuiz.vue` | 按当前页路径匹配章节题库，全局插槽挂载，无题自动隐藏 |
 | 命令详情页 | `scripts/gen-command-pages.mjs` | 由 JSON 生成每条命令的中英页面，构建前自动运行 |
 | 2D 渲染 | `gdl-engine/renderer-2d.ts` | 形状 → SVG，自适应取景与主题色 |
 
@@ -157,8 +159,9 @@ Every chapter can embed our own GDL sandbox: code on the left, live 3D or 2D pla
 | Error handbook | 24 errors and symptoms with cause, fix and a wrong/right pair | ✅ |
 | Glossary | 39 confusable terms with Chinese and English side by side | ✅ |
 | Learning progress | Homepage card + 19-chapter checklist + a footer on every chapter; ticks stay in your browser | ✅ |
+| Chapter quiz | 57 single-choice questions across 19 chapters, instant marking with an explanation, answers spread evenly | ✅ |
 
-All reference data lives in `docs/reference/data/*.json` with both languages in one record; `npm run check:data` validates structure, categories and chapter links.
+All reference data lives in `docs/reference/data/*.json` with both languages in one record; `npm run check:data` validates structure, categories, language pairs and chapter links.
 
 ### Quick start
 
@@ -172,7 +175,7 @@ npm run build          # static output in docs/.vitepress/dist
 npm run preview        # preview the build
 npm run test           # engine unit tests (vitest, 41 cases)
 npm run check:i18n     # every Chinese page has an English twin
-npm run check:data     # validate the reference JSON (commands, GLOB, snippets, errors, glossary, chapters)
+npm run check:data     # validate the reference JSON (commands, GLOB, snippets, errors, glossary, chapters, quizzes)
 npm run check:search   # 28 fixed queries against the real index
 npm run gen:commands   # regenerate command pages (runs before dev/build)
 ```
