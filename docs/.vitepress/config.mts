@@ -28,10 +28,6 @@ const zhSidebar = [
       { text: '第 2 章 变换堆栈', link: '/guide/part1-basics/02-transform-stack' },
       { text: '第 3 章 参数化入门', link: '/guide/part1-basics/03-parameters' },
       { text: '第 4 章 2D 脚本', link: '/guide/part1-basics/04-2d-script' },
-      { text: '第 5 章 控制流', link: '/guide/part1-basics/05-control-flow' },
-      { text: '第 2 章 变换堆栈', link: '/guide/part1-basics/02-transform-stack' },
-      { text: '第 3 章 参数化入门', link: '/guide/part1-basics/03-parameters' },
-      { text: '第 4 章 2D 脚本', link: '/guide/part1-basics/04-2d-script' },
       { text: '第 5 章 控制流', link: '/guide/part1-basics/05-control-flow' }
     ]
   },
@@ -70,10 +66,6 @@ const enSidebar = [
       { text: 'Learning Path Overview', link: '/en/guide/' },
       { text: 'Ch 0 Getting to Know GDL', link: '/en/guide/part1-basics/00-getting-started' },
       { text: 'Ch 1 Your First 3D Object', link: '/en/guide/part1-basics/01-first-3d-object' },
-      { text: 'Ch 2 The Transformation Stack', link: '/en/guide/part1-basics/02-transform-stack' },
-      { text: 'Ch 3 Introduction to Parametrics', link: '/en/guide/part1-basics/03-parameters' },
-      { text: 'Ch 4 The 2D Script', link: '/en/guide/part1-basics/04-2d-script' },
-      { text: 'Ch 5 Control Flow', link: '/en/guide/part1-basics/05-control-flow' },
       { text: 'Ch 2 The Transformation Stack', link: '/en/guide/part1-basics/02-transform-stack' },
       { text: 'Ch 3 Introduction to Parametrics', link: '/en/guide/part1-basics/03-parameters' },
       { text: 'Ch 4 The 2D Script', link: '/en/guide/part1-basics/04-2d-script' },

@@ -54,9 +54,9 @@ function geometryFor(s: Shape): THREE.BufferGeometry {
       return g
     }
     case 'ellips': {
-      // GDL ELLIPS h, r：z 向全高 h、水平半径 r，中心在原点
+      // GDL ELLIPS h, rx, ry：Z 向总高 h，水平两向半径 rx / ry，中心在原点
       const g = new THREE.SphereGeometry(1, 32, 24)
-      g.scale(s.r, s.r, s.h / 2)
+      g.scale(s.rx, s.ry, s.h / 2)
       return g
     }
     case 'prism': {

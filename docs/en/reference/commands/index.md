@@ -1,20 +1,15 @@
 # Command Index
 
-> Sheet REF-01 · under construction (full index lands in Phase P3)
+> Sheet REF-01 · Covers every command supported by the sandbox
 
-Every GDL command indexed by category, each entry with signature, parameter notes, a minimal example and a link back to the tutorial chapter. Data is compiled from the official Graphisoft GDL Reference Guide (AC29), with source attribution.
+Browse by category or search by command name, purpose or syntax. Each entry lists the signature, parameters, a minimal example and the matching tutorial chapter — paste the examples straight into the [playground](/en/playground/).
 
-## Categories
+<CommandTable locale="en" />
 
-| Category | Sample commands | Status |
-|---|---|---|
-| 3D primitives | `BLOCK` `CYLIND` `SPHERE` `PRISM` | Building |
-| 3D transforms | `ADD` `ROT` `MUL` `DEL` `XFORM` | Building |
-| 2D drawing | `LINE2` `POLY2_` `TEXT2` `PROJECT2` | Planned |
-| Attributes | `PEN` `MATERIAL` `FILL` | Planned |
-| Control flow | `IF` `FOR` `GOSUB` | Planned |
-| Data / strings | `STR` `SPLIT` `STRLEN` | Planned |
+::: tip One bilingual data source
+This page renders `docs/reference/data/commands.json`, where Chinese and English fields live side by side. Edit the JSON, never the page.
+:::
 
-::: tip Search works now
-The local site search is live — use the search box in the top bar to find any command by name.
+::: warning Sandbox vs. Archicad
+The sandbox is a teaching approximation: simplified geometry, palette-based materials. Trust Archicad for real project work.
 :::

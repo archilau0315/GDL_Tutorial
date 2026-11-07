@@ -21,7 +21,7 @@ Write GDL on the left, watch the 3D model build itself on the right. This is the
 4. **Take your work with you**: "Export object" produces an LP XML file; then use "Copy convert command" on a machine with Archicad installed to produce a `.gsm` you can open in Archicad
 
 ::: tip Sandbox scope
-Currently supported: `BLOCK` / `CYLIND` / `SPHERE` / `CONE` primitives, `ADD` / `MUL` / `ROT` / `DEL` transformations, variables, expressions, `IF` / `FOR` control flow. The PRISM family, materials and parameter panels arrive with the intermediate chapters.
+Currently supported: `BLOCK` / `CYLIND` / `SPHERE` / `ELLIPS` / `CONE` primitives, `PRISM` / `PRISM_` extrusion, `ADD` / `MUL` / `ROT` / `DEL` transformations, the full 2D drawing and transformation set, `MATERIAL` / `PEN` attributes, plus `IF` / `FOR` / `WHILE` / `GOSUB` control flow. Common functions (`SIN`, `COS`, `SQRT`, …) are available — see the [Command Index](/en/reference/commands/).
 :::
 
 ## What Errors Look Like

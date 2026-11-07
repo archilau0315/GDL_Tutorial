@@ -18,6 +18,14 @@ describe('基本体', () => {
     expect(r.shapes.map(s => s.type)).toEqual(['cylind', 'sphere', 'cone'])
   })
 
+  it('ELLIPS 三参数生成椭球，少给参数报错', () => {
+    const ok = run('ELLIPS 0.8, 0.5, 0.25')
+    expect(ok.errors).toEqual([])
+    expect(ok.shapes[0]).toMatchObject({ type: 'ellips', h: 0.8, rx: 0.5, ry: 0.25 })
+    const bad = run('ELLIPS 0.8, 0.5')
+    expect(bad.errors[0].messageEn).toContain('ELLIPS')
+  })
+
   it('大小写不敏感：block 与 BLOCK 等价', () => {
     const r = run('block 1,1,1')
     expect(r.errors).toEqual([])

@@ -46,3 +46,18 @@
 | 22:50 | tests/engine.test.ts | 新增 4 例：FOR 内 GOSUB、WHILE 内 GOSUB、子程序含未配对 FOR 后调用方循环继续、栏杆示例分布 | 单测 33 → 37 全绿 |
 | 23:05 | theme/GdlPlayground | 渲染后把 `bbox` 中心同步给 `OrbitControls.target` | 原先 target 恒为原点，`controls.update()` 会把相机拽回原点方向，模型不在原点时（如栏杆 x=0~3）被推到画面一侧并切边 |
 | 23:05 | theme/GdlPlayground | 对比示例改为 6 根、半径 1.5、柱高 0.6 | 8 根在 350px 窄视口里只有 5px 间距，看不出"一圈"，6 根间距翻倍后形状可辨 |
+
+## 2026-11-07 P3 第一批：命令速查库上线
+
+| 时间 | 模块 | 变更简述 | 备注 |
+|---|---|---|---|
+| 09:20 | reference/data/commands.json（新增） | 单源双语命令数据：40 条命令 / 7 个分类，含签名、参数、说明、最小示例、章节回链 | 中英字段同文件，页面不重复维护；未开课命令的 chapter 置 null |
+| 09:25 | theme/components/CommandTable.vue（新增） | 速查表组件：关键词搜索（名称/语法/说明/参数/示例）+ 分类筛选 + 锚点 + withBase 子路径兼容 | 列表按 locale 取字段；深色模式适配 |
+| 09:28 | theme/i18n.ts | 新增速查组件文案键（搜索占位、参数/示例/章节、空结果等） | 中英成对 |
+| 09:30 | reference/commands（中英） | 由「建设中」改为实装组件页，附数据单源与沙盒差异提示 | 两语参数分别传 locale |
+| 09:32 | gdl-engine（types/interpreter/renderer） | ELLIPS 签名由 2 参改为 3 参 `h, rx, ry`，按三轴缩放渲染 | 对齐官方签名；旧 2 参写法会报参数个数错误 |
+| 09:33 | scripts/check-data.mjs（新增） | 速查 JSON 校验：字段完整、分类合法、命令不重复、章节文件存在 | 接入 npm run check:data 与 CI |
+| 09:35 | scripts/check-i18n.mjs | 路径改用 fileURLToPath | 中文目录名被 URL 编码，Windows 本地直接跑会 ENOENT |
+| 09:36 | config.mts | 删除中英侧边栏重复的第 2-5 章条目 | 第 1 章之后重复了一遍 |
+| 09:37 | playground 页（中英） | 沙盒能力说明更新为实际支持集（PRISM/2D/MATERIAL/WHILE 等） | 原文案停留 P1 |
+| 09:40 | 验证 | check:data 40 条通过、check:i18n 11 对通过、单测 38 例全绿、构建成功 | 下一批：第 6-12 章 + 引擎补 REVOLVE/TUBE 等 |

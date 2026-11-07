@@ -9,6 +9,7 @@
     "build": "vitepress build docs",
     "preview": "vitepress preview docs",
     "check:i18n": "node scripts/check-i18n.mjs",
+    "check:data": "node scripts/check-data.mjs",
     "test": "vitest run"
   },
   "devDependencies": {

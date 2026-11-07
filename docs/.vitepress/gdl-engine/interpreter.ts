@@ -12,7 +12,7 @@ const D2R = Math.PI / 180
 
 /** 命令签名：名称 → [参数个数下限, 上限]（上限 null = 变长） */
 const CMD_SIG: Record<string, [number, number | null]> = {
-  BLOCK: [3, 3], CYLIND: [2, 2], SPHERE: [1, 1], ELLIPS: [2, 2],
+  BLOCK: [3, 3], CYLIND: [2, 2], SPHERE: [1, 1], ELLIPS: [3, 3],
   CONE: [3, 5],
   ADD: [3, 3], MUL: [3, 3], ROT: [3, 3], DEL: [1, 1],
   ADDX: [1, 1], ADDY: [1, 1], ADDZ: [1, 1],
@@ -177,7 +177,8 @@ export function interpret(ast: Stmt[]): RunResult {
         if (ge0(a[0], s.pos)) shapes.push({ type: 'sphere', r: a[0], ...base() })
         return
       case 'ELLIPS':
-        if (ge0(a[1], s.pos)) shapes.push({ type: 'ellips', h: a[0], r: a[1], ...base() })
+        if (ge0(a[1], s.pos) && ge0(a[2], s.pos))
+          shapes.push({ type: 'ellips', h: a[0], rx: a[1], ry: a[2], ...base() })
         return
       case 'CONE':
         if (ge0(a[1], s.pos) && ge0(a[2], s.pos))

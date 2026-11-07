@@ -17,7 +17,15 @@ export const dict = {
     shapes: '{n} 个几何体',
     editor: 'GDL 3D 脚本',
     viewport: '3D 视口（拖动旋转 · 滚轮缩放）',
-    view2d: '2D 平面符号（沙盒绘制）'
+    view2d: '2D 平面符号（沙盒绘制）',
+    cmdSearch: '搜索命令、用途或语法…',
+    cmdAll: '全部',
+    cmdParams: '参数',
+    cmdExample: '最小示例',
+    cmdChapter: '对应章节',
+    cmdFound: '{n} 条命令',
+    cmdEmpty: '没有匹配的命令，换个关键词试试',
+    cmdSource: '签名整理自官方手册 AC29，示例为本站原创'
   },
   en: {
     run: 'Run',
@@ -35,7 +43,15 @@ export const dict = {
     shapes: '{n} shape(s)',
     editor: 'GDL 3D Script',
     viewport: '3D viewport (drag to orbit · scroll to zoom)',
-    view2d: '2D plan symbol (sandbox drawing)'
+    view2d: '2D plan symbol (sandbox drawing)',
+    cmdSearch: 'Search a command, purpose or syntax…',
+    cmdAll: 'All',
+    cmdParams: 'Parameters',
+    cmdExample: 'Minimal example',
+    cmdChapter: 'Related chapter',
+    cmdFound: '{n} command(s)',
+    cmdEmpty: 'No command matches — try another keyword',
+    cmdSource: 'Signatures follow the official AC29 reference; examples are original'
   }
 } as const
 

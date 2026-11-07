@@ -1,0 +1,550 @@
+{
+  "meta": {
+    "version": "AC29",
+    "source": "Graphisoft GDL Reference Guide (AC29)",
+    "updated": "2026-11-07",
+    "note": {
+      "zh": "关键参数与签名整理自官方手册，讲解文字与示例为本站原创。沙盒已支持的条目可直接运行；标注「沙盒」的差异以 Archicad 实际运行为准。",
+      "en": "Signatures follow the official reference; explanations and examples are original. Entries supported by the sandbox run as-is; sandbox notes mark where behaviour is simplified."
+    }
+  },
+  "categories": [
+    { "id": "prim3d", "zh": "3D 基本体", "en": "3D Primitives" },
+    { "id": "extrude", "zh": "截面挤出", "en": "Profile Extrusion" },
+    { "id": "transform3d", "zh": "3D 变换", "en": "3D Transformations" },
+    { "id": "draw2d", "zh": "2D 绘制", "en": "2D Drawing" },
+    { "id": "transform2d", "zh": "2D 变换", "en": "2D Transformations" },
+    { "id": "attribute", "zh": "属性与材质", "en": "Attributes" },
+    { "id": "flow", "zh": "控制流", "en": "Control Flow" }
+  ],
+  "commands": [
+    {
+      "name": "BLOCK",
+      "category": "prim3d",
+      "syntax": "BLOCK a, b, c",
+      "params": {
+        "zh": ["a — X 向长度", "b — Y 向宽度", "c — Z 向高度"],
+        "en": ["a — length along X", "b — width along Y", "c — height along Z"]
+      },
+      "desc": {
+        "zh": "以当前坐标原点为一个角点，向 +X、+Y、+Z 方向生成长方体。三个参数都必须是正数。",
+        "en": "Creates a rectangular block with one corner at the current origin, extending towards +X, +Y and +Z. All three sizes must be positive."
+      },
+      "example": "BLOCK 1.2, 0.6, 0.04",
+      "chapter": { "zh": "/guide/part1-basics/01-first-3d-object", "en": "/en/guide/part1-basics/01-first-3d-object" }
+    },
+    {
+      "name": "CYLIND",
+      "category": "prim3d",
+      "syntax": "CYLIND h, r",
+      "params": {
+        "zh": ["h — 高度（沿着 +Z）", "r — 底面半径"],
+        "en": ["h — height along +Z", "r — base radius"]
+      },
+      "desc": {
+        "zh": "圆柱体：底面圆心在原点，向 +Z 方向长到高度 h。第一个参数是高度不是半径。",
+        "en": "A cylinder whose base circle is centred at the origin, growing to height h along +Z. The first argument is height, not radius."
+      },
+      "example": "CYLIND 0.72, 0.03",
+      "chapter": { "zh": "/guide/part1-basics/01-first-3d-object", "en": "/en/guide/part1-basics/01-first-3d-object" }
+    },
+    {
+      "name": "SPHERE",
+      "category": "prim3d",
+      "syntax": "SPHERE r",
+      "params": {
+        "zh": ["r — 半径"],
+        "en": ["r — radius"]
+      },
+      "desc": {
+        "zh": "球心在原点、半径为 r 的球体。",
+        "en": "A sphere centred at the origin with radius r."
+      },
+      "example": "ADD 0, 0, 0.5\nSPHERE 0.5",
+      "chapter": { "zh": "/guide/part1-basics/01-first-3d-object", "en": "/en/guide/part1-basics/01-first-3d-object" }
+    },
+    {
+      "name": "CONE",
+      "category": "prim3d",
+      "syntax": "CONE h, r1, r2",
+      "params": {
+        "zh": ["h — 高度", "r1 — 底半径", "r2 — 顶半径（0 即尖顶）"],
+        "en": ["h — height", "r1 — bottom radius", "r2 — top radius (0 makes a point)"]
+      },
+      "desc": {
+        "zh": "圆台：底面圆心在原点，沿 +Z 长到 h。顶半径写 0 就是圆锥；顶半径大于 0 是截头圆锥。",
+        "en": "A truncated cone with its base circle at the origin, growing to height h. Set r2 to 0 for a pointed cone."
+      },
+      "example": "CONE 1.2, 0.5, 0.1",
+      "chapter": { "zh": "/guide/part1-basics/01-first-3d-object", "en": "/en/guide/part1-basics/01-first-3d-object" }
+    },
+    {
+      "name": "ELLIPS",
+      "category": "prim3d",
+      "syntax": "ELLIPS h, rx, ry",
+      "params": {
+        "zh": ["h — 竖向总高（Z 向直径）", "rx — X 向半径", "ry — Y 向半径"],
+        "en": ["h — total height (Z diameter)", "rx — radius along X", "ry — radius along Y"]
+      },
+      "desc": {
+        "zh": "椭球体，中心在原点。三个半径互不相等时得到三轴椭球；改 ry 等于 rx 就退化成回转椭球。",
+        "en": "An ellipsoid centred at the origin. Making ry equal to rx gives a surface of revolution."
+      },
+      "example": "ADD 0, 0, 0.4\nELLIPS 0.8, 0.5, 0.25",
+      "chapter": { "zh": "/guide/part1-basics/01-first-3d-object", "en": "/en/guide/part1-basics/01-first-3d-object" }
+    },
+    {
+      "name": "PRISM",
+      "category": "extrude",
+      "syntax": "PRISM n, h, x1, y1, s1, … , xn, yn, sn",
+      "params": {
+        "zh": ["n — 顶点个数", "h — 挤出高度", "xi, yi — 第 i 个顶点坐标", "si — 顶点状态码：1 起点、0 中间点、-1 终点"],
+        "en": ["n — number of vertices", "h — extrusion height", "xi, yi — i-th vertex", "si — vertex status: 1 first, 0 intermediate, -1 last"]
+      },
+      "desc": {
+        "zh": "把 XY 平面上的闭合多边形沿 +Z 挤出成柱体。参数必须一次给全，换行用续行（行尾逗号）。这是做异形截面的主力命令。",
+        "en": "Extrudes a closed XY polygon up the Z axis. All vertices must be supplied in one statement (continue lines with a trailing comma). The workhorse for non-rectangular sections."
+      },
+      "example": "PRISM 4, 0.9,\n  0, 0, 1,\n  1, 0, 0,\n  1, 0.6, 0,\n  0, 0.6, -1",
+      "chapter": null
+    },
+    {
+      "name": "PRISM_",
+      "category": "extrude",
+      "syntax": "PRISM_ n, h, x1, y1, s1, … , xn, yn, sn, …",
+      "params": {
+        "zh": ["n — 轮廓与洞口的顶点总数", "h — 挤出高度", "xi, yi — 顶点坐标", "si — 状态码（1/-1/0，洞口用负状态码段）"],
+        "en": ["n — total vertices of contour and holes", "h — extrusion height", "xi, yi — vertex coordinates", "si — status codes (1/-1/0; holes use negative segments)"]
+      },
+      "desc": {
+        "zh": "PRISM 的增强版，支持多个轮廓与洞口（把带洞的截面一次挤出）。沙盒目前按单轮廓处理，洞口请以 Archicad 为准。",
+        "en": "The extended form of PRISM supporting multiple contours and holes. The sandbox currently handles a single contour; verify holes in Archicad."
+      },
+      "example": "PRISM_ 4, 1.0,\n  0, 0, 1,\n  2, 0, 0,\n  2, 1, 0,\n  0, 1, -1",
+      "chapter": null
+    },
+    {
+      "name": "ADD",
+      "category": "transform3d",
+      "syntax": "ADD dx, dy, dz",
+      "params": {
+        "zh": ["dx, dy, dz — 沿三个轴的平移量"],
+        "en": ["dx, dy, dz — offsets along the three axes"]
+      },
+      "desc": {
+        "zh": "把当前坐标系平移到新位置并压栈。后续几何都相对于新原点。用完记得 DEL 回退。",
+        "en": "Translates the current coordinate system and pushes it on the stack. Later geometry is relative to the new origin; pop it with DEL when done."
+      },
+      "example": "ADD 0.5, 0, 0.72\nCYLIND 0.1, 0.02\nDEL 1",
+      "chapter": { "zh": "/guide/part1-basics/02-transform-stack", "en": "/en/guide/part1-basics/02-transform-stack" }
+    },
+    {
+      "name": "ADDX",
+      "category": "transform3d",
+      "syntax": "ADDX dx",
+      "params": { "zh": ["dx — X 向平移量"], "en": ["dx — offset along X"] },
+      "desc": {
+        "zh": "等价于 `ADD dx, 0, 0` 的简写。ADDY / ADDZ 同理。",
+        "en": "Shorthand for `ADD dx, 0, 0`; ADDY / ADDZ work the same way."
+      },
+      "example": "ADDX 0.3\nBLOCK 0.1, 0.1, 0.5\nDEL 1",
+      "chapter": { "zh": "/guide/part1-basics/02-transform-stack", "en": "/en/guide/part1-basics/02-transform-stack" }
+    },
+    {
+      "name": "ADDY",
+      "category": "transform3d",
+      "syntax": "ADDY dy",
+      "params": { "zh": ["dy — Y 向平移量"], "en": ["dy — offset along Y"] },
+      "desc": { "zh": "等价于 `ADD 0, dy, 0`。", "en": "Equivalent to `ADD 0, dy, 0`." },
+      "example": "ADDY 0.3\nBLOCK 0.1, 0.1, 0.5\nDEL 1",
+      "chapter": { "zh": "/guide/part1-basics/02-transform-stack", "en": "/en/guide/part1-basics/02-transform-stack" }
+    },
+    {
+      "name": "ADDZ",
+      "category": "transform3d",
+      "syntax": "ADDZ dz",
+      "params": { "zh": ["dz — Z 向平移量"], "en": ["dz — offset along Z"] },
+      "desc": { "zh": "等价于 `ADD 0, 0, dz`。", "en": "Equivalent to `ADD 0, 0, dz`." },
+      "example": "BLOCK 1, 1, 0.1\nADDZ 0.1\nBLOCK 0.8, 0.8, 0.1\nDEL 1",
+      "chapter": { "zh": "/guide/part1-basics/02-transform-stack", "en": "/en/guide/part1-basics/02-transform-stack" }
+    },
+    {
+      "name": "ROT",
+      "category": "transform3d",
+      "syntax": "ROT x, y, z",
+      "params": {
+        "zh": ["x, y, z — 绕三个轴的旋转角（度）"],
+        "en": ["x, y, z — rotation angles in degrees"]
+      },
+      "desc": {
+        "zh": "按 X → Y → Z 的顺序旋转当前坐标系并压栈。角度用度不是弧度；连续 ROT 会层层叠加，容易转乱，建议每轮做完就 DEL。",
+        "en": "Rotates the current coordinate system in X → Y → Z order and pushes it. Angles are degrees; consecutive ROT calls accumulate, so pop with DEL each round."
+      },
+      "example": "FOR i = 1 TO 6\n  ROT 0, 0, i * 60\n  ADD 1.2, 0, 0\n  BLOCK 0.2, 0.1, 0.5\n  DEL 2\nNEXT i",
+      "chapter": { "zh": "/guide/part1-basics/02-transform-stack", "en": "/en/guide/part1-basics/02-transform-stack" }
+    },
+    {
+      "name": "ROTX",
+      "category": "transform3d",
+      "syntax": "ROTX angle",
+      "params": { "zh": ["angle — 绕 X 轴角度（度）"], "en": ["angle — degrees around X"] },
+      "desc": { "zh": "只绕 X 轴旋转，等价于 `ROT angle, 0, 0`。", "en": "Rotate around X only; same as `ROT angle, 0, 0`." },
+      "example": "ROTX 15\nBLOCK 1, 0.4, 0.05\nDEL 1",
+      "chapter": { "zh": "/guide/part1-basics/02-transform-stack", "en": "/en/guide/part1-basics/02-transform-stack" }
+    },
+    {
+      "name": "ROTY",
+      "category": "transform3d",
+      "syntax": "ROTY angle",
+      "params": { "zh": ["angle — 绕 Y 轴角度（度）"], "en": ["angle — degrees around Y"] },
+      "desc": { "zh": "只绕 Y 轴旋转，等价于 `ROT 0, angle, 0`。", "en": "Rotate around Y only; same as `ROT 0, angle, 0`." },
+      "example": "ROTY 30\nBLOCK 1, 0.4, 0.05\nDEL 1",
+      "chapter": { "zh": "/guide/part1-basics/02-transform-stack", "en": "/en/guide/part1-basics/02-transform-stack" }
+    },
+    {
+      "name": "ROTZ",
+      "category": "transform3d",
+      "syntax": "ROTZ angle",
+      "params": { "zh": ["angle — 绕 Z 轴角度（度）"], "en": ["angle — degrees around Z"] },
+      "desc": { "zh": "只绕 Z 轴旋转，平面阵列排版最常用。", "en": "Rotate around Z only; the usual choice for radial layouts." },
+      "example": "ROTZ 45\nBLOCK 1, 0.1, 0.05\nDEL 1",
+      "chapter": { "zh": "/guide/part1-basics/02-transform-stack", "en": "/en/guide/part1-basics/02-transform-stack" }
+    },
+    {
+      "name": "MUL",
+      "category": "transform3d",
+      "syntax": "MUL sx, sy, sz",
+      "params": {
+        "zh": ["sx, sy, sz — 三个轴的比例因子"],
+        "en": ["sx, sy, sz — scale factors per axis"]
+      },
+      "desc": {
+        "zh": "对当前坐标系做非等比缩放并压栈。它改的是「单位」不是「尺寸」——之后所有坐标（包括 ADD 的位移）都会被一起缩放。",
+        "en": "Scales the current coordinate system and pushes it. It changes the unit, so every later coordinate (including ADD offsets) is scaled too."
+      },
+      "example": "MUL 1, 1, 2\nBLOCK 0.5, 0.5, 0.25\nDEL 1",
+      "chapter": { "zh": "/guide/part1-basics/02-transform-stack", "en": "/en/guide/part1-basics/02-transform-stack" }
+    },
+    {
+      "name": "MULX",
+      "category": "transform3d",
+      "syntax": "MULX sx",
+      "params": { "zh": ["sx — X 向比例"], "en": ["sx — scale along X"] },
+      "desc": { "zh": "等价于 `MUL sx, 1, 1`。", "en": "Equivalent to `MUL sx, 1, 1`." },
+      "example": "MULX 2\nCYLIND 1, 0.2\nDEL 1",
+      "chapter": { "zh": "/guide/part1-basics/02-transform-stack", "en": "/en/guide/part1-basics/02-transform-stack" }
+    },
+    {
+      "name": "MULY",
+      "category": "transform3d",
+      "syntax": "MULY sy",
+      "params": { "zh": ["sy — Y 向比例"], "en": ["sy — scale along Y"] },
+      "desc": { "zh": "等价于 `MUL 1, sy, 1`。", "en": "Equivalent to `MUL 1, sy, 1`." },
+      "example": "MULY 2\nCYLIND 1, 0.2\nDEL 1",
+      "chapter": { "zh": "/guide/part1-basics/02-transform-stack", "en": "/en/guide/part1-basics/02-transform-stack" }
+    },
+    {
+      "name": "MULZ",
+      "category": "transform3d",
+      "syntax": "MULZ sz",
+      "params": { "zh": ["sz — Z 向比例"], "en": ["sz — scale along Z"] },
+      "desc": { "zh": "等价于 `MUL 1, 1, sz`。", "en": "Equivalent to `MUL 1, 1, sz`." },
+      "example": "MULZ 2\nBLOCK 0.4, 0.4, 0.5\nDEL 1",
+      "chapter": { "zh": "/guide/part1-basics/02-transform-stack", "en": "/en/guide/part1-basics/02-transform-stack" }
+    },
+    {
+      "name": "DEL",
+      "category": "transform3d",
+      "syntax": "DEL n",
+      "params": {
+        "zh": ["n — 回退的层数；省略则退 1 层；`DEL TOP` 退到栈底"],
+        "en": ["n — levels to pop; omitted means 1; `DEL TOP` clears to the root"]
+      },
+      "desc": {
+        "zh": "变换栈出栈，恢复到 n 层之前的坐标系。每个 ADD/ROT/MUL 都要配一个 DEL，否则出错是必然的。",
+        "en": "Pops n levels from the transformation stack. Every ADD/ROT/MUL needs a matching DEL; forgetting them is the most common source of wrong geometry."
+      },
+      "example": "ADD 1, 0, 0\nBLOCK 0.2, 0.2, 0.2\nDEL 1",
+      "chapter": { "zh": "/guide/part1-basics/02-transform-stack", "en": "/en/guide/part1-basics/02-transform-stack" }
+    },
+    {
+      "name": "LINE2",
+      "category": "draw2d",
+      "syntax": "LINE2 x1, y1, x2, y2",
+      "params": {
+        "zh": ["x1, y1 — 起点", "x2, y2 — 终点"],
+        "en": ["x1, y1 — start point", "x2, y2 — end point"]
+      },
+      "desc": {
+        "zh": "在 2D 脚本里从 (x1,y1) 到 (x2,y2) 画一条直线。2D 坐标 y 向上，单位与 3D 一致。",
+        "en": "Draws a line from (x1,y1) to (x2,y2) in the 2D script. The 2D y axis points up; units match the 3D script."
+      },
+      "example": "LINE2 0, 0, 1.2, 0.6",
+      "chapter": { "zh": "/guide/part1-basics/04-2d-script", "en": "/en/guide/part1-basics/04-2d-script" }
+    },
+    {
+      "name": "RECT2",
+      "category": "draw2d",
+      "syntax": "RECT2 x1, y1, x2, y2",
+      "params": {
+        "zh": ["x1, y1 — 一个角点", "x2, y2 — 对角点"],
+        "en": ["x1, y1 — one corner", "x2, y2 — opposite corner"]
+      },
+      "desc": {
+        "zh": "用两个对角点画矩形。平面符号里最省事的轮廓画法。",
+        "en": "Draws a rectangle from two opposite corners; the quickest outline for a plan symbol."
+      },
+      "example": "RECT2 0, 0, 1.2, 0.6",
+      "chapter": { "zh": "/guide/part1-basics/04-2d-script", "en": "/en/guide/part1-basics/04-2d-script" }
+    },
+    {
+      "name": "CIRCLE2",
+      "category": "draw2d",
+      "syntax": "CIRCLE2 x, y, r",
+      "params": {
+        "zh": ["x, y — 圆心", "r — 半径"],
+        "en": ["x, y — centre", "r — radius"]
+      },
+      "desc": { "zh": "画整圆。四条腿的桌子在平面图上就是四个圆。", "en": "Draws a full circle; a four-legged table becomes four circles in plan." },
+      "example": "CIRCLE2 0.05, 0.05, 0.03",
+      "chapter": { "zh": "/guide/part1-basics/04-2d-script", "en": "/en/guide/part1-basics/04-2d-script" }
+    },
+    {
+      "name": "ARC2",
+      "category": "draw2d",
+      "syntax": "ARC2 x, y, r, a1, a2",
+      "params": {
+        "zh": ["x, y — 圆心", "r — 半径", "a1 — 起始角（度）", "a2 — 终止角（度）"],
+        "en": ["x, y — centre", "r — radius", "a1 — start angle (deg)", "a2 — end angle (deg)"]
+      },
+      "desc": {
+        "zh": "画圆弧，从 a1 逆时针到 a2。角度用度，0° 指向 +X。",
+        "en": "Draws an arc from a1 counter-clockwise to a2, in degrees, with 0° pointing along +X."
+      },
+      "example": "ARC2 0, 0, 0.5, 0, 90",
+      "chapter": { "zh": "/guide/part1-basics/04-2d-script", "en": "/en/guide/part1-basics/04-2d-script" }
+    },
+    {
+      "name": "TEXT2",
+      "category": "draw2d",
+      "syntax": "TEXT2 x, y, \"text\"",
+      "params": {
+        "zh": ["x, y — 文字定位点", "\"text\" — 字符串（必须加双引号）"],
+        "en": ["x, y — anchor point", "\"text\" — string literal (quotes required)"]
+      },
+      "desc": {
+        "zh": "在平面符号上写字。字号、对齐由后续属性命令控制，沙盒只画内容不还原字体。",
+        "en": "Places text in the plan symbol. Size and alignment come from attribute commands; the sandbox renders the content only."
+      },
+      "example": "TEXT2 0, -0.1, \"1.2 x 0.6\"",
+      "chapter": { "zh": "/guide/part1-basics/04-2d-script", "en": "/en/guide/part1-basics/04-2d-script" }
+    },
+    {
+      "name": "POLY2_",
+      "category": "draw2d",
+      "syntax": "POLY2_ n, fill, x1, y1, s1, … , xn, yn, sn",
+      "params": {
+        "zh": ["n — 顶点数", "fill — 填充索引（0 为不填充）", "xi, yi — 顶点坐标", "si — 顶点状态码（1 起、0 中、-1 止）"],
+        "en": ["n — vertex count", "fill — fill index (0 = no fill)", "xi, yi — vertices", "si — status codes (1 start, 0 mid, -1 end)"]
+      },
+      "desc": {
+        "zh": "一次画出带填充属性的多边形，是平面符号做异形轮廓的主力。",
+        "en": "Draws a polygon with a fill attribute in one statement; the main tool for irregular plan outlines."
+      },
+      "example": "POLY2_ 4, 1,\n  0, 0, 1,\n  0.6, 0, 0,\n  0.6, 0.4, 0,\n  0, 0.4, -1",
+      "chapter": { "zh": "/guide/part1-basics/04-2d-script", "en": "/en/guide/part1-basics/04-2d-script" }
+    },
+    {
+      "name": "HOTSPOT2",
+      "category": "draw2d",
+      "syntax": "HOTSPOT2 x, y",
+      "params": {
+        "zh": ["x, y — 热点位置"],
+        "en": ["x, y — hotspot position"]
+      },
+      "desc": {
+        "zh": "在 2D 符号上放一个可拖拽的编辑点，不画任何图形。参数化对象能不能「手拉改尺寸」，靠的就是它。",
+        "en": "Places an editable hotspot in the plan symbol without drawing geometry; this is how parametric objects become draggable."
+      },
+      "example": "HOTSPOT2 0, 0\nHOTSPOT2 1.2, 0\nHOTSPOT2 1.2, 0.6",
+      "chapter": { "zh": "/guide/part1-basics/04-2d-script", "en": "/en/guide/part1-basics/04-2d-script" }
+    },
+    {
+      "name": "PROJECT2",
+      "category": "draw2d",
+      "syntax": "PROJECT2 x, y, z",
+      "params": {
+        "zh": ["x, y, z — 3D 空间点坐标"],
+        "en": ["x, y, z — a point in 3D space"]
+      },
+      "desc": {
+        "zh": "把 3D 点按当前投影方式投到平面图上，自动跟随平面图旋转（PROJECT2 常与 GLOB 结合用）。沙盒不绘制投影结果。",
+        "en": "Projects a 3D point into the plan using the current projection, so the symbol follows the plan rotation. The sandbox does not draw projected output."
+      },
+      "example": "PROJECT2 0, 0, 0\nPROJECT2 1.2, 0, 0",
+      "chapter": { "zh": "/guide/part1-basics/04-2d-script", "en": "/en/guide/part1-basics/04-2d-script" }
+    },
+    {
+      "name": "ADD2",
+      "category": "transform2d",
+      "syntax": "ADD2 dx, dy",
+      "params": { "zh": ["dx, dy — 平面平移量"], "en": ["dx, dy — planar offsets"] },
+      "desc": {
+        "zh": "2D 变换栈的平移，只影响后续 2D 图形，不影响 3D。",
+        "en": "Translates the 2D transformation stack; affects later 2D shapes only."
+      },
+      "example": "ADD2 0.5, 0\nCIRCLE2 0, 0, 0.1\nDEL2 1",
+      "chapter": { "zh": "/guide/part1-basics/04-2d-script", "en": "/en/guide/part1-basics/04-2d-script" }
+    },
+    {
+      "name": "ROT2",
+      "category": "transform2d",
+      "syntax": "ROT2 angle",
+      "params": { "zh": ["angle — 逆时针角度（度）"], "en": ["angle — degrees counter-clockwise"] },
+      "desc": {
+        "zh": "旋转 2D 坐标系。做斜向布置的平面符号很方便。",
+        "en": "Rotates the 2D coordinate system; handy for angled plan symbols."
+      },
+      "example": "ROT2 30\nRECT2 0, 0, 0.6, 0.3\nDEL2 1",
+      "chapter": { "zh": "/guide/part1-basics/04-2d-script", "en": "/en/guide/part1-basics/04-2d-script" }
+    },
+    {
+      "name": "MUL2",
+      "category": "transform2d",
+      "syntax": "MUL2 sx, sy",
+      "params": { "zh": ["sx, sy — 平面比例"], "en": ["sx, sy — planar scale factors"] },
+      "desc": {
+        "zh": "2D 非等比缩放，常用于把同一套符号拉伸适配不同尺寸。",
+        "en": "Non-uniform 2D scaling, useful for stretching one symbol to different sizes."
+      },
+      "example": "MUL2 2, 1\nCIRCLE2 0, 0, 0.2\nDEL2 1",
+      "chapter": { "zh": "/guide/part1-basics/04-2d-script", "en": "/en/guide/part1-basics/04-2d-script" }
+    },
+    {
+      "name": "DEL2",
+      "category": "transform2d",
+      "syntax": "DEL2 n",
+      "params": { "zh": ["n — 回退层数"], "en": ["n — levels to pop"] },
+      "desc": {
+        "zh": "2D 变换栈出栈，和 3D 的 DEL 分开管理，互不干扰。",
+        "en": "Pops the 2D transformation stack; independent from the 3D stack."
+      },
+      "example": "ADD2 1, 0\nRECT2 0, 0, 0.2, 0.2\nDEL2 1",
+      "chapter": { "zh": "/guide/part1-basics/04-2d-script", "en": "/en/guide/part1-basics/04-2d-script" }
+    },
+    {
+      "name": "MATERIAL",
+      "category": "attribute",
+      "syntax": "MATERIAL index",
+      "params": {
+        "zh": ["index — 材质索引（正整数）"],
+        "en": ["index — material index (positive integer)"]
+      },
+      "desc": {
+        "zh": "给后续几何体指定材质索引，索引对应 Archicad 项目里的材质表。沙盒用固定调色板近似显示，颜色与真实材质不一致。",
+        "en": "Assigns a material index to following geometry, referring to the project's material table. The sandbox uses a fixed palette, so colours differ from Archicad."
+      },
+      "example": "MATERIAL 8\nBLOCK 0.6, 0.6, 0.05",
+      "chapter": null
+    },
+    {
+      "name": "PEN",
+      "category": "attribute",
+      "syntax": "PEN index",
+      "params": {
+        "zh": ["index — 画笔颜色索引"],
+        "en": ["index — pen colour index"]
+      },
+      "desc": {
+        "zh": "指定后续线条使用的画笔颜色。3D 里控制轮廓线，2D 里控制线型颜色。",
+        "en": "Selects the pen colour for subsequent lines: contour edges in 3D, line colour in 2D."
+      },
+      "example": "PEN 2\nLINE2 0, 0, 1, 0",
+      "chapter": null
+    },
+    {
+      "name": "IF",
+      "category": "flow",
+      "syntax": "IF condition THEN … [ELSE …] ENDIF",
+      "params": {
+        "zh": ["condition — 条件表达式（非 0 为真）", "THEN/ELSE/ENDIF — 块结构关键字"],
+        "en": ["condition — expression (non-zero is true)", "THEN/ELSE/ENDIF — block keywords"]
+      },
+      "desc": {
+        "zh": "块式或单行式条件分支。相等判断写 `=`，不是 `==`；比较可用 `<>`、`<`、`>`、`<=`、`>=`，并用 AND / OR 组合。",
+        "en": "Block or single-line conditional. Equality is `=`, not `==`; comparisons support `<>`, `<`, `>`, `<=`, `>=`, combined with AND / OR."
+      },
+      "example": "IF h > 1.0 THEN\n  BLOCK 1, 1, h\nELSE\n  BLOCK 1, 1, 1.0\nENDIF",
+      "chapter": { "zh": "/guide/part1-basics/05-control-flow", "en": "/en/guide/part1-basics/05-control-flow" }
+    },
+    {
+      "name": "FOR",
+      "category": "flow",
+      "syntax": "FOR v = from TO to [STEP s] … NEXT [v]",
+      "params": {
+        "zh": ["v — 循环变量", "from/to — 起止值", "s — 步长（默认 1，可负）"],
+        "en": ["v — loop variable", "from/to — start and end values", "s — step (default 1, may be negative)"]
+      },
+      "desc": {
+        "zh": "次数已知的循环。循环结束后变量仍保留（值为越过上限的第一个值），后面继续用要重新赋值。",
+        "en": "A counted loop. The variable survives after the loop with the first value past the limit, so re-initialise before reuse."
+      },
+      "example": "FOR i = 1 TO 4\n  ADD 0.3, 0, 0\n  BLOCK 0.05, 0.05, 0.7\n  DEL 1\nNEXT i",
+      "chapter": { "zh": "/guide/part1-basics/05-control-flow", "en": "/en/guide/part1-basics/05-control-flow" }
+    },
+    {
+      "name": "WHILE",
+      "category": "flow",
+      "syntax": "WHILE condition … ENDWHILE",
+      "params": {
+        "zh": ["condition — 循环条件（非 0 继续）"],
+        "en": ["condition — loop condition (non-zero continues)"]
+      },
+      "desc": {
+        "zh": "条件为真就继续。必须在循环体里自己改条件变量，否则死循环；沙盒有 10000 次保险丝，真实 Archicad 会卡死。",
+        "en": "Loops while the condition holds. You must update the condition variable yourself; the sandbox has a 10000-iteration fuse, real Archicad simply hangs."
+      },
+      "example": "z = 0\nWHILE z < 1.8\n  ADD 0, 0, z\n  BLOCK 0.9, 0.3, 0.02\n  DEL 1\n  z = z + 0.4\nENDWHILE",
+      "chapter": { "zh": "/guide/part1-basics/05-control-flow", "en": "/en/guide/part1-basics/05-control-flow" }
+    },
+    {
+      "name": "GOSUB",
+      "category": "flow",
+      "syntax": "GOSUB label",
+      "params": {
+        "zh": ["label — 子程序入口标签名"],
+        "en": ["label — entry label of the subroutine"]
+      },
+      "desc": {
+        "zh": "跳到标签处执行子程序，遇到 RETURN 回到调用点。标签写在行首，后面加冒号：`build_leg:`。",
+        "en": "Jumps to a labelled subroutine and returns at RETURN. Write the label at line start followed by a colon: `build_leg:`."
+      },
+      "example": "GOSUB draw_leg\nEND\n\ndraw_leg:\n  CYLIND 0.7, 0.03\nRETURN",
+      "chapter": { "zh": "/guide/part1-basics/05-control-flow", "en": "/en/guide/part1-basics/05-control-flow" }
+    },
+    {
+      "name": "RETURN",
+      "category": "flow",
+      "syntax": "RETURN",
+      "params": { "zh": ["无参数"], "en": ["no arguments"] },
+      "desc": {
+        "zh": "从子程序返回调用点。没有对应 GOSUB 时执行 RETURN 会报错，也常被用来给主脚本收尾。",
+        "en": "Returns from a subroutine. A RETURN without a matching GOSUB raises an error and is often used to finish the main script."
+      },
+      "example": "GOSUB draw_leg\nEND\n\ndraw_leg:\n  CYLIND 0.7, 0.03\nRETURN",
+      "chapter": { "zh": "/guide/part1-basics/05-control-flow", "en": "/en/guide/part1-basics/05-control-flow" }
+    },
+    {
+      "name": "END",
+      "category": "flow",
+      "syntax": "END",
+      "params": { "zh": ["无参数"], "en": ["no arguments"] },
+      "desc": {
+        "zh": "立即结束脚本，不再执行后面的行。子程序通常放在 END 之后，避免主流程执行时误入。",
+        "en": "Stops the script immediately. Put subroutines after END so the main flow cannot fall into them."
+      },
+      "example": "GOSUB draw_leg\nEND",
+      "chapter": { "zh": "/guide/part1-basics/05-control-flow", "en": "/en/guide/part1-basics/05-control-flow" }
+    }
+  ]
+}

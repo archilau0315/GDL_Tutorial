@@ -1,9 +1,11 @@
 // CI 两语对齐检查：中英文页面文件必须一一对应，禁止单语孤儿页面
 // 用法：node scripts/check-i18n.mjs
 import { readdirSync, statSync } from 'node:fs'
-import { join, relative } from 'node:path'
+import { join } from 'node:path'
+import { fileURLToPath } from 'node:url'
 
-const ROOT = new URL('../docs', import.meta.url).pathname.replace(/^\/([A-Za-z]:)/, '$1')
+// fileURLToPath 才能正确解码中文路径（直接取 pathname 会保留 %E7%BB%9D 之类转义）
+const ROOT = fileURLToPath(new URL('../docs', import.meta.url))
 const ZH_DIR = join(ROOT)
 const EN_DIR = join(ROOT, 'en')
 

@@ -21,7 +21,7 @@ aside: false
 4. **带走作品**：点「导出对象」得到 LP XML 文件，再按「复制转换命令」在本机执行（需装有 Archicad），即可生成可在 Archicad 中打开的 `.gsm` 对象
 
 ::: tip 沙盒边界
-当前支持：`BLOCK` / `CYLIND` / `SPHERE` / `CONE` 基本体，`ADD` / `MUL` / `ROT` / `DEL` 变换，变量、表达式、`IF` / `FOR` 流程控制。PRISM 族、材质、参数面板将在进阶篇陆续开放。
+当前支持：`BLOCK` / `CYLIND` / `SPHERE` / `ELLIPS` / `CONE` 基本体，`PRISM` / `PRISM_` 挤出，`ADD` / `MUL` / `ROT` / `DEL` 变换，2D 全套绘图与变换命令，`MATERIAL` / `PEN` 属性，以及 `IF` / `FOR` / `WHILE` / `GOSUB` 流程控制。常用函数（`SIN` / `COS` / `SQRT` 等）可用，完整清单见[命令速查表](/reference/commands/)。
 :::
 
 ## 报错长什么样
