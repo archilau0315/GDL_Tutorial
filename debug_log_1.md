@@ -337,3 +337,5 @@
 **备注**：Gitee 用户名确认为 `archilau`（`archilau0315` 在 Gitee 不存在），README 三处链接已由 `archilau0315` 改为 `archilau`；`https://gitee.com/archilau/GDL_Tutorial` 实测目前 404（仓库尚未创建），建好后徽章自动生效。GitHub 主仓已验证 200。
 
 **验证**：README 中英两段结构一一对应（这是什么/现在有什么/资料库/快速开始/代码托管/目录结构/核心模块/写一章/部署/授权），无缺段。
+
+**同步**：本地加 `gitee` remote（`https://gitee.com/archilau/GDL_Tutorial.git`），`git push --all gitee` 成功，Gitee main 与本地 `6b6f6cb` 一致，仓库页 200；至此 GitHub 主仓与 Gitee 镜像内容相同。
