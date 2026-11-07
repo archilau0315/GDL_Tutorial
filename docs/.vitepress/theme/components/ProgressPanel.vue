@@ -1,11 +1,12 @@
 <script setup lang="ts">
 /**
  * 学习进度面板：数据来自 reference/data/chapters.json（中英字段单源）。
- * 进度保存在本机 localStorage，不采集、不上传。
+ * 进度保存在本机 localStorage，不采集、不上传；与章节页脚共用 useProgress。
  */
-import { computed, onMounted, ref, watch } from 'vue'
+import { computed } from 'vue'
 import { useData, withBase } from 'vitepress'
 import { t, tf, type Locale } from '../i18n'
+import { useProgress } from '../useProgress'
 import raw from '../../../reference/data/chapters.json'
 
 interface Chapter {
@@ -27,39 +28,7 @@ const data = raw as { parts: Part[]; chapters: Chapter[] }
 const { lang } = useData()
 const loc = computed<Locale>(() => props.locale ?? (lang.value.startsWith('en') ? 'en' : 'zh'))
 
-const KEY = 'gdl-progress-v1'
-const done = ref<Set<string>>(new Set())
-const ready = ref(false)
-
-onMounted(() => {
-  try {
-    const saved = JSON.parse(localStorage.getItem(KEY) || '[]')
-    if (Array.isArray(saved)) done.value = new Set(saved.filter((x: unknown) => typeof x === 'string'))
-  } catch {
-    /* 本地记录损坏时从零开始 */
-  }
-  ready.value = true
-})
-
-watch(done, (value) => {
-  if (!ready.value) return
-  try {
-    localStorage.setItem(KEY, JSON.stringify([...value]))
-  } catch {
-    /* 隐私模式禁用存储时静默降级 */
-  }
-})
-
-function toggle(id: string): void {
-  const next = new Set(done.value)
-  if (next.has(id)) next.delete(id)
-  else next.add(id)
-  done.value = next
-}
-
-function reset(): void {
-  done.value = new Set()
-}
+const { done, toggle, reset } = useProgress()
 
 const groups = computed(() =>
   data.parts.map((p) => {
@@ -71,6 +40,8 @@ const groups = computed(() =>
 
 const totalHit = computed(() => data.chapters.filter(c => done.value.has(c.id)).length)
 const totalPct = computed(() => Math.round((totalHit.value / data.chapters.length) * 100))
+/** 继续学习：跳到第一个未完成章节；全部学完则回第一章复习 */
+const nextUp = computed(() => data.chapters.find(c => !done.value.has(c.id)) ?? data.chapters[0])
 </script>
 
 <template>
@@ -81,6 +52,7 @@ const totalPct = computed(() => Math.round((totalHit.value / data.chapters.lengt
         <span class="prog-label">{{ tf(loc, 'progSummary', { pct: totalPct }) }}</span>
       </div>
       <button class="prog-reset" type="button" @click="reset">{{ t(loc, 'progReset') }}</button>
+      <a class="prog-go" :href="withBase(nextUp.href[loc])">{{ t(loc, 'progContinue') }} →</a>
     </header>
 
     <div class="prog-bar" role="progressbar" :aria-valuenow="totalPct" aria-valuemin="0" aria-valuemax="100">
@@ -137,6 +109,7 @@ const totalPct = computed(() => Math.round((totalHit.value / data.chapters.lengt
   display: flex;
   gap: 10px;
   align-items: baseline;
+  margin-right: auto;
 }
 
 .prog-num {
@@ -163,6 +136,25 @@ const totalPct = computed(() => Math.round((totalHit.value / data.chapters.lengt
 }
 .prog-reset:hover { color: var(--bp-600); border-color: var(--bp-400); }
 .dark .prog-reset:hover { color: var(--bp-200); }
+
+.prog-go {
+  padding: 4px 12px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #fff;
+  background: var(--bp-600);
+  border: 1px solid var(--bp-600);
+  border-radius: 999px;
+  text-decoration: none;
+  transition: background 0.15s;
+}
+.prog-go:hover { background: var(--bp-700); border-color: var(--bp-700); }
+.dark .prog-go {
+  color: #061a30;
+  background: var(--bp-200);
+  border-color: var(--bp-200);
+}
+.dark .prog-go:hover { background: var(--bp-100); border-color: var(--bp-100); }
 
 .prog-bar {
   height: 8px;

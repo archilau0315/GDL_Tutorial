@@ -58,7 +58,13 @@ export const dict = {
     progReset: '重置进度',
     progMark: '标记完成：',
     progOpen: '阅读',
-    progHint: '进度只保存在本机浏览器，换设备不同步；本站不收集任何学习数据。'
+    progHint: '进度只保存在本机浏览器，换设备不同步；本站不收集任何学习数据。',
+    progContinue: '继续学习',
+    progPrev: '上一章',
+    progNext: '下一章',
+    progDoneChapter: '本章已学完',
+    progMarkChapter: '标记本章学完',
+    progOverall: '{done}/{total} 章'
   },
   en: {
     run: 'Run',
@@ -117,7 +123,13 @@ export const dict = {
     progReset: 'Reset progress',
     progMark: 'Mark as done:',
     progOpen: 'Read',
-    progHint: 'Progress lives in this browser only — no sync, no tracking.'
+    progHint: 'Progress lives in this browser only — no sync, no tracking.',
+    progContinue: 'Continue',
+    progPrev: 'Previous chapter',
+    progNext: 'Next chapter',
+    progDoneChapter: 'Chapter done',
+    progMarkChapter: 'Mark chapter done',
+    progOverall: '{done}/{total} chapters'
   }
 } as const
 

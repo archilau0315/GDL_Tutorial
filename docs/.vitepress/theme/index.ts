@@ -6,10 +6,12 @@ import GlobTable from './components/GlobTable.vue'
 import SnippetList from './components/SnippetList.vue'
 import ErrorList from './components/ErrorList.vue'
 import ProgressPanel from './components/ProgressPanel.vue'
+import Layout from './Layout.vue'
 import './style.css'
 
 export default {
   extends: DefaultTheme,
+  Layout,
   enhanceApp({ app }: { app: any }) {
     app.component('GdlPlayground', GdlPlayground)
     app.component('CommandTable', CommandTable)

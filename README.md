@@ -42,7 +42,7 @@
 | GLOB 变量速查 | 28 个常用全局变量 / 7 类，附最小示例与「常见误传」 | ✅ |
 | 代码片段库 | 12 段常用写法，一键复制，标注沙盒可运行与对应章节 | ✅ |
 | 常见错误手册 | 24 条报错与现象，按「原因 → 改法 → 错误/正确写法」对照 | ✅ |
-| 学习进度 | 19 章清单，勾选记录只存本机浏览器，按分部显示完成度 | ✅ |
+| 学习进度 | 19 章清单 + 每章页脚「上一章 / 标记学完 / 下一章」，进度只存本机浏览器 | ✅ |
 
 所有速查数据存放在 `docs/reference/data/*.json`，中英字段同文件保存，`npm run check:data` 校验结构、分类与章节链接。
 
@@ -91,7 +91,7 @@ debug_log_1.md                # 变更记录
 | 沙盒界面 | `theme/components/GdlPlayground.vue` | 左代码右 3D、行号报错、双语错误提示、示例切换 |
 | 命令速查 | `reference/data/commands.json` | 单文件双语字段，命令的唯一样板 |
 | GLOB 速查 | `reference/data/globals.json` + `theme/components/GlobTable.vue` | 全局变量按用途分组，搜索与分类共用一套数据 |
-| 学习进度 | `reference/data/chapters.json` + `theme/components/ProgressPanel.vue` | 章节清单单源，勾选状态存 localStorage，不采集数据 |
+| 学习进度 | `reference/data/chapters.json` + `theme/useProgress.ts` | 章节清单单源；路径页与章节页脚共享状态，多标签页同步 |
 | 命令详情页 | `scripts/gen-command-pages.mjs` | 由 JSON 生成每条命令的中英页面，构建前自动运行 |
 | 2D 渲染 | `gdl-engine/renderer-2d.ts` | 形状 → SVG，自适应取景与主题色 |
 
@@ -151,7 +151,7 @@ Every chapter can embed our own GDL sandbox: code on the left, live 3D or 2D pla
 | GLOB variables | 28 common globals in 7 groups, with minimal examples and a "common myths" table | ✅ |
 | Snippet library | 12 common patterns with one-click copy, sandbox support and chapter links | ✅ |
 | Error handbook | 24 errors and symptoms with cause, fix and a wrong/right pair | ✅ |
-| Learning progress | 19-chapter checklist; ticks stay in your browser, per-part completion bars | ✅ |
+| Learning progress | 19-chapter checklist + a footer on every chapter (prev / mark done / next); ticks stay in your browser | ✅ |
 
 All reference data lives in `docs/reference/data/*.json` with both languages in one record; `npm run check:data` validates structure, categories and chapter links.
 

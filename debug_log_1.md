@@ -206,3 +206,16 @@
 | 11:09 | README.md | 公司名统一为「匡形无界 / Kuanform Boundless Intelligent Technology」；模块表补「学习进度 ✅」；check:search 17 → 26；写章流程第 3 步改为维护 chapters.json | 中英双语同步 |
 
 **验证**：check:data 59 命令 + 28 变量 + 12 片段 + 24 错误 + 19 章、check:i18n 86 对、check:search 26/26、单测 41 例、build 成功。
+
+## 2026-11-07 P4d 续：章节页脚与跨页进度同步
+
+| 时间 | 模块 | 变更简述 | 备注 |
+|---|---|---|---|
+| 11:20 | theme/useProgress.ts（新增） | 进度状态抽成组合式函数：模块级单例 Set、onMounted 读取、监听 storage 事件多标签页同步 | 组件不再各存一份，SSR 安全 |
+| 11:22 | theme/components/ChapterFooter.vue（新增） | 章末页脚：按当前页路径自动匹配章节，给「上一章 / 标记本章学完 / 下一章」与总进度 | 匹配规则：去掉 `en/` 与 `.md` 后对齐 `href.zh`；非章节页自动隐藏 |
+| 11:23 | theme/Layout.vue（新增）、theme/index.ts | 继承默认主题 Layout，在 `#doc-after` 插槽挂页脚；组件无需逐页手写 | 38 个章节页零改动即生效 |
+| 11:24 | theme/components/ProgressPanel.vue | 改用 useProgress；新增「继续学习」按钮，跳第一个未完成章节（全完成回第一章） | 与页脚状态实时一致 |
+| 11:25 | theme/i18n.ts | 新增 progContinue / progPrev / progNext / progDoneChapter / progMarkChapter / progOverall 六组中英文案 | — |
+| 11:26 | README.md | 学习进度模块说明补章节页脚与跨标签同步，核心模块表改指 useProgress.ts | 中英同步 |
+
+**验证**：build 成功；实测第 2 章页脚上一章→第 1 章、下一章→第 3 章，英文页自动用 `/en/` 链接；学习路径页「继续学习」按钮渲染正常。
